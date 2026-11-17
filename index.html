@@ -1,0 +1,407 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><link rel="icon" href="img/lingocub.webp"></head><body><title>Canopy · Thành phố thám hiểm</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Press+Start+2P&family=Noto+Sans+SC:wght@500;700&display=swap">
+<style>
+/* Canopy city map (Lingo Cub). Single deliberate look: navy night ground, cream pixel panels, hard ink borders.
+   Map (left) = the child's city; aside (right) = selected station, build progress, companions. */
+:root{
+  --orange:#f1a300; --sun:#fcc100; --lemon:#ffdf01; --sky:#729ed9; --blue:#386cb9; --navy:#174793; --navy-d:#0f3373;
+  --ink:#0b1f45; --cream:#fff8e3; --mute:#4a5068; --mute-2:#dbe6f6; --ok:#e5f4dc; --ok-d:#2e7d32;
+  --f-px:'Press Start 2P',ui-monospace,monospace;
+  --f-body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-zh:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--navy)}
+body{color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;font-weight:500}
+.wrap{max-width:1232px;margin:0 auto;padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+.zh{font-family:var(--f-zh);font-weight:700}
+.px{font-family:var(--f-px);letter-spacing:.5px}
+svg{image-rendering:pixelated}
+img.pix{image-rendering:pixelated}
+a,button{font:inherit;color:inherit}
+button{cursor:pointer}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--lemon);outline-offset:3px}
+[hidden]{display:none!important}
+.box{background:var(--cream);border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
+.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 14px;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);background:var(--cream);color:var(--ink);font-weight:800;font-size:14px;text-decoration:none}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn.go{background:var(--orange)}
+.btn.sun{background:var(--sun)}
+.btn.blue{background:var(--blue);color:var(--cream)}
+
+/* header */
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:16px;min-width:0}
+.logo{flex:none;background:#fff;border:4px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:6px 10px;line-height:0}
+.logo img{height:58px;width:auto}
+.sign{display:flex;flex-direction:column;gap:8px;min-width:0}
+.sign .px{font-size:18px;color:var(--lemon);letter-spacing:2px}
+.sign b{font-size:15px;color:var(--cream)}
+.stats{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.stat{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--ink);color:var(--cream);font-weight:700;font-size:13px}
+.stat .px{font-size:13px;color:var(--lemon)}
+.me{display:flex;align-items:center;gap:10px;padding:4px 12px 4px 4px;background:var(--cream);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer;text-align:left;min-height:52px}
+.me:hover{background:#fff}
+.me-av{width:40px;height:40px;flex:none;display:block;border:2px solid var(--ink)}
+.me-av svg,.pf-big svg,.pf-av svg{display:block;width:100%;height:100%}
+.pf-wrap{position:fixed;inset:0;z-index:40;background:rgba(11,31,69,.65);display:flex;justify-content:center;align-items:flex-start;overflow-y:auto;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.pf{width:100%;max-width:760px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.pf h3{margin:6px 0 0;font-size:17px;font-weight:800}
+.pf-h{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pf-h h2{margin:0;font-size:22px;font-weight:800}
+.pf-me{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.pf-big{width:96px;height:96px;flex:none;border:4px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.pf-name{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 240px}
+.pf-name label{font-weight:800;font-size:14px}
+.pf-row{display:flex;flex-wrap:wrap;gap:8px}
+.pf-row input{min-height:44px;flex:1 1 160px;min-width:0;padding:0 10px;border:3px solid var(--ink);font:inherit;font-size:16px}
+#pfMsg{font-size:13px;color:var(--ok-d);font-weight:700}
+.pf-avs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.pf-av{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px;border:3px solid var(--ink);background:#fff;font-size:12px;font-weight:700;line-height:1.2;text-align:center}
+.pf-av .pic{width:56px;height:56px;display:block}
+.pf-av[aria-checked="true"]{background:var(--sun);box-shadow:3px 3px 0 var(--ink)}
+.pf-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.pf-stat{border:3px solid var(--ink);background:#fff;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.pf-stat b{font-family:var(--f-px);font-size:16px;color:var(--navy)}
+.pf-stat span{font-size:13px;font-weight:600;color:var(--mute)}
+.pf-units{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.pf-units button{width:100%;display:grid;grid-template-columns:64px minmax(0,1fr) minmax(90px,1.2fr) auto;align-items:center;gap:10px;padding:8px 10px;border:2px solid var(--ink);background:#fff;text-align:left;min-height:48px}
+.pf-units button:hover{background:#fffbe9}
+.pf-units .px{font-size:9px;color:#c77a00}
+.pf-units .t{font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-units .bar span{height:12px}
+.pf-units .st{font-size:12px;font-weight:700;color:var(--mute);white-space:nowrap}
+.pf-units .done .st{color:var(--ok-d)}
+@media (max-width:560px){ .pf{padding:16px} .pf-units button{grid-template-columns:52px minmax(0,1fr) auto} .pf-units .bar{grid-column:1/-1;order:3} }
+.me .who{display:flex;flex-direction:column;gap:1px;min-width:0}
+.me .who b{font-size:14px;font-weight:800}
+.me .who span{font-size:12px;color:var(--mute)}
+.me button{min-height:36px;padding:0 10px;border:2px solid var(--ink);background:var(--sun);font-size:12px;font-weight:800}
+
+main{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.city{flex:999 1 560px;min-width:0;padding:20px;display:flex;flex-direction:column;gap:14px}
+.city-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 12px}
+.city-h h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
+.city-h span{font-size:14px;color:var(--mute)}
+.map{position:relative;border:4px solid var(--ink);line-height:0}
+.map svg{display:block;width:100%;height:auto}
+.lot{position:absolute;padding:0;border:0;background:transparent;border-radius:0}
+.lot:hover{background:rgba(255,223,1,.16)}
+.lot-n{position:absolute;left:-4px;bottom:-4px;min-width:22px;height:22px;padding:0 4px;display:grid;place-items:center;background:var(--cream);border:2px solid var(--ink);font-family:var(--f-px);font-size:9px;line-height:1;color:var(--ink)}
+.lot.is-built .lot-n{background:var(--orange)}
+.lot.is-cur .lot-n{background:var(--lemon)}
+@media (max-width:640px){ .lot-n{min-width:15px;height:15px;font-size:7px;padding:0 2px;border-width:1px;left:-2px;bottom:-2px} }
+.lot[aria-pressed="true"]{outline:3px solid var(--lemon);outline-offset:-3px}
+.bubble{position:absolute;z-index:3;line-height:1.3;max-width:min(300px,86%);background:var(--cream);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:8px 12px 8px 8px;display:flex;align-items:center;gap:10px}
+.bubble .say{flex:none;width:44px;height:44px;display:grid;place-items:center;background:var(--sun);border:3px solid var(--ink);padding:0}
+.bubble .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bubble small{font-size:12px;font-weight:700;color:var(--mute)}
+.bubble b{font-size:15px;font-weight:800}
+.bubble .zh{font-size:16px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 20px;font-size:14px;font-weight:700}
+.legend div{display:flex;align-items:center;gap:8px}
+.legend i{width:16px;height:16px;border:2px solid var(--ink);display:inline-block}
+.howto{margin:0;font-size:13px;color:var(--mute);border-top:3px dashed #d8c99f;padding-top:10px}
+
+aside{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.panel{padding:20px;display:flex;flex-direction:column;gap:14px}
+.st-h{display:flex;flex-direction:column;gap:6px}
+.st-h .px{font-size:12px;color:#c77a00}
+.st-h h2{margin:0;font-size:20px;font-weight:800;line-height:1.2}
+.st-h .sub{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline}
+.st-h .sub .zh{font-size:16px}
+.st-h .sub .py{font-size:13px;color:var(--mute)}
+.st-h .bd{font-size:14px;color:var(--mute)}
+.ls{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ls li{display:flex;align-items:center;gap:10px;padding:6px 8px;border:2px solid var(--ink);min-height:52px}
+.ls .ch{width:36px;height:36px;flex:none;display:grid;place-items:end center;background:#fff;border:2px solid var(--ink);overflow:hidden}
+.ls .ch img{height:32px;width:auto;max-width:100%;object-fit:contain}
+.ls .abc{width:36px;height:36px;flex:none;display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--ink);font-family:var(--f-px);font-size:9px;line-height:32px;text-align:center}
+.ls .abc i{font-style:normal}.ls .abc i:nth-child(1){background:var(--orange)}.ls .abc i:nth-child(2){background:var(--lemon)}.ls .abc i:nth-child(3){background:var(--sky)}
+.ls .nm{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.ls .nm .px{font-size:9px;color:var(--mute)}
+.ls .nm b{font-size:14px;font-weight:800}
+.ls .note{font-size:12px;font-weight:600;text-align:right}
+.ls .done{background:var(--ok)}
+.ls .cur{background:var(--sun)}
+.ls .lock{border-style:dashed;border-color:#6b6f80;color:var(--mute)}
+.ls .lock .ch,.ls .lock .abc{opacity:.45;filter:grayscale(1)}
+.ls a.btn{min-height:44px;padding:0 12px;font-size:13px}
+.ls .ok{color:var(--ok-d);font-weight:800;font-size:13px;white-space:nowrap}
+.lockbox{display:flex;align-items:center;gap:10px;padding:10px;background:var(--mute-2);border:2px solid var(--ink);font-weight:700;font-size:14px}
+.more{font-size:14px;font-weight:800;color:var(--ink)}
+.bar{display:grid;gap:4px}
+.bar span{height:16px;border:2px solid var(--ink);background:var(--cream)}
+.bar span.on{background:var(--orange)}
+.build h2{margin:0;font-size:16px;font-weight:800}
+.build p{margin:0;font-size:14px}
+.crew{background:var(--blue);color:var(--cream);display:flex;align-items:center;gap:14px;padding:16px 20px}
+.crew .imgs{display:flex;align-items:flex-end;gap:2px;flex:none}
+.crew .imgs img{height:46px;width:auto}
+.crew p{margin:0;font-size:14px;font-weight:600}
+
+footer{display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:var(--mute-2);font-size:13px}
+footer .btn{min-height:40px;font-size:13px}
+.teach{padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:14px;font-weight:700}
+.teach input{min-height:44px;width:120px;padding:0 10px;border:3px solid var(--ink);font:inherit;font-size:16px}
+.tbanner{background:var(--lemon);border:3px solid var(--ink);padding:8px 12px;font-weight:800;font-size:14px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.namebox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.namebox input{min-height:40px;width:160px;padding:0 10px;border:3px solid var(--ink);font:inherit;font-size:16px}
+@keyframes blink{to{visibility:hidden}}
+.blink{animation:blink 1s steps(2,start) infinite}
+@keyframes bob{50%{transform:translateY(-1px)}}
+.bob{animation:bob 1s steps(2) infinite}
+@media (prefers-reduced-motion:reduce){.blink,.bob{animation:none}}
+@media (max-width:640px){ .logo img{height:44px} .sign .px{font-size:14px} .city{padding:14px} .panel{padding:16px} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <span class="logo"><img src="img/lingocub.webp" alt="Lingo Cub · English and Chinese Hub"></span>
+      <div class="sign"><span class="px">CANOPY</span><b>Thành phố thám hiểm · 城市探险</b></div>
+    </div>
+    <div class="stats">
+      <div class="stat" title="Công trình đã xây"><svg viewBox="0 0 7 7" width="21" height="21" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fcc100" d="M3 0h1v1h-1z M2 1h3v1h-3z M1 2h5v1h-5z M0 3h7v1h-7z"/><path fill="#fff8e3" d="M1 4h5v3h-5z"/><path fill="#0b1f45" d="M3 5h1v2h-1z"/></svg><span class="px" id="nBuilt">0</span><span>/ 12 công trình</span></div>
+      <div class="stat" title="Bài đã xong"><svg viewBox="0 0 7 7" width="21" height="21" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fcc100" d="M3 0h1v2h-1z M0 2h7v1h-7z M1 3h5v1h-5z M2 4h3v1h-3z M1 5h2v1h-2z M4 5h2v1h-2z M0 6h2v1h-2z M5 6h2v1h-2z"/></svg><span class="px" id="nLes">0</span><span>bài đã xong</span></div>
+      <button type="button" class="me" id="meBtn" aria-haspopup="dialog">
+        <span class="me-av" id="meAv"></span>
+        <span class="who"><b id="meName">Nhà thám hiểm</b><span>Hồ sơ · đổi avatar</span></span>
+      </button>
+    </div>
+  </header>
+  <div class="pf-wrap" id="pf" hidden role="dialog" aria-modal="true" aria-labelledby="pfT">
+    <div class="box pf">
+      <div class="pf-h"><h2 id="pfT">Hồ sơ nhà thám hiểm</h2><button type="button" class="btn" id="pfX">Đóng ✕</button></div>
+      <div class="pf-me"><span class="pf-big" id="pfAv"></span>
+        <div class="pf-name"><label for="pfName">Tên của con</label><div class="pf-row"><input id="pfName" maxlength="20" autocomplete="off" placeholder="Nhập tên"><button type="button" class="btn go" id="pfSave">Lưu tên</button></div><span id="pfMsg" role="status"></span></div></div>
+      <h3>Chọn avatar</h3><div class="pf-avs" id="pfAvs" role="radiogroup" aria-label="Chọn avatar"></div>
+      <h3>Thống kê</h3><div class="pf-stats" id="pfStats"></div>
+      <h3>Tiến độ 12 trạm</h3><ol class="pf-units" id="pfUnits"></ol>
+    </div>
+  </div>
+  <div class="tbanner" id="tBanner" hidden>Chế độ giáo viên: mọi trạm và mọi bài đều mở để xem thử.<button type="button" class="btn" id="tOff">Tắt chế độ giáo viên</button></div>
+
+  <main>
+    <section class="box city" aria-labelledby="cityTitle">
+      <div class="city-h"><h1 id="cityTitle">Thành phố của con</h1><span>Chạm vào công trình để nghe lại câu của trạm đó</span></div>
+      <div class="map" id="map"></div>
+      <div class="legend" id="legend"></div>
+      <p class="howto">Mỗi trạm là một unit. Con học xong mỗi bài thì một phần công trình được xây thêm; xong cả trạm thì công trình hoàn thành và trạm tiếp theo được mở.</p>
+    </section>
+    <aside>
+      <section class="box panel" id="station" aria-live="polite"></section>
+      <section class="box panel build" id="build"></section>
+      <section class="box crew" aria-label="Bạn đồng hành">
+        <div class="imgs" aria-hidden="true"><img src="img/c_leo.webp" alt=""><img src="img/c_bunny.webp" alt=""><img src="img/c_buffy.webp" alt=""><img src="img/c_xiaobao.webp" alt=""></div>
+        <p>Leo, Bunny, Buffy và Xiaobao đi cùng con ở mỗi bài học.</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer>
+    <button type="button" class="btn blue" id="tBtn">Dành cho giáo viên</button>
+    <span>Tiến độ được lưu trên máy này.</span>
+  </footer>
+  <div class="box teach" id="tBox" hidden>
+    <label for="tPin">Mã giáo viên</label><input id="tPin" inputmode="numeric" maxlength="6" autocomplete="off">
+    <button type="button" class="btn go" id="tGo">Mở mọi trạm</button>
+    <button type="button" class="btn" id="tReset">Xoá tiến độ trên bản đồ</button>
+    <span id="tMsg" role="status"></span>
+  </div>
+</div>
+
+<script>window.CANOPY_SITE=true;</script><script src="cdata.js"></script>
+<script>
+(function(){
+'use strict';
+var C=window.CANOPY, U=C.U;
+var U14='https://claude.ai/artifact/2f9py98zEHztpug1UV2BDC';
+var LINK={1:U14,2:U14,3:U14,4:U14,5:'https://claude.ai/artifact/Etq3hFoM5KV4CDhLiH2Scm',6:'https://claude.ai/artifact/6UVAznqvefYEDhPV37Z32C',7:'https://claude.ai/artifact/LCqLitoH7zrNALxuqP2b7A',8:'https://claude.ai/artifact/8kjLt8Nob8cRMnZzraSkA1',9:'https://claude.ai/artifact/PAMMcH8QTLhTvxdzMaCPsv',10:'https://claude.ai/artifact/LbuN386V77mQq6xoBvB6qS',11:'https://claude.ai/artifact/MBMWqs9mYQ5qb8CfDGTMiQ',12:'https://claude.ai/artifact/HmZqFadycHqU7fkt4BH6kE'};
+if(C.site) LINK={1:'u1to4/index.html',2:'u1to4/index.html',3:'u1to4/index.html',4:'u1to4/index.html',5:'u5/index.html',6:'u6/index.html',7:'u7/index.html',8:'u8/index.html',9:'u9/index.html',10:'u10/index.html',11:'u11/index.html',12:'u12/index.html'};
+var TGT=C.site?'':' target="_blank" rel="noopener"';
+var KEY='canopy_city_v2', PIN='2468';
+var S={p:{},a:{},name:'',teacher:false,av:0};
+try{ var raw=JSON.parse(localStorage.getItem(KEY)||'null'); if(raw&&typeof raw==='object') S=Object.assign(S,raw); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+/* progress */
+function bits(u){ var b=S.p[u]||'', n=U[u].n, o=''; for(var i=0;i<n;i++) o+=(b[i]==='1'?'1':'0'); return o; }
+function doneCount(u){ return bits(u).split('').filter(function(c){return c==='1';}).length; }
+function built(u){ return doneCount(u)===U[u].n; }
+function open(u){ if(C.demoOpenAll||S.teacher) return true; for(var k=1;k<u;k++) if(!built(k)) return false; return true; }
+function current(){ for(var u=1;u<=12;u++) if(!built(u)) return u; return 12; }
+function ingest(){
+  var r=C.parseReport(location.hash||''), got=false;
+  Object.keys(r).forEach(function(u){ if(!U[u]) return; var old=bits(u), nw=r[u], m='';
+    for(var i=0;i<U[u].n;i++) m+=((old[i]==='1'||nw[i]==='1')?'1':'0'); if(m!==old){ S.p[u]=m; got=true; } });
+  if(got) save();
+  return got;
+}
+function link(u,l){ return LINK[u]+'#'+C.goStr(u,l,S.teacher); }
+
+/* ---------- map: a small town with winding streets, a river, bridges, a plaza and a park ---------- */
+/* each lot: art box top-left (20 x 32, ground at y+32), where the explorer stands, which way the arrow points */
+var LOT={
+  1:{x:5,y:94,kx:25,ky:121}, 2:{x:31,y:86,kx:51,ky:121}, 3:{x:57,y:94,kx:77,ky:121}, 4:{x:85,y:86,kx:105,ky:121},
+  5:{x:92,y:44,kx:112,ky:71}, 6:{x:62,y:44,kx:82,ky:71}, 7:{x:163,y:44,kx:184,ky:71}, 8:{x:174,y:90,kx:166,ky:84},
+  9:{x:36,y:4,kx:56,ky:31}, 10:{x:66,y:4,kx:86,ky:31}, 11:{x:96,y:4,kx:116,ky:31}, 12:{x:170,y:4,kx:162,ky:31}
+};
+var sel=null, bubbleFor=0;
+function partial(u,frac){ return C.partial(u,frac); }
+function P(fill,list){ var a=list.split(' ').map(Number), d=''; for(var i=0;i+3<a.length;i+=4) d+='M'+a[i]+' '+a[i+1]+'h'+a[i+2]+'v'+a[i+3]+'h-'+a[i+2]+'z'; return '<path fill="'+fill+'" d="'+d+'"/>'; }
+function tree(x,y,big){ return big ? P('#3f8f3a',(x+1)+' '+y+' 6 1 '+x+' '+(y+1)+' 8 5 '+(x+1)+' '+(y+6)+' 6 1')+P('#2f6f2c',(x+5)+' '+(y+2)+' 3 4')+P('#84d45f',(x+2)+' '+(y+1)+' 2 1')+P('#7a4a2a',(x+3)+' '+(y+7)+' 2 3')
+  : P('#3f8f3a',(x+1)+' '+y+' 3 1 '+x+' '+(y+1)+' 5 3')+P('#2f6f2c',(x+3)+' '+(y+2)+' 2 2')+P('#7a4a2a',(x+2)+' '+(y+4)+' 1 2'); }
+function house(x,y,roof,wall){ return P(roof,(x)+' '+(y+3)+' 10 2 '+(x+1)+' '+(y+1)+' 8 2 '+(x+3)+' '+y+' 4 1')+P(wall,(x+1)+' '+(y+5)+' 8 6')+P('#9fd8f5',(x+2)+' '+(y+6)+' 2 2')+P('#8a5a34',(x+6)+' '+(y+7)+' 2 4'); }
+function flowers(x,y){ return P('#e8453c',x+' '+y+' 1 1 '+(x+3)+' '+(y+1)+' 1 1')+P('#ffdf01',(x+1)+' '+(y+2)+' 1 1 '+(x+4)+' '+y+' 1 1')+P('#ffffff',(x+2)+' '+y+' 1 1'); }
+function lamp(x,y){ return P('#0b1f45',x+' '+(y+1)+' 1 6')+P('#ffdf01',(x-1)+' '+y+' 3 1'); }
+function townBase(){
+  var s='<rect x="0" y="-8" width="200" height="154" fill="#6cc04a"/>';
+  /* grass texture */
+  var dots=''; for(var i=0;i<70;i++){ var x=(i*53)%200, y=((i*37)%150)-6; dots+=x+' '+y+' 1 1 '; }
+  s+=P('#5aa83c',dots)+P('#84d45f','14 140 1 1 60 141 1 1 100 138 1 1 128 140 1 1 4 30 1 1 118 60 1 1 190 74 1 1 50 70 1 1');
+  /* river */
+  s+=P('#2e95c2','138 -8 8 46 138 38 12 5 142 43 8 17 146 60 8 18 146 78 12 5 150 83 8 27 154 110 8 36');
+  s+=P('#5bb8e0','140 2 1 4 141 20 1 5 144 50 1 4 148 66 1 5 152 92 1 4 156 120 1 5 157 134 1 4');
+  s+=P('#b0d98a','137 -8 1 46 146 -8 1 46 141 43 1 17 150 43 1 17 145 60 1 18 154 60 1 18 149 83 1 27 158 83 1 27 153 110 1 36 162 110 1 36');
+  /* streets */
+  var road='0 128 120 5 115 78 5 55 0 78 200 5 27 38 5 45 27 38 173 5 39 120 4 8 93 120 4 8 182 83 4 7';
+  s+=P('#d9c08a',road);
+  s+=P('#b89c66','0 128 115 1 0 132 120 1 114 83 1 45 120 83 1 50 0 78 200 1 0 82 27 1 32 82 82 1 120 82 80 1 26 43 1 35 32 43 1 35 27 38 173 1 32 42 168 1');
+  var dash=''; for(var x=3;x<112;x+=8) dash+=x+' 130 3 1 '; for(var y=86;y<126;y+=8) dash+='117 '+y+' 1 3 ';
+  for(var x2=3;x2<198;x2+=8) if(x2<26||x2>33) dash+=x2+' 80 3 1 '; for(var x3=36;x3<198;x3+=8) dash+=x3+' 40 3 1 ';
+  s+=P('#fff8e3',dash);
+  /* bridges */
+  s+=P('#8a5a34','136 37 16 7 144 77 16 7')+P('#6b4226','139 38 1 5 143 38 1 5 147 38 1 5 147 78 1 5 151 78 1 5 155 78 1 5')+P('#5a2e1a','136 36 16 1 136 44 16 1 144 76 16 1 144 84 16 1');
+  /* plaza with fountain (between the avenue and the river) */
+  s+=P('#e9dcb5','122 92 24 22')+P('#cdbb8a','122 92 24 1 122 113 24 1 122 92 1 22 145 92 1 22');
+  s+=P('#9aa3b5','128 97 12 10')+P('#2e95c2','130 99 8 6')+P('#9fd8f5','133 100 2 4 132 101 4 1')+P('#ffffff','133 98 2 1');
+  s+=P('#8a5a34','124 110 5 1 139 110 5 1')+P('#cdbb8a','120 101 2 4');
+  /* park with pond (east bank) */
+  s+=P('#2e95c2','168 128 22 10 170 126 18 2 170 138 18 2')+P('#9fd8f5','172 130 4 1 182 134 4 1')+P('#5a6070','176 127 1 0');
+  s+=P('#ffffff','184 129 2 1 185 128 1 1')+P('#f1a300','186 129 1 1');
+  /* little houses that are not stations */
+  s+=house(2,58,'#386CB9','#fbe3a6')+house(14,47,'#c8322b','#fff8e3')+house(186,4,'#f1a300','#fbe3a6')+house(4,134,'#729ED9','#fff8e3')+house(124,128,'#c8322b','#fbe3a6');
+  /* trees, flowers, lamps */
+  [[6,4,1],[16,16,0],[4,22,0],[18,28,1],[118,8,1],[126,20,0],[118,26,0],[152,12,0],[156,24,1],[192,22,0],[126,48,1],[134,62,0],[120,66,0],[2,46,0],[20,62,1],[48,50,0],[54,62,0],[192,52,0],[194,94,0],[164,100,0],[166,112,1],[192,112,0],[194,138,0],[30,136,1],[52,138,0],[96,136,0],[106,140,1],[136,120,0],[146,130,1],[112,92,0],[112,104,1]].forEach(function(t){ s+=tree(t[0],t[1],t[2]); });
+  [[18,140],[70,138],[84,141],[126,86],[142,88],[2,90],[46,118],[110,66],[134,74],[188,86],[58,32],[90,34],[124,34]].forEach(function(f){ s+=flowers(f[0],f[1]); });
+  [[28,121],[82,121],[60,71],[128,71],[34,31],[130,31],[170,71]].forEach(function(l){ s+=lamp(l[0],l[1]); });
+  /* town gate at the start of the main street */
+  s+=P('#c8322b','0 118 2 10')+P('#fcc100','2 118 5 3')+P('#0b1f45','2 117 1 1');
+  return s;
+}
+function drawMap(){
+  var cur=current();
+  var s='<svg viewBox="0 -8 200 154" shape-rendering="crispEdges" role="img" aria-label="Bản đồ thị trấn Canopy với 12 trạm">'+townBase();
+  for(var u=1;u<=12;u++){
+    var L=LOT[u], d=doneCount(u), g='<g transform="translate('+L.x+' '+L.y+')">';
+    if(built(u)) g+=C.art(u);
+    else if(d>0 || u===cur) g+=partial(u,d/U[u].n)+C.rects(C.SCAF);
+    else g+=C.rects(C.PLOT)+C.rects(C.SIGN)+'<text x="10" y="12.4" font-family="Press Start 2P, monospace" font-size="5" fill="#0b1f45" text-anchor="middle">'+u+'</text>';
+    if(u===cur && !built(u)) g+='<rect class="blink" x="-1.5" y="-0.5" width="23" height="33" fill="none" stroke="#ffdf01" stroke-width="1" stroke-dasharray="2 1"/>'+'<path class="bob" fill="#ffdf01" d="M9 -8h2v4h-2z M7 -4h6v1h-6z M8 -3h4v1h-4z M9 -2h2v1h-2z"/>';
+    s+=g+'</g>';
+  }
+  var K=LOT[cur];
+  s+='<g transform="translate('+K.kx+' '+K.ky+')"><path fill="#2a1a12" d="M1 0h4v1h-4z M0 1h6v3h-6z M0 4h1v3h-1z M5 4h1v3h-1z"/><path fill="#f2c29b" d="M1 2h4v3h-4z M0 7h1v1h-1z M5 7h1v1h-1z"/><path fill="#0b1f45" d="M2 3h1v1h-1z M4 3h1v1h-1z M1 8h1v2h-1z M4 8h1v2h-1z"/><path fill="#f1a300" d="M5 0h1v1h-1z M1 5h4v3h-4z"/><path fill="#fcc100" d="M2 6h2v1h-2z"/><path fill="#174793" d="M1 10h1v1h-1z M4 10h1v1h-1z"/></g>';
+  s+='</svg>';
+  var btns='';
+  for(var v=1;v<=12;v++){ var Q=LOT[v], dv=doneCount(v), st=built(v)?'đã xây xong':(dv?'đang xây, xong '+dv+'/'+U[v].n+' bài':'chưa xây');
+    btns+='<button type="button" class="lot'+(built(v)?' is-built':'')+(v===cur&&!built(v)?' is-cur':'')+'" data-u="'+v+'" aria-pressed="'+(v===sel)+'" aria-label="Trạm '+v+' · '+esc(U[v].en)+' · '+st+'" style="left:'+((Q.x-1)/200*100)+'%;top:'+((Q.y+7)/154*100)+'%;width:'+(22/200*100)+'%;height:'+(34/154*100)+'%">'+(built(v)||dv>0||v===cur?'<span class="lot-n">'+v+'</span>':'')+'</button>'; }
+  var b='';
+  if(bubbleFor && doneCount(bubbleFor)>0){ var Z=LOT[bubbleFor], left=Math.min(Math.max((Z.x-4)/200*100,1),52), top=Z.y<60?((Z.y+40)/154*100):((Z.y-22)/154*100);
+    b='<div class="bubble" style="left:'+left+'%;top:'+top+'%"><button type="button" class="say" id="sayBtn" aria-label="Nghe lại câu của '+esc(U[bubbleFor].b)+'"><svg viewBox="0 0 9 9" width="22" height="22" shape-rendering="crispEdges" aria-hidden="true"><path fill="#0b1f45" d="M0 3h2v3h-2z M2 2h1v5h-1z M3 1h1v7h-1z M4 0h1v9h-1z M6 3h1v3h-1z M7 1h1v1h-1z M8 2h1v5h-1z M7 7h1v1h-1z"/></svg></button><div class="t"><small>'+esc(U[bubbleFor].b)+' · Trạm '+bubbleFor+'</small><b>'+esc(U[bubbleFor].sEn)+'</b><span class="zh">'+esc(U[bubbleFor].sZh)+'</span></div></div>'; }
+  $('map').innerHTML=s+btns+b;
+  $('map').querySelectorAll('.lot').forEach(function(x){ x.onclick=function(){ var u=+x.dataset.u; sel=u; bubbleFor=doneCount(u)>0?(bubbleFor===u?0:u):0; render(); if(bubbleFor) speak(u); }; });
+  var sb=$('sayBtn'); if(sb) sb.onclick=function(e){ e.stopPropagation(); speak(bubbleFor); };
+  var nb=0, nl=0, nw=0; for(var w=1;w<=12;w++){ if(built(w)) nb++; else if(doneCount(w)>0||w===cur) nw++; nl+=doneCount(w); }
+  $('legend').innerHTML='<div><i style="background:#c8643c"></i>Đã xây · '+nb+' công trình</div>'+
+    (nw?'<div><i style="background:#ffdf01"></i>Đang xây · '+nw+' công trình</div>':'')+
+    (12-nb-nw?'<div><i style="background:#b07d4f"></i>Chưa xây · '+(12-nb-nw)+' trạm</div>':'');
+  $('nBuilt').textContent=nb; $('nLes').textContent=nl;
+}
+function speak(u){
+  try{ var ss=window.speechSynthesis; if(!ss) return; ss.cancel();
+    var a=new SpeechSynthesisUtterance(U[u].sEn); a.lang='en-US'; a.rate=.9;
+    var b=new SpeechSynthesisUtterance(U[u].sZh); b.lang='zh-CN'; b.rate=.85;
+    ss.speak(a); ss.speak(b); }catch(e){}
+}
+
+/* ---------- station panel ---------- */
+function icon(l){ return l.abc ? '<span class="abc" aria-hidden="true"><i>A</i><i>B</i><i>C</i></span>' : '<span class="ch" aria-hidden="true"><img src="'+C.whoImg[l.who]+'" alt=""></span>'; }
+function drawStation(){
+  var u=sel||current(), info=U[u], ls=C.lessons(u), b=bits(u), op=open(u), firstTodo=b.indexOf('0');
+  var h='<div class="st-h"><span class="px">TRẠM '+u+'</span><h2>'+esc(info.en)+'</h2><div class="sub"><span class="zh">'+esc(info.zh)+'</span><span class="py">'+esc(info.py)+'</span></div><span class="bd">Công trình: '+esc(info.b)+'</span></div>';
+  if(!op) h+='<div class="lockbox"><svg viewBox="0 0 7 8" width="21" height="24" shape-rendering="crispEdges" aria-hidden="true"><path fill="#0b1f45" d="M2 0h3v1h-3z M1 1h1v3h-1z M5 1h1v3h-1z M0 4h7v4h-7z"/><path fill="#fcc100" d="M3 5h1v2h-1z"/></svg>Học xong Trạm '+(u-1)+' để mở trạm này nhé.</div>';
+  h+='<ol class="ls">';
+  ls.forEach(function(l,i){
+    var done=b[i]==='1', isCur=op && !done && i===firstTodo, canGo=op && (done||isCur||S.teacher);
+    var cls=done?'done':(isCur?'cur':(canGo?'':'lock'));
+    var right = done ? (canGo?'<a class="btn" href="'+link(u,l.n)+'"'+TGT+'>Học lại</a>':'') :
+      isCur ? '<a class="btn go" href="'+link(u,l.n)+'"'+TGT+'>Vào học ▶</a>' :
+      canGo ? '<a class="btn" href="'+link(u,l.n)+'"'+TGT+'>Xem</a>' :
+      '<span class="note">'+(op?'Mở sau Bài '+(l.n-1):'Chưa mở')+'</span>';
+    h+='<li class="'+cls+'">'+icon(l)+'<span class="nm"><span class="px">BÀI '+l.n+'</span><b>'+esc(l.vi)+'</b>'+(done?'<span class="ok">✓ Đã xong</span>':'')+'</span>'+right+'</li>';
+  });
+  h+='</ol>';
+  if(op) h+='<a class="more" href="'+link(u,0)+'"'+TGT+'>Xem cả trạm '+u+' ▶</a>';
+  $('station').innerHTML=h;
+  var n=info.n, d=doneCount(u), left=n-d;
+  $('build').innerHTML = built(u) ?
+    '<h2>Đã xây xong '+esc(info.b)+'</h2><div class="bar" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(n+1).join('<span class="on"></span>')+'</div><p>Công trình đã mọc lên trên bản đồ của con. Chạm vào nó để nghe lại câu của trạm nhé!</p>' :
+    !op ? '<h2>'+esc(info.b)+'</h2><p>Trạm này chưa mở. Con xây xong công trình của trạm '+(u-1)+' trước nhé.</p>' :
+    '<h2>Đang xây '+esc(info.b)+'</h2><div class="bar" role="img" aria-label="Đã xong '+d+' trên '+n+' bài" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(d+1).join('<span class="on"></span>')+Array(left+1).join('<span></span>')+'</div><p>Còn '+left+' bài nữa là công trình mọc lên trên bản đồ.</p>';
+}
+function render(){
+  $('cityTitle').textContent='Thành phố của '+(S.name||'con');
+  $('meName').textContent=S.name||'Nhà thám hiểm'; $('meAv').innerHTML=C.avatar(S.av||0);
+  $('tBanner').hidden=!S.teacher;
+  drawMap(); drawStation();
+}
+
+/* explorer profile: avatar, name, stats, progress */
+var TOTAL_L=0; for(var t=1;t<=12;t++) TOTAL_L+=U[t].n;
+function paintProfile(){
+  $('pfAv').innerHTML=C.avatar(S.av||0);
+  $('pfAvs').innerHTML=C.AV.map(function(a,i){ return '<button type="button" class="pf-av" role="radio" aria-checked="'+((S.av||0)===i)+'" data-av="'+i+'"><span class="pic">'+C.avatar(i)+'</span>'+esc(a.n)+'</button>'; }).join('');
+  $('pfAvs').querySelectorAll('[data-av]').forEach(function(b){ b.onclick=function(){ S.av=+b.dataset.av; save(); paintProfile(); render(); }; });
+  var nb=0, nl=0, ad=0, at=0, has=false; for(var u=1;u<=12;u++){ if(built(u)) nb++; nl+=doneCount(u); var a=(S.a||{})[u]; if(a){ has=true; ad+=a[0]; at+=a[1]; } }
+  var cur=current();
+  $('pfStats').innerHTML=[[nb+'/12','công trình đã xây'],[nl+'/'+TOTAL_L,'bài đã học xong'],[nl,'tem đã nhận'],[has?ad+(at?'/'+at:''):'—','hoạt động đã xong'],['Trạm '+cur,esc(U[cur].en)+(built(cur)?' · đã xong':' · đang học')]]
+    .map(function(x){ return '<div class="pf-stat"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'; }).join('');
+  var rows='';
+  for(var v=1;v<=12;v++){ var n=U[v].n, d=doneCount(v), b=bits(v), st=built(v)?'✓ Đã xây xong':(!open(v)?'Chưa mở':(d?'Đang xây · '+d+'/'+n+' bài':'Chưa bắt đầu')), a2=(S.a||{})[v];
+    rows+='<li class="'+(built(v)?'done':'')+'"><button type="button" data-u="'+v+'"><span class="px">TRẠM '+v+'</span><span class="t">'+esc(U[v].en)+'</span><span class="bar" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+b.split('').map(function(c){return '<span class="'+(c==='1'?'on':'')+'"></span>';}).join('')+'</span><span class="st">'+st+(a2&&a2[1]?' · ★'+a2[0]+'/'+a2[1]:'')+'</span></button></li>'; }
+  $('pfUnits').innerHTML=rows;
+  $('pfUnits').querySelectorAll('[data-u]').forEach(function(b){ b.onclick=function(){ sel=+b.dataset.u; bubbleFor=0; closeProfile(); render(); $('station').scrollIntoView({behavior:'smooth',block:'start'}); }; });
+}
+var lastFocus=null;
+function openProfile(){ lastFocus=document.activeElement; $('pfName').value=S.name||''; $('pfMsg').textContent=''; paintProfile(); $('pf').hidden=false; $('pfX').focus(); }
+function closeProfile(){ $('pf').hidden=true; if(lastFocus&&lastFocus.focus) lastFocus.focus(); }
+$('meBtn').onclick=openProfile;
+$('pfX').onclick=closeProfile;
+$('pf').addEventListener('click',function(e){ if(e.target===$('pf')) closeProfile(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !$('pf').hidden) closeProfile(); });
+$('pfSave').onclick=function(){ S.name=$('pfName').value.trim().slice(0,20); save(); $('pfMsg').textContent='Đã lưu tên.'; render(); };
+$('pfName').onkeydown=function(e){ if(e.key==='Enter'){ e.preventDefault(); $('pfSave').click(); } };
+/* teacher */
+$('tBtn').onclick=function(){ $('tBox').hidden=!$('tBox').hidden; if(!$('tBox').hidden) $('tPin').focus(); };
+$('tGo').onclick=function(){ if($('tPin').value.trim()===PIN){ S.teacher=true; save(); $('tMsg').textContent='Đã mở mọi trạm.'; $('tPin').value=''; render(); } else $('tMsg').textContent='Mã chưa đúng.'; };
+$('tOff').onclick=function(){ S.teacher=false; save(); render(); };
+var armed=false;
+$('tReset').onclick=function(){ if($('tPin').value.trim()!==PIN){ $('tMsg').textContent='Nhập mã giáo viên trước nhé.'; return; }
+  if(!armed){ armed=true; $('tReset').textContent='Bấm lần nữa để xoá'; return; }
+  armed=false; $('tReset').textContent='Xoá tiến độ trên bản đồ'; S.p={}; S.a={}; save(); if(C.site){ try{ ['canopy_u1_progress_v2','lc_open','lc_submit'].forEach(function(k){ localStorage.removeItem(k); }); }catch(e){} } sel=null; bubbleFor=0; $('tMsg').textContent='Đã xoá tiến độ trên bản đồ.'; render(); };
+
+ingest();
+window.addEventListener('hashchange',function(){ if(ingest()) render(); });
+/* coming back from a station page: read the shared progress again */
+window.addEventListener('pageshow',function(){ try{ var o=JSON.parse(localStorage.getItem(KEY)||'null'); if(o&&typeof o==='object') S=Object.assign({p:{},a:{},name:'',teacher:false,av:0},o); }catch(e){} render(); });
+render();
+})();
+</script>
+</body></html>

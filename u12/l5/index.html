@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cambridge Starters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Press+Start+2P&display=swap">
+<style>
+:root{--ink:#1d2433;--paper:#fffdf6;--bg:#f4efe2;--red:#e23b3b;--green:#2e9e4f;--blue:#2563eb;--sun:#ffd23f;--mute:#5d6577;--line:#d9d2bf}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Andika,"Segoe UI",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:940px;margin:0 auto;padding:12px max(12px,env(safe-area-inset-left,0px)) 28px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+.top h1{margin:0;font-size:1.25rem;flex:1 1 auto;min-width:0}
+.top h1 small{display:block;font-size:.85rem;font-weight:400;color:var(--mute)}
+.pxl{font-family:"Press Start 2P",monospace;font-size:10px;letter-spacing:.5px}
+.seg{display:flex;border:3px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink)}
+.seg button{border:0;background:none;padding:8px 12px;font-weight:700}
+.seg button.on{background:var(--ink);color:var(--sun)}
+.parts{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+.parts button{border:3px solid var(--ink);background:#fff;padding:6px 10px;font-weight:700;box-shadow:2px 2px 0 var(--ink);min-width:74px}
+.parts button.on{background:var(--sun)}
+.parts button .sc{display:block;font-size:.75rem;font-weight:400;color:var(--mute)}
+.parts button.done .sc{color:var(--green);font-weight:700}
+.help{background:#fff;border:3px solid var(--ink);padding:8px 12px;margin-bottom:10px;font-size:.95rem}
+.help b{color:var(--red)}
+.player{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--ink);color:#fff;padding:8px 10px;margin-bottom:10px;position:sticky;top:0;z-index:20}
+.player .pp{width:46px;height:46px;border:3px solid var(--sun);background:var(--sun);color:var(--ink);font-size:1.2rem;font-weight:700}
+.player input[type=range]{flex:1 1 160px;min-width:0;accent-color:var(--sun)}
+.player .t{font-variant-numeric:tabular-nums;font-size:.85rem;min-width:84px}
+.player .mk{display:flex;flex-wrap:wrap;gap:4px;flex-basis:100%}
+.player .mk button{border:2px solid #fff;background:transparent;color:#fff;padding:3px 9px;font-size:.85rem}
+.player .mk button.cur{background:var(--sun);color:var(--ink);border-color:var(--sun)}
+.palette{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#fff;border:3px solid var(--ink);padding:8px;margin-bottom:10px;position:sticky;top:0;z-index:19}
+.player+.palette{top:auto}
+#tool{position:sticky;top:0;z-index:20}
+#tool .player,#tool .palette{position:static}
+.palette .sw{width:40px;height:40px;border:3px solid var(--ink);border-radius:50%}
+.palette .sw.on{outline:4px solid var(--red);outline-offset:2px}
+.palette .pnm{font-weight:700;margin-left:6px}
+.pages{display:flex;flex-direction:column;gap:14px}
+.pg{position:relative;width:100%;container-type:inline-size;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.12);user-select:none;-webkit-user-select:none}
+.pg>img{display:block;width:100%;height:auto;pointer-events:none}
+.pg svg,.pg canvas{position:absolute;inset:0;width:100%;height:100%}
+.pg svg{pointer-events:none}
+.pg canvas{mix-blend-mode:multiply;pointer-events:none}
+.pg .cvhit{position:absolute;inset:0}
+.w{position:absolute}
+.w input{width:100%;height:100%;border:0;border-bottom:2px dashed #7a8aa8;background:rgba(255,248,200,.55);font:inherit;font-size:3.1cqw;text-align:center;color:#1a4fd1;padding:0 .4cqw}
+.w input:focus{outline:3px solid var(--sun);background:#fff8c8}
+.w input:disabled{color:#1a4fd1;opacity:1}
+.w input.ok{background:rgba(46,158,79,.18);border-bottom:3px solid var(--green)}
+.w input.no{background:rgba(226,59,59,.14);border-bottom:3px solid var(--red);color:#b42318}
+.nm{position:absolute;transform:translate(-50%,-50%);border:3px solid transparent;border-radius:12px;background:rgba(255,255,255,.01)}
+.nm.sel{border-color:var(--red);background:rgba(255,210,63,.35)}
+.nm.has{border-color:#1a4fd1}
+.ps{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:3px dashed transparent;background:transparent}
+.ps.armed{border-color:rgba(226,59,59,.65);background:rgba(255,210,63,.18)}
+.tk{position:absolute;border:0;background:transparent}
+.tk.on::after{content:"";position:absolute}
+.mark{position:absolute;transform:translate(-50%,-50%);font-size:4.4cqw;font-weight:700;color:#1a4fd1;pointer-events:none;line-height:1}
+.box{position:absolute;transform:translate(-50%,-50%);border:3px solid transparent;border-radius:6px;background:rgba(255,248,200,.25);display:flex;align-items:center;justify-content:center;font-size:3.6cqw;font-weight:700;color:#1a4fd1}
+.box:focus-visible,.tk:focus-visible,.nm:focus-visible,.ps:focus-visible,.yn button:focus-visible{outline:3px solid var(--red)}
+.yn{position:absolute;display:flex;gap:1cqw;align-items:stretch}
+.yn button{flex:1;border:2px solid #7a8aa8;background:rgba(255,255,255,.85);border-radius:8px;font-size:2.7cqw;padding:0}
+.yn button.on{background:#1a4fd1;color:#fff;border-color:#1a4fd1}
+.res{position:absolute;transform:translate(-50%,-50%);font-size:3.2cqw;font-weight:700;pointer-events:none;white-space:nowrap;padding:.2cqw .8cqw;border-radius:6px}
+.res.ok{color:#fff;background:var(--green)}
+.res.no{color:#fff;background:var(--red)}
+.res.key{color:#14532d;background:#d8f5df;border:2px solid var(--green);font-weight:700}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 4px}
+.btn{border:3px solid var(--ink);background:#fff;padding:9px 14px;font-weight:700;box-shadow:3px 3px 0 var(--ink)}
+.btn.go{background:var(--green);color:#fff}
+.btn.sun{background:var(--sun)}
+.btn:disabled{opacity:.5;cursor:default}
+.msg{font-weight:700}
+.msg.good{color:var(--green)}
+.sum{background:#fff;border:3px solid var(--ink);padding:12px 14px;margin-top:12px;box-shadow:3px 3px 0 var(--ink)}
+.sum h2{margin:0 0 6px;font-size:1.1rem}
+.shields{font-size:1.4rem;letter-spacing:2px}
+.note{font-size:.8rem;color:var(--mute);margin-top:12px}
+
+/* ---------- speaking ---------- */
+.sp-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:3px solid var(--ink);padding:10px;margin-bottom:10px}
+.sp-top input{font:inherit;padding:7px 10px;border:2px solid var(--ink);min-width:0;flex:1 1 180px}
+.sp-top label{font-weight:700}
+.scene{background:#fff;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);margin-bottom:10px}
+.scene img{display:block;width:100%;height:auto}
+.cards{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:12px}
+.cards button{border:3px solid var(--ink);padding:0;background:#fff;aspect-ratio:1}
+.cards button img{width:100%;height:100%;object-fit:cover;display:block}
+.cards button.on{outline:4px solid var(--red);outline-offset:1px}
+.bigcard{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+.bigcard img{max-width:min(80vw,420px);border:6px solid #fff;background:#fff}
+.spart{background:#fff;border:3px solid var(--ink);margin-bottom:10px}
+.spart>h3{margin:0;padding:8px 12px;background:var(--ink);color:var(--sun);font-size:1rem;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.spart>h3 small{color:#fff;font-weight:400}
+.qrow{display:grid;grid-template-columns:1fr auto;gap:6px 10px;padding:9px 12px;border-top:1px solid var(--line);align-items:center}
+.qrow .q{font-weight:700;min-width:0}
+.qrow .h{grid-column:1/2;font-size:.85rem;color:var(--mute)}
+.qrow .kind{font-size:.72rem;font-weight:700;border:2px solid var(--ink);padding:0 5px;margin-right:6px;background:var(--sun)}
+.qrow .kind.say{background:#bfe6ff}
+.qbtns{grid-column:2/3;grid-row:1/3;display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:300px}
+.qbtns button{border:2px solid var(--ink);background:#fff;padding:5px 8px;font-size:.82rem;font-weight:700;border-radius:6px}
+.qbtns button.on.r{background:var(--green);color:#fff}
+.qbtns button.on.h{background:#f59e0b;color:#fff}
+.qbtns button.on.x{background:var(--red);color:#fff}
+.qbtns button.on.f{background:#64748b;color:#fff}
+.tally{font-size:.9rem;margin:6px 0 10px;font-weight:700}
+.crit{background:#fff;border:3px solid var(--ink);padding:10px 12px;margin-bottom:10px}
+.crit h4{margin:0 0 4px;font-size:1rem}
+.crit .sug{font-size:.85rem;color:var(--mute)}
+.bands{display:flex;gap:4px;margin:6px 0}
+.bands button{flex:1;border:2px solid var(--ink);background:#fff;padding:6px 0;font-weight:700}
+.bands button.on{background:var(--ink);color:var(--sun)}
+.bands button.sg{box-shadow:inset 0 -5px 0 var(--sun)}
+.desc{font-size:.88rem;background:#f8f5ea;border-left:4px solid var(--sun);padding:6px 10px}
+.desc i{color:var(--mute)}
+.result{background:#fff;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:12px 14px}
+.result textarea{width:100%;min-height:70px;font:inherit;border:2px solid var(--ink);padding:6px}
+.hist{font-size:.85rem;margin-top:8px}
+.hist div{border-top:1px solid var(--line);padding:4px 0}
+@media (max-width:560px){.cards{grid-template-columns:repeat(4,1fr)}.qrow{grid-template-columns:1fr}.qbtns{grid-column:1;grid-row:auto;justify-content:flex-start;max-width:none}}
+@media (max-width:560px){#tool{position:static}.palette .sw{width:32px;height:32px}.player .pp{width:40px;height:40px}.player .mk button{padding:2px 7px}.top h1{font-size:1.05rem}.parts button{min-width:62px;padding:5px 7px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="top">
+    <h1 id="title">Cambridge English · Starters<small>Đề luyện thi YLE Starters</small></h1>
+    <div class="seg" id="skill" role="group" aria-label="Kỹ năng"><button data-k="L">🎧 Listening</button><button data-k="RW">📖 Reading &amp; Writing</button><button data-k="SP">🗣 Speaking</button></div>
+  </div>
+  <div class="parts" id="parts"></div>
+  <div class="help" id="help"></div>
+  <div id="tool"></div>
+  <div class="pages" id="pages"></div>
+  <div class="bar" id="bar">
+    <button class="btn go" id="check">✔ Chấm phần này</button>
+    <button class="btn" id="key" hidden>👀 Xem đáp án</button>
+    <button class="btn" id="redo">↺ Làm lại phần này</button>
+    <button class="btn sun" id="next">Phần tiếp theo ➜</button>
+    <span class="msg" id="msg" role="status"></span>
+  </div>
+  <div class="sum" id="sum" hidden></div>
+  <div id="spk" hidden></div>
+  <p class="note">Đề và audio trích từ <i>Cambridge English Starters 1 · Authentic Examination Papers</i> (Cambridge University Press, 2018), chỉ dùng cho lớp học.</p>
+</div>
+<script>
+const SPEC = {"t1":{"L":[{"type":"lines","pages":[{"img":"p05","names":[{"id":"mark","x":308,"y":348,"ans":"fish","ex":true},{"id":"eva","x":515,"y":348,"ans":"kite","ex":false},{"id":"dan","x":722,"y":348,"ans":"bat","ex":false},{"id":"alice","x":928,"y":348,"ans":"tgirl","ex":false},{"id":"grace","x":342,"y":1433,"ans":"read","ex":false},{"id":"nick","x":617,"y":1433,"ans":null,"ex":false},{"id":"alex","x":892,"y":1433,"ans":"skate","ex":false}],"persons":[{"id":"fish","x":775,"y":790,"r":62},{"id":"read","x":968,"y":715,"r":55},{"id":"bat","x":540,"y":690,"r":62},{"id":"skate","x":610,"y":1150,"r":80},{"id":"kite","x":290,"y":880,"r":62},{"id":"tgirl","x":262,"y":668,"r":48},{"id":"tboy","x":358,"y":690,"r":48}]}]},{"type":"input","pages":[{"img":"p06"},{"img":"p07","items":[{"q":1,"x1":752,"y":403,"x2":1030,"ans":["ben"]},{"q":2,"x1":752,"y":575,"x2":1030,"ans":["12","twelve"]},{"q":3,"x1":752,"y":746,"x2":1030,"ans":["5","five"]},{"q":4,"x1":752,"y":918,"x2":1030,"ans":["18","eighteen"]},{"q":5,"x1":757,"y":1090,"x2":1032,"ans":["hall"]}]}]},{"type":"tick","pages":[{"img":"p08","items":[{"q":0,"y":643,"xs":[390,672,953],"ans":"A","ex":true},{"q":1,"y":1071,"xs":[391,672,955],"ans":"B","ex":false},{"q":2,"y":1499,"xs":[391,674,956],"ans":"C","ex":false}]},{"img":"p09","items":[{"q":3,"y":494,"xs":[360,636,913],"ans":"B","ex":false},{"q":4,"y":913,"xs":[362,638,915],"ans":"B","ex":false},{"q":5,"y":1332,"xs":[364,640,917],"ans":"A","ex":false}]}]},{"type":"colour","pages":[{"img":"p10","objs":[{"id":"cup","x":965,"y":432,"rx":50,"ry":40,"ans":null,"ex":"brown"},{"id":"boy","x":770,"y":672,"rx":50,"ry":50,"ans":"pink","ex":null},{"id":"big","x":780,"y":1040,"rx":70,"ry":60,"ans":"yellow","ex":null},{"id":"mat","x":210,"y":1135,"rx":44,"ry":40,"ans":"orange","ex":null},{"id":"cat","x":478,"y":1422,"rx":42,"ry":46,"ans":"green","ex":null},{"id":"mum","x":265,"y":1315,"rx":48,"ry":48,"ans":"blue","ex":null},{"id":"tbl","x":1083,"y":1070,"rx":42,"ry":38,"ans":null,"ex":null}]}]}],"RW":[{"type":"tickx","pages":[{"img":"p11","items":[{"q":1,"x":984,"y":1411,"ans":"y"}]},{"img":"p12","items":[{"q":2,"x":1062,"y":287,"ans":"y"},{"q":3,"x":1064,"y":654,"ans":"n"},{"q":4,"x":1065,"y":1020,"ans":"n"},{"q":5,"x":1066,"y":1387,"ans":"y"}]}]},{"type":"yn","pages":[{"img":"p13","items":[{"q":1,"x1":755,"y":1320,"x2":1030,"ans":["no"]},{"q":2,"x1":755,"y":1382,"x2":1030,"ans":["yes"]},{"q":3,"x1":755,"y":1443,"x2":1030,"ans":["yes"]},{"q":4,"x1":755,"y":1504,"x2":1030,"ans":["no"]},{"q":5,"x1":755,"y":1565,"x2":1030,"ans":["yes"]}]}]},{"type":"input","spell":true,"pages":[{"img":"p14","items":[{"q":1,"x1":640,"y":735,"x2":770,"ans":["pear"]},{"q":2,"x1":625,"y":945,"x2":787,"ans":["lemon"]},{"q":3,"x1":608,"y":1160,"x2":805,"ans":["orange"]},{"q":4,"x1":608,"y":1355,"x2":805,"ans":["banana"]},{"q":5,"x1":550,"y":1555,"x2":848,"ans":["pineapple"]}]}]},{"type":"input","bank":["dinner","tablet","book","arm","kitchen","motorbike","rug"],"pages":[{"img":"p15","items":[{"q":1,"x1":390,"y":830,"x2":665,"ans":["kitchen"]},{"q":2,"x1":258,"y":880,"x2":530,"ans":["dinner"]},{"q":3,"x1":655,"y":930,"x2":930,"ans":["book"]},{"q":4,"x1":560,"y":980,"x2":835,"ans":["tablet"]},{"q":5,"x1":360,"y":1030,"x2":635,"ans":["rug"]}]}]},{"type":"input","pages":[{"img":"p16","items":[{"q":1,"x1":800,"y":1312,"x2":1080,"ans":["boy"]}]},{"img":"p17","items":[{"q":2,"x1":760,"y":635,"x2":1040,"ans":["4","four"]},{"q":3,"x1":760,"y":752,"x2":1040,"ans":["monkey"]},{"q":4,"x1":760,"y":1322,"x2":1040,"ans":["girl"]},{"q":5,"x1":760,"y":1440,"x2":1040,"ans":["pointing"]}]}]}]},"t2":{"L":[{"type":"lines","pages":[{"img":"p18","names":[{"id":"mark","x":315,"y":360,"ans":"boat","ex":false},{"id":"jill","x":520,"y":360,"ans":"water","ex":false},{"id":"pat","x":730,"y":360,"ans":null,"ex":false},{"id":"alice","x":935,"y":360,"ans":"read","ex":false},{"id":"tom","x":350,"y":1450,"ans":"cap","ex":true},{"id":"grace","x":625,"y":1450,"ans":"chips","ex":false},{"id":"hugo","x":900,"y":1450,"ans":"burger","ex":false}],"persons":[{"id":"water","x":318,"y":790,"r":62},{"id":"boat","x":625,"y":600,"r":55},{"id":"bad","x":640,"y":830,"r":62},{"id":"burger","x":910,"y":715,"r":55},{"id":"cap","x":745,"y":1060,"r":70},{"id":"read","x":330,"y":1200,"r":80},{"id":"chips","x":950,"y":1250,"r":75}]}]},{"type":"input","pages":[{"img":"p19"},{"img":"p20","items":[{"q":1,"x1":750,"y":410,"x2":1025,"ans":["12","twelve"]},{"q":2,"x1":668,"y":580,"x2":940,"ans":["robot"]},{"q":3,"x1":750,"y":750,"x2":1025,"ans":["6","six"]},{"q":4,"x1":750,"y":922,"x2":1025,"ans":["lucy"]},{"q":5,"x1":750,"y":1093,"x2":1025,"ans":["3","three"]}]}]},{"type":"tick","pages":[{"img":"p21","items":[{"q":0,"y":680,"xs":[382,664,946],"ans":"A","ex":true},{"q":1,"y":1109,"xs":[383,665,948],"ans":"A","ex":false},{"q":2,"y":1537,"xs":[384,666,948],"ans":"C","ex":false}]},{"img":"p22","items":[{"q":3,"y":511,"xs":[360,636,911],"ans":"B","ex":false},{"q":4,"y":929,"xs":[362,637,912],"ans":"B","ex":false},{"q":5,"y":1347,"xs":[363,638,914],"ans":"A","ex":false}]}]},{"type":"colour","pages":[{"img":"p23","objs":[{"id":"rug","x":490,"y":1320,"rx":65,"ry":45,"ans":null,"ex":"brown"},{"id":"truck","x":330,"y":590,"rx":82,"ry":52,"ans":"blue","ex":null},{"id":"small","x":650,"y":645,"rx":105,"ry":62,"ans":"green","ex":null},{"id":"fence","x":310,"y":972,"rx":62,"ry":40,"ans":"yellow","ex":null},{"id":"tree","x":822,"y":910,"rx":58,"ry":42,"ans":"red","ex":null},{"id":"boy","x":475,"y":1208,"rx":62,"ry":45,"ans":null,"ex":null},{"id":"dog","x":745,"y":1255,"rx":57,"ry":48,"ans":"purple","ex":null}]}]}],"RW":[{"type":"tickx","pages":[{"img":"p24","items":[{"q":1,"x":993,"y":1403,"ans":"y"}]},{"img":"p25","items":[{"q":2,"x":1037,"y":303,"ans":"n"},{"q":3,"x":1036,"y":666,"ans":"y"},{"q":4,"x":1034,"y":1028,"ans":"y"},{"q":5,"x":1033,"y":1392,"ans":"n"}]}]},{"type":"yn","pages":[{"img":"p26","items":[{"q":1,"x1":760,"y":1320,"x2":1035,"ans":["no"]},{"q":2,"x1":760,"y":1382,"x2":1035,"ans":["yes"]},{"q":3,"x1":760,"y":1443,"x2":1035,"ans":["no"]},{"q":4,"x1":760,"y":1504,"x2":1035,"ans":["yes"]},{"q":5,"x1":760,"y":1565,"x2":1035,"ans":["yes"]}]}]},{"type":"input","spell":true,"pages":[{"img":"p27","items":[{"q":1,"x1":620,"y":705,"x2":750,"ans":["fish"]},{"q":2,"x1":605,"y":890,"x2":768,"ans":["bread"]},{"q":3,"x1":605,"y":1075,"x2":768,"ans":["chips"]},{"q":4,"x1":588,"y":1250,"x2":785,"ans":["tomato"]},{"q":5,"x1":588,"y":1455,"x2":785,"ans":["burger"]}]}]},{"type":"input","bank":["piano","kiwi","kitchen","television","ruler","pictures","sofa"],"pages":[{"img":"p28","items":[{"q":1,"x1":412,"y":887,"x2":688,"ans":["kitchen"]},{"q":2,"x1":258,"y":937,"x2":532,"ans":["television"]},{"q":3,"x1":333,"y":987,"x2":610,"ans":["sofa"]},{"q":4,"x1":343,"y":1038,"x2":618,"ans":["piano"]},{"q":5,"x1":258,"y":1088,"x2":532,"ans":["pictures"]}]}]},{"type":"input","pages":[{"img":"p29","items":[{"q":1,"x1":805,"y":1325,"x2":1090,"ans":["flowers","flower"]}]},{"img":"p30","items":[{"q":2,"x1":758,"y":632,"x2":1028,"ans":["cat"]},{"q":3,"x1":758,"y":748,"x2":1028,"ans":["flying"]},{"q":4,"x1":760,"y":1313,"x2":1028,"ans":["tree"]},{"q":5,"x1":760,"y":1430,"x2":1028,"ans":["kite"]}]}]}]},"t3":{"L":[{"type":"lines","pages":[{"img":"p31","names":[{"id":"matt","x":315,"y":370,"ans":"pencil","ex":false},{"id":"tom","x":520,"y":370,"ans":null,"ex":false},{"id":"hugo","x":722,"y":370,"ans":"back","ex":true},{"id":"lucy","x":925,"y":370,"ans":"door","ex":false},{"id":"sue","x":350,"y":1440,"ans":"cap","ex":false},{"id":"jill","x":622,"y":1440,"ans":"sit","ex":false},{"id":"alex","x":893,"y":1440,"ans":"paint","ex":false}],"persons":[{"id":"back","x":570,"y":720,"r":60},{"id":"cap","x":465,"y":810,"r":55},{"id":"door","x":890,"y":740,"r":60},{"id":"teacher","x":700,"y":880,"r":60},{"id":"sit","x":860,"y":960,"r":55},{"id":"paint","x":590,"y":1080,"r":60},{"id":"pencil","x":330,"y":1060,"r":70}]}]},{"type":"input","pages":[{"img":"p32"},{"img":"p33","items":[{"q":1,"x1":750,"y":418,"x2":1025,"ans":["ugly"]},{"q":2,"x1":750,"y":640,"x2":1025,"ans":["15","fifteen"]},{"q":3,"x1":750,"y":825,"x2":1025,"ans":["rice"]},{"q":4,"x1":750,"y":1012,"x2":1025,"ans":["20","twenty"]},{"q":5,"x1":668,"y":1197,"x2":942,"ans":["park"]}]}]},{"type":"tick","pages":[{"img":"p34","items":[{"q":0,"y":652,"xs":[389,674,959],"ans":"B","ex":true},{"q":1,"y":1084,"xs":[388,674,959],"ans":"C","ex":false},{"q":2,"y":1516,"xs":[388,673,958],"ans":"A","ex":false}]},{"img":"p35","items":[{"q":3,"y":501,"xs":[357,638,919],"ans":"A","ex":false},{"q":4,"y":926,"xs":[358,639,919],"ans":"B","ex":false},{"q":5,"y":1351,"xs":[359,640,920],"ans":"C","ex":false}]}]},{"type":"colour","pages":[{"img":"p36","objs":[{"id":"car","x":970,"y":840,"rx":50,"ry":40,"ans":null,"ex":"blue"},{"id":"roof","x":572,"y":437,"rx":68,"ry":45,"ans":"green","ex":null},{"id":"tree","x":362,"y":783,"rx":40,"ry":35,"ans":"yellow","ex":null},{"id":"dog","x":635,"y":735,"rx":34,"ry":22,"ans":"pink","ex":null},{"id":"chair","x":683,"y":1125,"rx":40,"ry":37,"ans":null,"ex":null},{"id":"flower","x":295,"y":1300,"rx":52,"ry":32,"ans":"brown","ex":null},{"id":"feet","x":1060,"y":1435,"rx":47,"ry":37,"ans":"red","ex":null}]}]}],"RW":[{"type":"tickx","pages":[{"img":"p37","items":[{"q":1,"x":995,"y":1416,"ans":"n"}]},{"img":"p38","items":[{"q":2,"x":995,"y":308,"ans":"y"},{"q":3,"x":995,"y":667,"ans":"n"},{"q":4,"x":996,"y":1025,"ans":"n"},{"q":5,"x":996,"y":1384,"ans":"y"}]}]},{"type":"yn","pages":[{"img":"p39","items":[{"q":1,"x1":762,"y":1345,"x2":1040,"ans":["yes"]},{"q":2,"x1":762,"y":1405,"x2":1040,"ans":["no"]},{"q":3,"x1":762,"y":1468,"x2":1040,"ans":["no"]},{"q":4,"x1":762,"y":1560,"x2":1040,"ans":["yes"]},{"q":5,"x1":762,"y":1622,"x2":1040,"ans":["no"]}]}]},{"type":"input","spell":true,"pages":[{"img":"p40","items":[{"q":1,"x1":597,"y":700,"x2":725,"ans":["lamp"]},{"q":2,"x1":597,"y":887,"x2":725,"ans":["sofa"]},{"q":3,"x1":580,"y":1075,"x2":742,"ans":["clock"]},{"q":4,"x1":563,"y":1260,"x2":760,"ans":["mirror"]},{"q":5,"x1":530,"y":1445,"x2":795,"ans":["computer"]}]}]},{"type":"input","bank":["pencil","fish","books","hippo","hats","football","sand"],"pages":[{"img":"p41","items":[{"q":1,"x1":313,"y":848,"x2":577,"ans":["hats"]},{"q":2,"x1":508,"y":900,"x2":770,"ans":["books"]},{"q":3,"x1":475,"y":951,"x2":740,"ans":["sand"]},{"q":4,"x1":248,"y":1002,"x2":530,"ans":["football"]},{"q":5,"x1":782,"y":1002,"x2":1045,"ans":["fish"]}]}]},{"type":"input","pages":[{"img":"p42","items":[{"q":1,"x1":760,"y":1278,"x2":1042,"ans":["phone","telephone","mobile","mobile phone"]}]},{"img":"p43","items":[{"q":2,"x1":760,"y":657,"x2":1042,"ans":["table"]},{"q":3,"x1":760,"y":777,"x2":1042,"ans":["boy"]},{"q":4,"x1":760,"y":1365,"x2":1042,"ans":["cake"]},{"q":5,"x1":760,"y":1488,"x2":1042,"ans":["dad","father"]}]}]}]}};
+const SPK = {"t1": {"scene": "scene44", "place": "a shop", "cards": ["c45_clock", "c45_shell", "c45_book", "c45_fish", "c45_pen", "c45_eyes", "c45_bear", "c45_guitar"], "parts": [{"n": 1, "title": "Instructions and objects", "vi": "Con chỉ vào tranh và đặt thẻ theo lời cô", "items": [{"k": "say", "q": "Hello. What's your name?", "hint": "My name is … / tên của con", "vi": "Chào hỏi, hỏi tên", "card": null}, {"k": "act", "q": "Look at the picture. This is a shop. Where is the bread? Point to the bread.", "hint": "con chỉ vào bánh mì", "vi": ""}, {"k": "act", "q": "Where is the monkey?", "hint": "con chỉ vào con khỉ đồ chơi trên sàn", "vi": ""}, {"k": "act", "q": "Look at these cards: here is a clock, a fish, a guitar. Point to the fish.", "hint": "con chỉ thẻ con cá", "vi": ""}, {"k": "act", "q": "Put the clock on the table.", "hint": "đặt thẻ đồng hồ lên cái bàn vàng", "vi": ""}, {"k": "act", "q": "Put the fish next to the flowers.", "hint": "đặt thẻ con cá cạnh chậu hoa", "vi": ""}]}, {"n": 2, "title": "Questions about the scene", "vi": "Hỏi về bức tranh lớn", "items": [{"k": "say", "q": "(point to a pineapple) What is this?", "hint": "a pineapple / pineapple", "vi": "", "card": null}, {"k": "say", "q": "What colour is it?", "hint": "yellow", "vi": "", "card": null}, {"k": "say", "q": "How many babies are there?", "hint": "two", "vi": "", "card": null}, {"k": "say", "q": "What is the woman doing?", "hint": "(she’s) talking on the phone / phoning", "vi": "", "card": null}, {"k": "say", "q": "(point to the man) Tell me about this man.", "hint": "He's got a basket. / He's happy. / He's walking.", "vi": "Con nói 1–2 ý là đạt", "card": null}]}, {"n": 3, "title": "Questions about the object cards", "vi": "Hỏi về các thẻ đồ vật", "items": [{"k": "say", "q": "(show the bear card) What's this?", "hint": "a bear", "vi": "", "card": "c45_bear"}, {"k": "say", "q": "(show the guitar card) What's this?", "hint": "a guitar", "vi": "", "card": "c45_guitar"}, {"k": "say", "q": "Have you got a guitar?", "hint": "Yes. / No.", "vi": "", "card": null}, {"k": "say", "q": "(show the pen card) What's this? What colour is it?", "hint": "a pen · blue", "vi": "", "card": "c45_pen"}, {"k": "say", "q": "Do you like fish?", "hint": "Yes, I do. / No.", "vi": "", "card": "c45_fish"}]}, {"n": 4, "title": "Questions about the child", "vi": "Hỏi về bản thân con", "items": [{"k": "say", "q": "How old are you?", "hint": "I'm seven. / Seven.", "vi": "", "card": null}, {"k": "say", "q": "What's your favourite colour?", "hint": "Blue. / I like blue.", "vi": "", "card": null}, {"k": "say", "q": "Have you got a brother or a sister?", "hint": "Yes. / No. / One sister.", "vi": "", "card": null}, {"k": "say", "q": "Tell me about your friend.", "hint": "Her name's … / He's eight. / He likes football.", "vi": "Gợi ý thêm nếu con im lặng: “What’s your friend’s name? How old is he/she?”", "card": null}]}]}, "t2": {"scene": "scene46", "place": "a garden", "cards": ["c47_lemon", "c47_fish", "c47_dress", "c47_guitar", "c47_bag", "c47_mouse", "c47_phone", "c47_bike"], "parts": [{"n": 1, "title": "Instructions and objects", "vi": "Con chỉ vào tranh và đặt thẻ theo lời cô", "items": [{"k": "say", "q": "Hello. What's your name?", "hint": "My name is … / tên của con", "vi": "Chào hỏi, hỏi tên", "card": null}, {"k": "act", "q": "Look at the picture. This is a garden. Where is the ball? Point to the ball.", "hint": "con chỉ quả bóng", "vi": ""}, {"k": "act", "q": "Where is the crocodile?", "hint": "con chỉ con cá sấu", "vi": ""}, {"k": "act", "q": "Look at these cards: here is a mouse, a bike, a lemon. Point to the bike.", "hint": "con chỉ thẻ xe đạp", "vi": ""}, {"k": "act", "q": "Put the mouse next to the ball.", "hint": "đặt thẻ con chuột cạnh quả bóng", "vi": ""}, {"k": "act", "q": "Put the bike under the tree.", "hint": "đặt thẻ xe đạp dưới cây dừa", "vi": ""}]}, {"n": 2, "title": "Questions about the scene", "vi": "Hỏi về bức tranh lớn", "items": [{"k": "say", "q": "(point to the crocodile) What is this?", "hint": "a crocodile", "vi": "", "card": null}, {"k": "say", "q": "(point to the towel) What colour is it?", "hint": "pink / purple", "vi": "", "card": null}, {"k": "say", "q": "How many girls are there?", "hint": "three", "vi": "", "card": null}, {"k": "say", "q": "(point to the girl in the pool) What is she doing?", "hint": "(she’s) swimming / waving", "vi": "", "card": null}, {"k": "say", "q": "(point to the woman) Tell me about this woman.", "hint": "She's reading. / She's got a book.", "vi": "Con nói 1–2 ý là đạt", "card": null}]}, {"n": 3, "title": "Questions about the object cards", "vi": "Hỏi về các thẻ đồ vật", "items": [{"k": "say", "q": "(show the phone card) What's this?", "hint": "a phone", "vi": "", "card": "c47_phone"}, {"k": "say", "q": "Have you got a phone?", "hint": "Yes. / No.", "vi": "", "card": null}, {"k": "say", "q": "(show the dress card) What's this? What colour is it?", "hint": "a dress · red", "vi": "", "card": "c47_dress"}, {"k": "say", "q": "(show the bike card) What's this?", "hint": "a bike", "vi": "", "card": "c47_bike"}, {"k": "say", "q": "Can you ride a bike?", "hint": "Yes, I can. / No.", "vi": "", "card": null}]}, {"n": 4, "title": "Questions about the child", "vi": "Hỏi về bản thân con", "items": [{"k": "say", "q": "How old are you?", "hint": "I'm eight.", "vi": "", "card": null}, {"k": "say", "q": "What's your favourite animal?", "hint": "A dog. / Cats.", "vi": "", "card": null}, {"k": "say", "q": "What do you have for breakfast?", "hint": "Bread. / Eggs and milk.", "vi": "", "card": null}, {"k": "say", "q": "Tell me about your house.", "hint": "It's big. / It's got a garden.", "vi": "Gợi ý thêm: “Is it big? Have you got a garden?”", "card": null}]}]}, "t3": {"scene": "scene48", "place": "a living room", "cards": ["c49_rubber", "c49_grapes", "c49_balloon", "c49_sunglasses", "c49_elephant", "c49_radio", "c49_egg", "c49_basketball"], "parts": [{"n": 1, "title": "Instructions and objects", "vi": "Con chỉ vào tranh và đặt thẻ theo lời cô", "items": [{"k": "say", "q": "Hello. What's your name?", "hint": "My name is … / tên của con", "vi": "Chào hỏi, hỏi tên", "card": null}, {"k": "act", "q": "Look at the picture. This is a living room. Where is the baby? Point to the baby.", "hint": "con chỉ em bé đang ngủ", "vi": ""}, {"k": "act", "q": "Where is the lamp?", "hint": "con chỉ cái đèn", "vi": ""}, {"k": "act", "q": "Look at these cards: here is a balloon, an egg, an elephant. Point to the egg.", "hint": "con chỉ thẻ quả trứng", "vi": ""}, {"k": "act", "q": "Put the balloon on the sofa.", "hint": "đặt thẻ bóng bay lên ghế sofa", "vi": ""}, {"k": "act", "q": "Put the elephant under the table.", "hint": "đặt thẻ con voi dưới cái bàn", "vi": ""}]}, {"n": 2, "title": "Questions about the scene", "vi": "Hỏi về bức tranh lớn", "items": [{"k": "say", "q": "(point to the television) What is this?", "hint": "a television / a TV", "vi": "", "card": null}, {"k": "say", "q": "(point to the lamp) What colour is it?", "hint": "blue", "vi": "", "card": null}, {"k": "say", "q": "How many lorries are there?", "hint": "two", "vi": "", "card": null}, {"k": "say", "q": "What is the baby doing?", "hint": "(he’s / she’s) sleeping", "vi": "", "card": null}, {"k": "say", "q": "(point to the boy) Tell me about this boy.", "hint": "He's on the sofa. / He's playing.", "vi": "Con nói 1–2 ý là đạt", "card": null}]}, {"n": 3, "title": "Questions about the object cards", "vi": "Hỏi về các thẻ đồ vật", "items": [{"k": "say", "q": "(show the radio card) What's this?", "hint": "a radio", "vi": "", "card": "c49_radio"}, {"k": "say", "q": "(show the sunglasses card) What are these?", "hint": "sunglasses / glasses", "vi": "", "card": "c49_sunglasses"}, {"k": "say", "q": "Do you like grapes?", "hint": "Yes, I do. / No.", "vi": "", "card": "c49_grapes"}, {"k": "say", "q": "(show the basketball card) What's this?", "hint": "a basketball / a ball", "vi": "", "card": "c49_basketball"}, {"k": "say", "q": "Can you play basketball?", "hint": "Yes, I can. / No.", "vi": "", "card": null}]}, {"n": 4, "title": "Questions about the child", "vi": "Hỏi về bản thân con", "items": [{"k": "say", "q": "How old are you?", "hint": "I'm seven.", "vi": "", "card": null}, {"k": "say", "q": "What's your favourite toy?", "hint": "My robot. / A ball.", "vi": "", "card": null}, {"k": "say", "q": "Who is in your family?", "hint": "Mum, dad and my sister.", "vi": "", "card": null}, {"k": "say", "q": "Tell me about your bedroom.", "hint": "It's small. / I've got a bed and a desk.", "vi": "Gợi ý thêm: “Is it big? What’s in your bedroom?”", "card": null}]}]}};
+const MARKS = {"01": {"ex": 58.64, "1": 103.96000000000001, "2": 126.16, "3": 147.39999999999998, "4": 168.48, "5": 188.78, "again": 212.5, "end": 325.54}, "02": {"ex": 0, "1": 57.36, "2": 87.84, "3": 116.08, "4": 147.57999999999998, "5": 179.76, "again": 208.0, "end": 347.96}, "03": {"ex": 0, "1": 48.34, "2": 81.62, "3": 112.82000000000001, "4": 152.22, "5": 183.48, "again": 223.42, "end": 396.64}, "04": {"ex": 0, "1": 54.64, "2": 88.0, "3": 124.10000000000001, "4": 154.82, "5": 186.73999999999998, "again": 226.36, "end": 420.76}, "05": {"ex": 42.46, "1": 96.44, "2": 121.02, "3": 143.83999999999997, "4": 172.73999999999998, "5": 191.54, "again": 219.04, "end": 342.36}, "06": {"ex": 0, "1": 56.620000000000005, "2": 80.44, "3": 111.22, "4": 134.11999999999998, "5": 162.23999999999998, "again": 189.82, "end": 306.58}, "07": {"ex": 0, "1": 45.74, "2": 75.26, "3": 103.38000000000001, "4": 130.2, "5": 161.66, "again": 185.86, "end": 325.5}, "08": {"ex": 0, "1": 43.260000000000005, "2": 78.0, "3": 117.48, "4": 154.35999999999999, "5": 188.89999999999998, "again": 224.02, "end": 426.92}, "09": {"ex": 42.720000000000006, "1": 84.84, "2": 104.52, "3": 122.8, "4": 140.51999999999998, "5": 159.32, "again": 179.18, "end": 272.04}, "10": {"ex": 0, "1": 61.900000000000006, "2": 92.88000000000001, "3": 122.26, "4": 155.57999999999998, "5": 184.57999999999998, "again": 217.98, "end": 358.56}, "11": {"ex": 0, "1": 45.660000000000004, "2": 73.0, "3": 97.48, "4": 127.4, "5": 157.2, "again": 183.88, "end": 318.24}, "12": {"ex": 0, "again": 223.52, "end": 425.06, "1": 45.7, "2": 79.7, "3": 117.7, "4": 151.4, "5": 183.0}};
+const PW = 1241, PH = 1754;
+const COLS = {red:'#e53935',blue:'#1e66f5',green:'#2ea043',yellow:'#ffd400',orange:'#ff8c1a',pink:'#ff6fb5',purple:'#8e44ad',brown:'#8b5a2b',black:'#2b2b2b',grey:'#9aa0a6'};
+const COLVI = {red:'đỏ',blue:'xanh dương',green:'xanh lá',yellow:'vàng',orange:'cam',pink:'hồng',purple:'tím',brown:'nâu',black:'đen',grey:'xám'};
+const TID = (location.hash.replace('#','')||'t1');
+const T = SPEC[TID] || SPEC.t1;
+const TN = TID.slice(1);
+const AUD = {t1:['01','02','03','04'],t2:['05','06','07','08'],t3:['09','10','11','12']}[TID] || ['01','02','03','04'];
+const HELP = {
+  lines:'<b>Listen and draw lines.</b> Nghe, rồi chạm vào <b>một tên</b> và chạm vào <b>người</b> trong tranh để nối. Chạm lại tên đó để nối lại.',
+  input:'<b>Listen and write a name or a number.</b> Nghe và viết tên hoặc số vào chỗ chấm.',
+  tick:'<b>Listen and tick (✔) the box.</b> Nghe và chạm vào bức tranh đúng.',
+  colour:'<b>Listen and colour.</b> Chọn một màu ở bảng màu, rồi chạm vào đồ vật trong tranh để tô.',
+  tickx:'<b>Look and read. Put a tick (✔) or a cross (✘) in the box.</b> Chạm vào ô: lần 1 là ✔, lần 2 là ✘.',
+  yn:'<b>Look and read. Write yes or no.</b> Nhìn tranh, đọc câu rồi chọn <b>yes</b> hoặc <b>no</b>.',
+  spell:'<b>Look at the pictures. Look at the letters. Write the words.</b> Sắp xếp các chữ cái thành từ đúng.',
+  bank:'<b>Read this. Choose a word from the box.</b> Đọc đoạn văn, chọn từ trong khung và viết vào chỗ trống 1–5.',
+  short:'<b>Look at the pictures and read the questions. Write one-word answers.</b> Trả lời bằng <b>một từ</b>.'};
+const KEY = 'canopy12_yle_'+TID;
+let S = load();
+let skill = S.skill||'L', part = S.part||0, pal = 'red';
+
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return {}; } }
+function save(){ S.skill=skill; S.part=part; try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+const $ = id => document.getElementById(id);
+const pct = (v,d) => (v/d*100)+'%';
+const pid = () => skill+part;
+const P = () => T[skill][part];
+const p0 = () => T[skill][part];
+const st = () => (S[pid()] = S[pid()] || {});
+const norm = s => String(s||'').toLowerCase().replace(/[.,!?'’"]/g,'').replace(/\s+/g,' ').trim().replace(/^(the|a|an|mrs|mr|miss)\s+/,'').replace(/\s+school$/,'');
+const helpOf = p => p.type==='input' ? (p.spell?HELP.spell : p.bank?HELP.bank : skill==='RW'?HELP.short:HELP.input) : HELP[p.type];
+
+/* ---------- top-level painting ---------- */
+function paint(){
+  const sp=skill==='SP'; ['parts','help','tool','pages','bar','sum'].forEach(id=>$(id).hidden=sp); $('spk').hidden=!sp;
+  document.querySelectorAll('#skill button').forEach(b=>{ b.classList.toggle('on', b.dataset.k===skill); b.setAttribute('aria-pressed', b.dataset.k===skill); });
+  if(sp){ stopAudio(); $('title').innerHTML=`Cambridge English · Starters · Test ${TN}<small>Speaking · công cụ chấm cho giáo viên / phụ huynh</small>`; paintSP(); save(); postH(); return; }
+  $('title').innerHTML = `Cambridge English · Starters · Test ${TN}<small>Đề luyện thi YLE Starters · chọn phần, làm bài rồi bấm “Chấm phần này”</small>`;
+  document.querySelectorAll('#skill button').forEach(b=>{ b.classList.toggle('on', b.dataset.k===skill); b.setAttribute('aria-pressed', b.dataset.k===skill); });
+  $('parts').innerHTML = T[skill].map((p,i)=>{ const r=S['res_'+skill+i]; return `<button class="${i===part?'on':''} ${r?'done':''}" data-i="${i}">Part ${i+1}<span class="sc">${r?`${r.ok}/${r.n} ✓`:'chưa chấm'}</span></button>`; }).join('');
+  $('parts').querySelectorAll('button').forEach(b=>b.onclick=()=>{ stopAudio(); part=+b.dataset.i; save(); paint(); window.scrollTo(0,0); });
+  const p = P();
+  $('help').innerHTML = `<span class="pxl">${skill==='L'?'LISTENING':'READING & WRITING'} · PART ${part+1}</span><br>${helpOf(p)}`;
+  $('tool').innerHTML=''; stopAudio();
+  if(skill==='L') audioBar(); if(p.type==='colour') paletteBar();
+  renderPages();
+  const r=S['res_'+pid()];
+  $('key').hidden = !r; $('msg').textContent = r ? `Phần này: ${r.ok}/${r.n} câu đúng.` : ''; $('msg').className='msg'+(r&&r.ok===r.n?' good':'');
+  $('next').hidden = (skill==='RW' && part===T.RW.length-1);
+  summary(); postH();
+}
+$('skill').querySelectorAll('button').forEach(b=>b.onclick=()=>{ stopAudio(); skill=b.dataset.k; part=0; save(); paint(); });
+$('check').onclick=()=>{ grade(true); };
+$('key').onclick=()=>{ S['key_'+pid()] = !S['key_'+pid()]; save(); renderPages(); };
+$('redo').onclick=()=>{ delete S[pid()]; delete S['res_'+pid()]; delete S['key_'+pid()]; save(); paint(); };
+$('next').onclick=()=>{ stopAudio(); if(part<T[skill].length-1) part++; else if(skill==='L'){ skill='RW'; part=0; } save(); paint(); window.scrollTo(0,0); };
+
+/* ---------- audio ---------- */
+let au=null;
+function stopAudio(){ if(au){ try{ au.pause(); }catch(e){} } }
+function audioBar(){
+  const code=AUD[part], M=MARKS[code]||{};
+  const fmt=s=>{ s=Math.max(0,Math.floor(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+  const mk=[['ex','Ví dụ'],['1','Câu 1'],['2','Câu 2'],['3','Câu 3'],['4','Câu 4'],['5','Câu 5'],['again','Nghe lần 2']].filter(m=>M[m[0]]!=null);
+  $('tool').insertAdjacentHTML('beforeend',`<div class="player"><button class="pp" id="pp" aria-label="Phát / dừng">▶</button><input type="range" id="seek" min="0" max="${Math.ceil(M.end||300)}" value="0" step="0.5" aria-label="Vị trí"><span class="t" id="tm">0:00 / ${fmt(M.end)}</span>
+    <div class="mk">${mk.map(m=>`<button data-t="${M[m[0]]}" data-k="${m[0]}">${m[1]}</button>`).join('')}</div></div>`);
+  au=new Audio(`au/a${code}.mp3`); au.preload='metadata';
+  const pp=$('pp'), seek=$('seek');
+  pp.onclick=()=>{ if(au.paused) au.play().catch(()=>{}); else au.pause(); };
+  au.onplay=()=>pp.textContent='⏸'; au.onpause=()=>pp.textContent='▶';
+  au.ontimeupdate=()=>{ seek.value=au.currentTime; $('tm').textContent=`${fmt(au.currentTime)} / ${fmt(au.duration||M.end)}`;
+    let cur=null; mk.forEach(m=>{ if(au.currentTime>=M[m[0]]) cur=m[0]; });
+    document.querySelectorAll('.player .mk button').forEach(b=>b.classList.toggle('cur',b.dataset.k===cur)); };
+  seek.oninput=()=>{ au.currentTime=+seek.value; };
+  document.querySelectorAll('.player .mk button').forEach(b=>b.onclick=()=>{ au.currentTime=+b.dataset.t; au.play().catch(()=>{}); });
+}
+function paletteBar(){
+  $('tool').insertAdjacentHTML('beforeend',`<div class="palette" role="group" aria-label="Bảng màu">${Object.keys(COLS).map(c=>`<button class="sw${c===pal?' on':''}" data-c="${c}" style="background:${COLS[c]}" aria-label="${c} · ${COLVI[c]}"></button>`).join('')}
+    <button class="sw${pal==='erase'?' on':''}" data-c="erase" style="background:#fff" aria-label="Tẩy">🧽</button><span class="pnm" id="palnm"></span></div>`);
+  const nm=()=>$('palnm').textContent = pal==='erase' ? 'Tẩy màu' : `${pal} · ${COLVI[pal]}`;
+  document.querySelectorAll('.palette .sw').forEach(b=>b.onclick=()=>{ pal=b.dataset.c; document.querySelectorAll('.palette .sw').forEach(x=>x.classList.toggle('on',x===b)); nm(); }); nm();
+}
+
+/* ---------- pages ---------- */
+function renderPages(){
+  const p=P(), s=st(), r=S['res_'+pid()], showKey=!!S['key_'+pid()];
+  $('pages').innerHTML = p.pages.map((g,gi)=>`<div class="pg" data-g="${gi}"><img src="pg/${g.img}.webp" alt="Test ${TN} ${skill==='L'?'Listening':'Reading and Writing'} Part ${part+1}, trang ${gi+1}" ${gi===0?'':'loading="lazy"'}></div>`).join('');
+  document.querySelectorAll('.pg').forEach(el=>{ const g=p.pages[+el.dataset.g]; const img=el.querySelector('img'); img.onload=postH;
+    if(p.type==='lines') lines(el,g,s,r,showKey);
+    else if(p.type==='input') inputs(el,g,s,r,showKey);
+    else if(p.type==='yn') yn(el,g,s,r,showKey);
+    else if(p.type==='tick') tick(el,g,s,r,showKey);
+    else if(p.type==='tickx') tickx(el,g,s,r,showKey);
+    else if(p.type==='colour') colour(el,g,s,r,showKey); });
+}
+const res = (el,x,y,ok,txt) => { const d=document.createElement('div'); d.className='res '+(ok===true?'ok':ok===false?'no':'key'); d.style.left=pct(x,PW); d.style.top=pct(y,PH); d.textContent=txt; el.appendChild(d); };
+
+/* Part type: draw lines */
+function lines(el,g,s,r,showKey){
+  s.ln = s.ln||{};
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('viewBox',`0 0 ${PW} ${PH}`); svg.setAttribute('preserveAspectRatio','none'); el.appendChild(svg);
+  const anchor = n => [n.x, n.y + (n.y<PH/2 ? 26 : -30)];
+  const draw = () => { svg.innerHTML=''; const add=(n,pid2,col,dash)=>{ const ps=g.persons.find(x=>x.id===pid2); if(!ps) return; const [x1,y1]=anchor(n);
+      const l=document.createElementNS('http://www.w3.org/2000/svg','line'); l.setAttribute('x1',x1); l.setAttribute('y1',y1); l.setAttribute('x2',ps.x); l.setAttribute('y2',ps.y);
+      l.setAttribute('stroke',col); l.setAttribute('stroke-width',6); l.setAttribute('stroke-linecap','round'); if(dash) l.setAttribute('stroke-dasharray','14 10'); svg.appendChild(l);
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle'); c.setAttribute('cx',ps.x); c.setAttribute('cy',ps.y); c.setAttribute('r',9); c.setAttribute('fill',col); svg.appendChild(c); };
+    g.names.forEach(n=>{ if(s.ln[n.id]) add(n,s.ln[n.id], r ? (s.ln[n.id]===n.ans?'#2e9e4f':'#e23b3b') : '#1a4fd1'); });
+    if(r && showKey) g.names.forEach(n=>{ if(n.ans && !n.ex && s.ln[n.id]!==n.ans) add(n,n.ans,'#2e9e4f',true); });
+    el.querySelectorAll('.nm').forEach(b=>b.classList.toggle('has',!!s.ln[b.dataset.id])); };
+  let sel=null;
+  g.persons.forEach(ps=>{ const b=document.createElement('button'); b.className='ps'; b.style.left=pct(ps.x,PW); b.style.top=pct(ps.y,PH); b.style.width=pct(ps.r*2,PW); b.style.height=pct(ps.r*2,PH);
+    b.setAttribute('aria-label','Người trong tranh'); b.dataset.id=ps.id; if(g.names.some(n=>n.ex&&n.ans===ps.id)) b.disabled=true; el.appendChild(b);
+    b.onclick=()=>{ if(r) return; if(!sel){ flash('Chạm vào một tên trước nhé.'); return; }
+      Object.keys(s.ln).forEach(k=>{ if(s.ln[k]===ps.id) delete s.ln[k]; }); s.ln[sel]=ps.id; sel=null; arm(); save(); draw(); }; });
+  g.names.forEach(n=>{ if(n.ex) return; const b=document.createElement('button'); b.className='nm'; b.dataset.id=n.id;
+    b.style.left=pct(n.x,PW); b.style.top=pct(n.y,PH); b.style.width=pct(170,PW); b.style.height=pct(64,PH); b.setAttribute('aria-label','Tên '+n.id); el.appendChild(b);
+    b.onclick=()=>{ if(r) return; if(sel===n.id){ delete s.ln[n.id]; sel=null; save(); } else { sel=n.id; if(s.ln[n.id]){ delete s.ln[n.id]; save(); } } arm(); draw(); }; });
+  const arm=()=>{ el.querySelectorAll('.nm').forEach(b=>b.classList.toggle('sel',b.dataset.id===sel)); el.querySelectorAll('.ps').forEach(b=>b.classList.toggle('armed',!!sel&&!b.disabled)); };
+  draw();
+  if(r) g.names.forEach(n=>{ if(n.ans && !n.ex){ const ok=s.ln[n.id]===n.ans; const [x,y]=anchor(n); res(el,n.x+95,n.y,ok,ok?'✓':'✗'); } });
+}
+/* Part type: write words / names / numbers */
+function inputs(el,g,s,r,showKey){
+  (g.items||[]).forEach(it=>{ const w=document.createElement('div'); w.className='w'; w.style.left=pct(it.x1,PW); const hh=p0().bank?38:48; w.style.top=pct(it.y-hh+2,PH); w.style.width=pct(it.x2-it.x1,PW); w.style.height=pct(hh,PH);
+    const inp=document.createElement('input'); inp.type='text'; inp.autocomplete='off'; inp.spellcheck=false; inp.setAttribute('autocapitalize','off'); inp.setAttribute('aria-label','Câu '+it.q);
+    inp.value=s['q'+it.q]||''; inp.disabled=!!r; inp.oninput=()=>{ s['q'+it.q]=inp.value; save(); }; w.appendChild(inp); el.appendChild(w);
+    if(r){ const ok=isOk(it,s['q'+it.q]); inp.classList.add(ok?'ok':'no');
+      if(p0().bank){ if(!ok&&showKey) inp.value=`${s['q'+it.q]||'…'} → ${it.ans[0]}`; }
+      else { res(el,it.x2+34,it.y-24,ok,ok?'✓':'✗'); if(!ok&&showKey) res(el,(it.x1+it.x2)/2,it.y+26,null,it.ans[0]); } } });
+}
+function isOk(it,v){ const a=norm(v); return !!a && it.ans.some(x=>norm(x)===a); }
+/* Part type: yes / no */
+function yn(el,g,s,r,showKey){
+  g.items.forEach(it=>{ const w=document.createElement('div'); w.className='yn'; w.style.left=pct(it.x1+20,PW); w.style.top=pct(it.y-52,PH); w.style.width=pct(it.x2-it.x1-40,PW); w.style.height=pct(54,PH);
+    w.innerHTML=['yes','no'].map(v=>`<button data-v="${v}" class="${s['q'+it.q]===v?'on':''}" ${r?'disabled':''} aria-pressed="${s['q'+it.q]===v}">${v}</button>`).join(''); el.appendChild(w);
+    w.querySelectorAll('button').forEach(b=>b.onclick=()=>{ s['q'+it.q]=b.dataset.v; save(); w.querySelectorAll('button').forEach(x=>{ x.classList.toggle('on',x===b); x.setAttribute('aria-pressed',x===b); }); });
+    if(r){ const ok=s['q'+it.q]===it.ans[0]; res(el,it.x2+34,it.y-24,ok,ok?'✓':'✗'); if(!ok&&showKey) res(el,(it.x1+it.x2)/2,it.y+24,null,it.ans[0]); } });
+}
+/* Part type: tick the right picture A / B / C */
+function tick(el,g,s,r,showKey){
+  g.items.forEach(it=>{ if(it.ex) return;
+    it.xs.forEach((bx,k)=>{ const L='ABC'[k]; const b=document.createElement('button'); b.className='tk'; b.setAttribute('aria-label',`Câu ${it.q}: chọn ${L}`);
+      b.style.left=pct(bx-150,PW); b.style.top=pct(it.y-330,PH); b.style.width=pct(285,PW); b.style.height=pct(358,PH); b.disabled=!!r; el.appendChild(b);
+      b.onclick=()=>{ s['q'+it.q]=L; save(); renderPages(); }; });
+    const v=s['q'+it.q]; if(v){ const k='ABC'.indexOf(v); const m=document.createElement('div'); m.className='mark'; m.style.left=pct(it.xs[k]+2,PW); m.style.top=pct(it.y-4,PH); m.textContent='✔'; el.appendChild(m); }
+    if(r){ const ok=v===it.ans; res(el,it.xs[2]+70,it.y,ok,ok?'✓':'✗'); if(!ok&&showKey){ const k='ABC'.indexOf(it.ans); res(el,it.xs[k],it.y+40,null,'đáp án '+it.ans); } } });
+}
+/* Part type: tick or cross */
+function tickx(el,g,s,r,showKey){
+  g.items.forEach(it=>{ const b=document.createElement('button'); b.className='box'; b.style.left=pct(it.x,PW); b.style.top=pct(it.y,PH); b.style.width=pct(60,PW); b.style.height=pct(60,PH);
+    const v=s['q'+it.q]; b.textContent= v==='y'?'✔':v==='n'?'✘':''; b.disabled=!!r; b.setAttribute('aria-label',`Câu ${it.q}: ${v==='y'?'đúng ✔':v==='n'?'sai ✘':'chưa chọn'}`); el.appendChild(b);
+    b.onclick=()=>{ s['q'+it.q] = !v ? 'y' : v==='y' ? 'n' : ''; save(); renderPages(); };
+    if(r){ const ok=v===it.ans; res(el,it.x+70,it.y,ok,ok?'✓':'✗'); if(!ok&&showKey) res(el,it.x-90,it.y,null,it.ans==='y'?'✔':'✘'); } });
+}
+/* Part type: listen and colour (tap an object to fill it) */
+const PIX={};
+function pix(img){ if(PIX[img.src]) return PIX[img.src]; const c=document.createElement('canvas'); c.width=PW; c.height=PH; const x=c.getContext('2d'); x.drawImage(img,0,0,PW,PH);
+  let d=null; try{ d=x.getImageData(0,0,PW,PH).data; }catch(e){ return null; } const L=new Uint8Array(PW*PH); for(let i=0;i<PW*PH;i++) L[i]=(d[i*4]*.3+d[i*4+1]*.59+d[i*4+2]*.11)|0; return PIX[img.src]=L; }
+function regionOf(L,o,sx,sy){ // light pixels inside the object's ellipse connected to the seed
+  const inE=(x,y)=>((x-o.x)/o.rx)**2+((y-o.y)/o.ry)**2<=1, ok=(x,y)=>inE(x,y)&&L[y*PW+x]>118;
+  if(!ok(sx,sy)){ let best=null; for(let d=1;d<14&&!best;d++) for(let dy=-d;dy<=d&&!best;dy++) for(let dx=-d;dx<=d;dx++){ if(ok(sx+dx,sy+dy)){ best=[sx+dx,sy+dy]; break; } } if(!best) return null; [sx,sy]=best; }
+  const seen=new Uint8Array(PW*PH), q=[sx+sy*PW], out=[]; seen[q[0]]=1;
+  while(q.length){ const i=q.pop(); out.push(i); const x=i%PW, y=(i/PW)|0; [[1,0],[-1,0],[0,1],[0,-1]].forEach(([a,b])=>{ const nx=x+a, ny=y+b, j=ny*PW+nx; if(!seen[j]&&ok(nx,ny)){ seen[j]=1; q.push(j); } }); }
+  return out; }
+function colour(el,g,s,r,showKey){
+  s.fills=s.fills||[]; s.obj=s.obj||{};
+  const cv=document.createElement('canvas'); cv.width=PW; cv.height=PH; el.appendChild(cv); const cx=cv.getContext('2d');
+  const hit=document.createElement('div'); hit.className='cvhit'; el.appendChild(hit);
+  const img=el.querySelector('img');
+  const paintAll=()=>{ const L=pix(img); if(!L) return; const id=cx.createImageData(PW,PH), D=id.data;
+    s.fills.forEach(f=>{ const o=g.objs.find(x=>x.id===f.o); if(!o) return; const reg=regionOf(L,o,f.x,f.y); if(!reg) return;
+      const hex=f.c==='erase'?null:COLS[f.c]; const rr=hex?parseInt(hex.slice(1,3),16):0, gg=hex?parseInt(hex.slice(3,5),16):0, bb=hex?parseInt(hex.slice(5,7),16):0;
+      reg.forEach(i=>{ if(hex){ D[i*4]=rr; D[i*4+1]=gg; D[i*4+2]=bb; D[i*4+3]=235; } else D[i*4+3]=0; }); });
+    cx.putImageData(id,0,0); };
+  const go=()=>{ paintAll(); if(r) g.objs.forEach(o=>{ if(!o.ans) return; const ok=s.obj[o.id]===o.ans; res(el,o.x+o.rx+30,o.y-o.ry,ok,ok?'✓':'✗'); if(!ok&&showKey) res(el,o.x,o.y+o.ry+22,null,`${o.ans} · ${COLVI[o.ans]}`); }); };
+  if(img.complete && img.naturalWidth) go(); else img.addEventListener('load',go,{once:true});
+  hit.onclick=e=>{ if(r) return; const b=hit.getBoundingClientRect(); const x=Math.round((e.clientX-b.left)/b.width*PW), y=Math.round((e.clientY-b.top)/b.height*PH);
+    const o=g.objs.find(o=>!o.ex && ((x-o.x)/o.rx)**2+((y-o.y)/o.ry)**2<=1);
+    if(!o){ if(g.objs.some(o=>o.ex && ((x-o.x)/o.rx)**2+((y-o.y)/o.ry)**2<=1)) flash('Đây là ví dụ, đã tô sẵn rồi.'); return; }
+    s.fills.push({o:o.id,x,y,c:pal}); if(pal==='erase'){ s.fills=s.fills.filter(f=>f.o!==o.id); delete s.obj[o.id]; } else s.obj[o.id]=pal; save(); paintAll(); };
+}
+
+/* ---------- grading & summary ---------- */
+function gradePart(sk,i){ const p=T[sk][i], s=S[sk+i]||{}; let ok=0,n=0;
+  p.pages.forEach(g=>{
+    if(p.type==='lines') g.names.forEach(nm=>{ if(nm.ans&&!nm.ex){ n++; if((s.ln||{})[nm.id]===nm.ans) ok++; } });
+    if(p.type==='input') (g.items||[]).forEach(it=>{ n++; if(isOk(it,s['q'+it.q])) ok++; });
+    if(p.type==='yn') g.items.forEach(it=>{ n++; if(s['q'+it.q]===it.ans[0]) ok++; });
+    if(p.type==='tick') g.items.forEach(it=>{ if(it.ex) return; n++; if(s['q'+it.q]===it.ans) ok++; });
+    if(p.type==='tickx') g.items.forEach(it=>{ n++; if(s['q'+it.q]===it.ans) ok++; });
+    if(p.type==='colour') g.objs.forEach(o=>{ if(!o.ans) return; n++; if((s.obj||{})[o.id]===o.ans) ok++; }); });
+  return {ok,n}; }
+function grade(){ const r=gradePart(skill,part); S['res_'+pid()]=r; save(); paint();
+  const m=$('msg'); m.textContent = r.ok===r.n ? `Tuyệt vời! ${r.ok}/${r.n} câu đúng 🌟` : `${r.ok}/${r.n} câu đúng. Bấm “Xem đáp án” để xem câu sai.`; m.className='msg'+(r.ok===r.n?' good':'');
+  const all=[...T.L.map((_,i)=>'res_L'+i),...T.RW.map((_,i)=>'res_RW'+i)].every(k=>S[k]);
+  if(all && !S.sent){ S.sent=1; save(); const tot=totals(); try{ parent.postMessage({canopyL5:'done',tab:TID,text:`Test ${TN}: Listening ${tot.L.ok}/${tot.L.n} · Reading & Writing ${tot.RW.ok}/${tot.RW.n}`},'*'); }catch(e){} } }
+function totals(){ const t={}; ['L','RW'].forEach(k=>{ t[k]={ok:0,n:0,done:0}; T[k].forEach((_,i)=>{ const r=S['res_'+k+i]; if(r){ t[k].ok+=r.ok; t[k].n+=r.n; t[k].done++; } }); }); return t; }
+function summary(){ const t=totals(); if(!t.L.done && !t.RW.done){ $('sum').hidden=true; return; }
+  const sh=(ok,n)=> n? '🛡'.repeat(Math.max(1,Math.round(ok/n*5))) + '▫'.repeat(5-Math.max(1,Math.round(ok/n*5))) : '';
+  $('sum').hidden=false;
+  $('sum').innerHTML=`<h2>Kết quả Test ${TN}</h2>
+    <div>🎧 Listening: <b>${t.L.ok}/${t.L.n}</b> (${t.L.done}/${T.L.length} phần đã chấm) <span class="shields" title="Khiên ước tính">${sh(t.L.ok,t.L.n)}</span></div>
+    <div>📖 Reading &amp; Writing: <b>${t.RW.ok}/${t.RW.n}</b> (${t.RW.done}/${T.RW.length} phần đã chấm) <span class="shields" title="Khiên ước tính">${sh(t.RW.ok,t.RW.n)}</span></div>
+    <div class="note" style="margin-top:6px">Khiên 🛡 chỉ để con tự đánh giá (ước tính theo tỉ lệ câu đúng), không phải điểm chính thức của Cambridge.</div>`; }
+let ft=null; function flash(t){ const m=$('msg'); m.textContent=t; m.className='msg'; clearTimeout(ft); ft=setTimeout(()=>{ if(m.textContent===t) m.textContent=''; },2200); }
+function postH(){ try{ parent.postMessage({canopyL5:'h',tab:TID,h:document.documentElement.scrollHeight},'*'); }catch(e){} }
+try{ new ResizeObserver(postH).observe(document.body); }catch(e){}
+window.addEventListener('hashchange',()=>location.reload());
+/* ================= Speaking · scoring tool (Pre A1 Starters criteria: Vocabulary · Pronunciation · Interaction, 0–5) ================= */
+const CRIT = [
+ {k:'voc', en:'Vocabulary', vi:'Từ vựng', note:'Vốn từ con dùng để trả lời. Ở Starters chỉ cần trả lời bằng một từ; không chấm liên kết ý.',
+  b:{5:['Enough vocabulary for all questions. Simple answers with a few errors. Mainly single words or phrases, occasionally full sentences.','Đủ từ để trả lời tất cả câu hỏi. Câu trả lời đơn giản, ít lỗi. Chủ yếu là một từ hoặc cụm từ, đôi khi nói được cả câu.'],
+     3:['Enough vocabulary for most questions. Simple answers; errors may hinder understanding. Single words, may use phrases.','Đủ từ cho phần lớn câu hỏi. Trả lời đơn giản, lỗi có thể làm người nghe khó hiểu. Chủ yếu một từ, có thể dùng cụm từ.'],
+     1:['Enough vocabulary to attempt some questions. Answers some simple questions; errors hinder communication. Very basic answers or no answer.','Đủ từ để thử trả lời một số câu. Trả lời được vài câu đơn giản, lỗi gây cản trở giao tiếp. Trả lời rất cơ bản hoặc không trả lời.']}},
+ {k:'pro', en:'Pronunciation', vi:'Phát âm', note:'Âm đơn và trọng âm. Ở Starters không chấm ngữ điệu.',
+  b:{5:['Most sounds are easy to understand; some may be unclear. Some ability to stress words.','Phần lớn âm dễ hiểu, có thể vài âm chưa rõ. Bước đầu nhấn đúng trọng âm của từ.'],
+     3:['Relatively easy to understand.','Tương đối dễ hiểu.'],
+     1:['Makes an effort, but may be unclear and hard to understand.','Con có cố gắng nhưng có thể chưa rõ, khó hiểu.']}},
+ {k:'int', en:'Interaction', vi:'Tương tác', note:'Phản hồi câu hỏi, mức độ cần giám khảo hỗ trợ, độ trôi chảy.',
+  b:{5:['Suitable answers, sometimes needing examiner help. Knows how to ask for help. Prompt, with occasional pauses.','Trả lời phù hợp, đôi khi cần giám khảo giúp. Biết cách xin trợ giúp. Phản hồi nhanh, thỉnh thoảng ngập ngừng.'],
+     3:['Suitable answers but frequent examiner help. Attempts to ask for help. Pauses when answering.','Trả lời phù hợp nhưng thường xuyên cần giám khảo giúp. Có cố gắng xin trợ giúp. Ngập ngừng khi trả lời.'],
+     1:['Frequently needs help and may not answer. Long pauses that require significant patience.','Thường xuyên cần giúp và có thể không trả lời. Ngập ngừng lâu, cần rất kiên nhẫn chờ.']}}];
+const BAND_TXT = (c,b) => b===0 ? ['Below band 1 level.','Dưới mức band 1.'] : c.b[b] || (b===4 ? ['Between band 5 and band 3.','Nằm giữa band 5 và band 3.'] : ['Between band 3 and band 1.','Nằm giữa band 3 và band 1.']);
+const SPKEY = 'canopy12_yle_sp_'+TID;
+let SPS = (()=>{ try{ return JSON.parse(localStorage.getItem(SPKEY))||{}; }catch(e){ return {}; } })();
+const spSave = () => { try{ localStorage.setItem(SPKEY, JSON.stringify(SPS)); }catch(e){} };
+const spCur = () => (SPS.cur = SPS.cur || {name:'', marks:{}, band:{}, note:''});
+
+function spTally(){ const D=SPK[TID], c=spCur(); const t={say:0,act:0,r:0,h:0,x:0,ra:0,xa:0,pause:0,unclear:0,clear:0};
+  D.parts.forEach(p=>p.items.forEach((it,i)=>{ const m=c.marks[p.n+'_'+i]||{}; if(!m.a) return;
+    if(it.k==='act'){ t.act++; if(m.a==='x') t.xa++; else t.ra++; if(m.a==='h') t.h++; }
+    else { t.say++; t[m.a]++; if(m.a!=='x'){ if(m.u) t.unclear++; else t.clear++; } }
+    if(m.p) t.pause++; }));
+  return t; }
+/* suggested band from what the teacher marked, mapped onto the descriptors */
+function spSuggest(t){
+  const nSay=t.say, nAll=t.say+t.act, s={};
+  if(!nSay){ s.voc=s.pro=null; } else {
+    const r=(t.r+0.75*t.h)/nSay; s.voc = r>=0.9?5 : r>=0.75?4 : r>=0.6?3 : r>=0.4?2 : r>0?1 : 0;
+    const spoke=t.r+t.h; const u=spoke? t.clear/spoke : 0; s.pro = !spoke?0 : u>=0.85?5 : u>=0.7?4 : u>=0.5?3 : u>=0.3?2 : 1;
+    if(spoke<3 && s.pro>3) s.pro=3; }
+  if(!nAll) s.int=null; else {
+    const answered=(t.r+t.h+t.ra)/nAll, help=t.h/nAll, none=(t.x+t.xa)/nAll, pause=t.pause/nAll;
+    s.int = answered===0?0 : (help<=0.2&&none<=0.1&&pause<=0.25)?5 : (help<=0.35&&none<=0.2&&pause<=0.4)?4 : (help<=0.5&&none<=0.35)?3 : none<=0.5?2 : 1; }
+  return s; }
+function paintSP(){
+  const D=SPK[TID], c=spCur(), t=spTally(), sug=spSuggest(t);
+  const marked = t.say+t.act, total = D.parts.reduce((n,p)=>n+p.items.length,0);
+  const band = k => c.band[k]!=null ? c.band[k] : sug[k];
+  const sum = CRIT.reduce((n,k)=>n+(band(k.k)||0),0), full = CRIT.every(k=>band(k.k)!=null);
+  const shields = full ? Math.max(1,Math.min(5,Math.round(sum/3))) : 0;
+  $('spk').innerHTML = `
+  <div class="help"><span class="pxl">SPEAKING · 3–5 PHÚT · 4 PHẦN</span><br>
+    <b>Dành cho giáo viên hoặc phụ huynh.</b> Cho con xem tranh lớn và thẻ đồ vật, cô đọc câu hỏi tiếng Anh ở dưới. Sau mỗi câu, bấm nhanh cách con trả lời: <b>✓ Tự trả lời</b> · <b>✓ Cần gợi ý</b> · <b>✗ Sai / im lặng</b>; thêm <b>⏸ Ngập ngừng</b> nếu con chờ lâu, <b>🔈 Khó nghe</b> nếu từ con nói khó hiểu. Cuối bài, công cụ gợi ý band 0–5 cho 3 tiêu chí; cô xem mô tả và chốt band.</div>
+  <div class="sp-top"><label for="spName">Học sinh:</label><input id="spName" value="${(c.name||'').replace(/"/g,'&quot;')}" placeholder="Tên học sinh" autocomplete="off">
+    <button class="btn" id="spNew">＋ Học sinh mới</button></div>
+  <div class="scene"><img src="sp/${D.scene}.webp" alt="Tranh lớn Speaking Test ${TN}: ${D.place}"></div>
+  <div class="cards" role="group" aria-label="Thẻ đồ vật">${D.cards.map(k=>`<button data-k="${k}" aria-label="Thẻ ${k.split('_')[1]}"><img src="sp/${k}.webp" alt=""></button>`).join('')}</div>
+  ${D.parts.map(p=>`<div class="spart"><h3>Part ${p.n} · ${p.title} <small>${p.vi}</small></h3>${p.items.map((it,i)=>{ const id=p.n+'_'+i, m=c.marks[id]||{};
+    const b=(v,cls,txt)=>`<button class="${cls}${m.a===v?' on':''}" data-id="${id}" data-a="${v}" aria-pressed="${m.a===v}">${txt}</button>`;
+    return `<div class="qrow"><div class="q"><span class="kind ${it.k}">${it.k==='act'?'CHỈ / ĐẶT':'NÓI'}</span>${it.q}${it.card?` <button class="btn" style="padding:1px 6px;font-size:.75rem;box-shadow:none" data-card="${it.card}">🖼 thẻ</button>`:''}</div>
+      <div class="h">${it.hint?`Đáp án gợi ý: <i>${it.hint}</i>`:''}${it.vi?` · ${it.vi}`:''}</div>
+      <div class="qbtns">${b('r','r',it.k==='act'?'✓ Làm đúng':'✓ Tự trả lời')}${b('h','h','✓ Cần gợi ý')}${b('x','x',it.k==='act'?'✗ Sai':'✗ Sai / im lặng')}
+        <button class="f${m.p?' on':''}" data-id="${id}" data-f="p" aria-pressed="${!!m.p}">⏸ Ngập ngừng</button>${it.k==='say'?`<button class="f${m.u?' on':''}" data-id="${id}" data-f="u" aria-pressed="${!!m.u}">🔈 Khó nghe</button>`:''}</div></div>`; }).join('')}</div>`).join('')}
+  <div class="tally">Đã ghi ${marked}/${total} câu · Nói: ${t.r} tự trả lời, ${t.h} cần gợi ý, ${t.x} sai/im lặng · Chỉ/đặt: ${t.ra} đúng, ${t.xa} sai · ${t.pause} lần ngập ngừng · ${t.unclear} lần khó nghe</div>
+  ${CRIT.map(k=>{ const v=band(k.k), d=v!=null?BAND_TXT(k,v):null;
+    return `<div class="crit"><h4>${k.en} · ${k.vi}</h4><div class="sug">${k.note} ${sug[k.k]!=null?`Gợi ý từ phần ghi: <b>band ${sug[k.k]}</b>.`:'Ghi vài câu trả lời để có gợi ý.'}</div>
+      <div class="bands" role="group" aria-label="${k.en}">${[0,1,2,3,4,5].map(n=>`<button data-c="${k.k}" data-b="${n}" class="${v===n?'on':''} ${sug[k.k]===n?'sg':''}" aria-pressed="${v===n}">${n}</button>`).join('')}</div>
+      ${d?`<div class="desc"><b>Band ${v}:</b> ${d[1]}<br><i>${d[0]}</i></div>`:''}</div>`; }).join('')}
+  <div class="result"><h2 style="margin:0 0 6px;font-size:1.1rem">Kết quả Speaking · Test ${TN}${c.name?` · ${c.name}`:''}</h2>
+    ${full?`<div>Vocabulary <b>${band('voc')}</b>/5 · Pronunciation <b>${band('pro')}</b>/5 · Interaction <b>${band('int')}</b>/5 · Tổng <b>${sum}/15</b></div>
+    <div class="shields" title="Khiên ước tính">${'🛡'.repeat(shields)}${'▫'.repeat(5-shields)} <span style="font-size:.9rem">≈ ${shields}/5 khiên (ước tính)</span></div>`:'<div>Chốt band cho đủ 3 tiêu chí để xem kết quả.</div>'}
+    <label for="spNote" style="display:block;font-weight:700;margin-top:8px">Nhận xét của cô:</label><textarea id="spNote" placeholder="Ví dụ: Con nói rõ, cần luyện thêm câu “Tell me about…”">${c.note||''}</textarea>
+    <div class="bar"><button class="btn sun" id="spCopy">📋 Sao chép kết quả gửi phụ huynh</button><button class="btn go" id="spKeep" ${full?'':'disabled'}>💾 Lưu vào danh sách</button><button class="btn" id="spReset">↺ Chấm lại từ đầu</button><span class="msg" id="spMsg" role="status"></span></div>
+    <div class="note">Band bám theo mô tả tiêu chí Speaking Starters (thang 0–5 cho từng tiêu chí). Band gợi ý chỉ để tham khảo; cô là người chốt. Số khiên là ước tính từ tổng điểm, không phải cách quy đổi chính thức của Cambridge.</div>
+    ${(SPS.hist||[]).length?`<div class="hist"><b>Đã lưu (${SPS.hist.length})</b>${SPS.hist.slice().reverse().map(h=>`<div>${h.d} · <b>${h.name||'(chưa đặt tên)'}</b> · V${h.voc} P${h.pro} I${h.int} = ${h.sum}/15 · ${'🛡'.repeat(h.sh)}</div>`).join('')}</div>`:''}
+  </div>`;
+  const re=()=>{ spSave(); const y=window.scrollY; paintSP(); window.scrollTo(0,y); postH(); };
+  $('spName').oninput=e=>{ c.name=e.target.value; spSave(); };
+  $('spNote').oninput=e=>{ c.note=e.target.value; spSave(); };
+  $('spk').querySelectorAll('.qbtns button[data-a]').forEach(b=>b.onclick=()=>{ const m=c.marks[b.dataset.id]=c.marks[b.dataset.id]||{}; m.a = m.a===b.dataset.a ? null : b.dataset.a; re(); });
+  $('spk').querySelectorAll('.qbtns button[data-f]').forEach(b=>b.onclick=()=>{ const m=c.marks[b.dataset.id]=c.marks[b.dataset.id]||{}; m[b.dataset.f]=!m[b.dataset.f]; re(); });
+  $('spk').querySelectorAll('.bands button').forEach(b=>b.onclick=()=>{ c.band[b.dataset.c]=+b.dataset.b; re(); });
+  const big=k=>{ const d=document.createElement('div'); d.className='bigcard'; d.innerHTML=`<img src="sp/${k}.webp" alt="Thẻ ${k.split('_')[1]}">`; d.onclick=()=>d.remove(); document.body.appendChild(d); };
+  $('spk').querySelectorAll('.cards button').forEach(b=>b.onclick=()=>big(b.dataset.k));
+  $('spk').querySelectorAll('[data-card]').forEach(b=>b.onclick=()=>big(b.dataset.card));
+  const txt=()=>`Kết quả Speaking (Cambridge Starters · Test ${TN})${c.name?` · ${c.name}`:''}\n`+CRIT.map(k=>{ const v=band(k.k); return `- ${k.en} (${k.vi}): ${v!=null?v+'/5 · '+BAND_TXT(k,v)[1]:'chưa chấm'}`; }).join('\n')+(full?`\nTổng: ${sum}/15 · khoảng ${shields}/5 khiên (ước tính)`:'')+(c.note?`\nNhận xét: ${c.note}`:'');
+  $('spCopy').onclick=()=>{ const s=txt(); const ok=()=>{ $('spMsg').textContent='Đã sao chép.'; }; try{ navigator.clipboard.writeText(s).then(ok,()=>fallback(s)); }catch(e){ fallback(s); } };
+  const fallback=s=>{ const ta=$('spNote'); const old=ta.value; ta.value=s; ta.select(); $('spMsg').textContent='Máy không cho sao chép tự động: chữ đã được bôi đen, con bấm giữ để sao chép.'; setTimeout(()=>{ ta.value=old; },8000); };
+  $('spKeep').onclick=()=>{ (SPS.hist=SPS.hist||[]).push({d:new Date().toLocaleDateString('vi-VN'),name:c.name,voc:band('voc'),pro:band('pro'),int:band('int'),sum,sh:shields}); spSave(); $('spMsg').textContent='Đã lưu.'; re(); };
+  $('spReset').onclick=()=>{ SPS.cur={name:c.name,marks:{},band:{},note:''}; re(); };
+  $('spNew').onclick=()=>{ SPS.cur={name:'',marks:{},band:{},note:''}; re(); $('spName').focus(); };
+}
+
+paint();
+</script>
+</body>
+</html>
