@@ -5883,7 +5883,7 @@ const G1={started:false,
         f.style.left=(x-ox)+'%'; f.style.top=(y-oy)+'%'; f.style.transform=`scale(${1-.5*e}) rotate(${-30*e}deg)`; });
       if(run!==this.run) return; f.style.opacity='0'; tones([660,880],.08,'square'); this.hud();
       setTimeout(()=>{ if(run!==this.run) return; this.r++; this.cur=null; this.busy=false; this.lineUp(); this.hud();
-        if(this.r>=this.N){ markDone('g1'); resultCard($('g1Stage'),'Giỏ đầy cá!',this.miss,`Leo và Xiaobao câu được ${this.fish} con cá, trượt ${this.miss} lần.`,()=>this.reset()); }
+        if(this.r>=this.N){ markDone('g1'); resultCard($('g1Stage'),'Giỏ đầy cá!',this.miss,`Chúc mừng con đã hoàn thành ${this.N}/${this.N} câu! Leo và Xiaobao câu được ${this.fish} con cá rồi!`,()=>this.reset()); }
         else { $('g1Cast').hidden=false; $('g1Cast').textContent='Quăng cần tiếp'; } },700);
     } else {
       /* 2b. wrong fish: it wriggles on the hook, breaks free and swims away */
@@ -5925,7 +5925,7 @@ const MT={started:false,N:6,
     if(match){ this.found++; ce.classList.add('solved'); cz.classList.add('solved'); this.status(); setTimeout(()=>say(a.zh,'zh'),350); }
     else { ce.classList.add('miss'); cz.classList.add('miss'); setTimeout(()=>say(a.zh,'zh'),500); }
     setTimeout(()=>{ if(!match){ ce.classList.remove('open','miss'); cz.classList.remove('open','miss'); } this.oEn=this.oZh=null; this.judging=false;
-      if(this.found===this.N){ markDone('mt'); const miss=this.tries-this.right; resultCard($('ap-mt'),`Ghép xong ${this.N} cặp!`,miss,`Con chọn đúng ${this.right}/${this.tries} lần.`,()=>this.reset()); }
+      if(this.found===this.N){ markDone('mt'); const miss=this.tries-this.right; resultCard($('ap-mt'),`Ghép xong ${this.N} cặp!`,miss,`Chúc mừng con đã hoàn thành ${this.N}/${this.N} cặp thẻ! Con nhớ giỏi quá!`,()=>this.reset()); }
       else this.fb('Lật tiếp 2 thẻ nhé.'); }, match?1500:2300); }
 };
 $('mtV').onclick=()=>MT.judge(true); $('mtX').onclick=()=>MT.judge(false);
@@ -5968,7 +5968,7 @@ const G2={started:false,
         $('g2Msg').className='msg bad'; $('g2Msg').textContent=(o.why||'Chưa đúng.')+' Ô màu xanh là đáp án đúng.'; }
       $('g2Goals').textContent=`${this.goals} GOAL`;
       if(this.r>=this.N-1){ setTimeout(()=>{ markDone('g2'); $('g2Bar').style.width='100%';
-        resultCard($('g2Stage'),`${this.goals}/${this.N} bàn thắng!`,this.miss,`Buffy sút vào ${this.goals} bàn, Bunny bắt được ${this.miss} quả.`,()=>this.reset()); },1800); }
+        resultCard($('g2Stage'),`${this.goals}/${this.N} bàn thắng!`,this.miss,`Chúc mừng con đã hoàn thành ${this.goals}/${this.N} câu! Buffy ghi được ${this.goals} bàn thắng.${this.goals<this.N?' Chơi lại để ghi thêm bàn nhé!':' Tuyệt vời!'}`,()=>this.reset()); },1800); }
       else $('g2Next').hidden=false;
     },640);
   }
@@ -6045,7 +6045,7 @@ const G3={ready:false,
       await wait(1500);
     }
     $('g3Bar').style.width='100%'; markDone('g3');
-    resultCard($('g3Stage'),'Phiên dịch giỏi quá!',this.sc.length-this.score,`Bé giúp ${this.score}/${this.sc.length} đôi bạn hiểu nhau ngay (sai không quá 1 lần).`,()=>{ this.prepare(); this.start(); });
+    resultCard($('g3Stage'),'Phiên dịch giỏi quá!',this.sc.length-this.score,`Chúc mừng con đã hoàn thành ${this.sc.length}/${this.sc.length} câu! Con đã giúp các đôi bạn hiểu nhau rồi!`,()=>{ this.prepare(); this.start(); });
   }
 };
 $('g3Start').onclick=()=>G3.start();
@@ -6079,7 +6079,7 @@ const WM={ready:false,
       $('wmMsg').className='msg good'; $('wmMsg').innerHTML=`Trúng rồi! ${q.right}`;
       $('wmHoles').querySelectorAll('.mole').forEach(x=>{ if(x!==m) x.classList.remove('up'); });
       setTimeout(()=>{ m.classList.remove('up','hit'); this.r++; this.hud();
-        if(this.r>=this.N){ $('wmBar').style.width='100%'; markDone('wm'); resultCard($('wmStage'),`${this.hits}/${this.N} lần trúng!`,this.miss,`Con đập trúng ${this.hits} bạn, đập nhầm ${this.miss} lần.`,()=>{ this.prepare(); this.begin(); }); }
+        if(this.r>=this.N){ $('wmBar').style.width='100%'; markDone('wm'); resultCard($('wmStage'),`${this.hits}/${this.N} lần trúng!`,this.miss,`Chúc mừng con đã hoàn thành ${this.hits}/${this.N} câu! Con đập nhanh tay quá!`,()=>{ this.prepare(); this.begin(); }); }
         else this.show(); },1900); }
     else { this.miss++; buzz(); FX.smirk(); m.classList.add('bad'); $('wmMsg').className='msg bad'; $('wmMsg').textContent=(o.why||'Chưa đúng.')+' Đập bạn khác nhé!'; setTimeout(()=>m.classList.remove('up'),600); }
   }
@@ -6114,7 +6114,7 @@ const PS={started:false,
   answer(i,b){ if(this.lock||b.classList.contains('wrongo')) return; const q=this.Q[this.i], o=this.opts[i];
     if(o.ok){ this.lock=true; ding(); b.classList.add('right'); $('psPeople').classList.remove('veil'); $('psText').classList.add('hint'); $('psText').classList.remove('hidden'); $('psOpts').classList.remove('nopy');
       $('psMsg').className='msg good'; $('psMsg').textContent='Chính xác! Thám tử giỏi quá.'; if(o.t) say(o.t,'zh');
-      if(this.i>=this.N-1){ setTimeout(()=>{ markDone('ps'); $('psBar').style.width='100%'; resultCard($('ap-ps'),`Xong cả ${this.N} câu!`,this.miss,`Con trả lời sai ${this.miss} lần.`,()=>this.reset()); },900); }
+      if(this.i>=this.N-1){ setTimeout(()=>{ markDone('ps'); $('psBar').style.width='100%'; resultCard($('ap-ps'),`Xong cả ${this.N} câu!`,this.miss,`Chúc mừng con đã hoàn thành ${this.N}/${this.N} câu! Con giỏi lắm!`,()=>this.reset()); },900); }
       else $('psNext').hidden=false; }
     else { this.miss++; this.tries++; buzz(); b.classList.add('wrongo');
       $('psText').classList.add('hint'); $('psText').classList.remove('hidden'); $('psOpts').classList.remove('nopy'); $('psHint').hidden=false;
@@ -6139,7 +6139,7 @@ const CALG={started:false,
     $('calGrid').querySelectorAll('.cd').forEach(b=>b.onclick=()=>this.tap(+b.dataset.d,b)); setTimeout(()=>say(...q.say),300); },
   tap(d,b){ if(this.lock||b.classList.contains('no')) return; const q=this.Q[this.r];
     if(d===q.target){ this.lock=true; ding(); b.classList.add('ok'); $('calMsg').className='msg good'; $('calMsg').innerHTML=`Đúng rồi! ${q.right}`; setTimeout(()=>say(...q.after),250);
-      if(this.r>=this.N-1){ setTimeout(()=>{ markDone('cal'); $('calBar').style.width='100%'; resultCard($('ap-cal'),'Đọc lịch giỏi quá!',this.miss,`Con chạm nhầm ${this.miss} lần.`,()=>this.reset()); },1200); }
+      if(this.r>=this.N-1){ setTimeout(()=>{ markDone('cal'); $('calBar').style.width='100%'; resultCard($('ap-cal'),'Đọc lịch giỏi quá!',this.miss,`Chúc mừng con đã hoàn thành ${this.N}/${this.N} câu! Con đọc lịch giỏi lắm!`,()=>this.reset()); },1200); }
       else $('calNext').hidden=false; }
     else { this.miss++; buzz(); b.classList.add('no'); $('calMsg').className='msg bad'; $('calMsg').textContent=`Con chọn ngày ${d}. Chưa đúng, nghe lại rồi thử lần nữa nhé!`; } }
 };
@@ -6168,7 +6168,7 @@ const BAL={started:false,
       const s=$('balSlots').querySelector(`.bslot[data-k="${this.k}"]`); s.innerHTML=`<span class="zh">${need.t}</span>${need.p?`<span class="py">${need.p}</span>`:''}`; s.classList.add('on'); this.k++; this.wrong=0;
       $('balFly').querySelectorAll('.balloon.hintb').forEach(x=>x.classList.remove('hintb'));
       if(this.k>=q.chunks.length){ this.done=true; ding(); setTimeout(()=>say(q.sent.t,'zh'),500); $('balMsg').className='msg good'; $('balMsg').innerHTML=`Giỏi quá! <span class="zh">${q.sent.t}</span> = ${q.en}`;
-        if(this.i>=this.N-1){ setTimeout(()=>{ markDone('bal'); $('balBar').style.width='100%'; resultCard($('ap-bal'),'Ghép xong cả bài!',this.miss,`Con chạm nhầm bóng ${this.miss} lần.`,()=>this.reset()); },1600); }
+        if(this.i>=this.N-1){ setTimeout(()=>{ markDone('bal'); $('balBar').style.width='100%'; resultCard($('ap-bal'),'Ghép xong cả bài!',this.miss,`Chúc mừng con đã hoàn thành ${this.N}/${this.N} câu! Con ghép câu giỏi lắm!`,()=>this.reset()); },1600); }
         else $('balNext').hidden=false; } }
     else { this.miss++; this.wrong++; buzz(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
       $('balMsg').className='msg bad'; $('balMsg').textContent=`“${b._c.t}” chưa phải cụm tiếp theo.${this.wrong>=2?' Gợi ý: bóng đang nhấp nháy!':''}`;
@@ -6269,7 +6269,7 @@ const PQ={started:false,
   answer(i,b){ if(this.lock) return; const q=this.Q[this.i], p=this.opts[i];
     if(p===q.right){ this.lock=true; this.ok++; ding(); b.classList.add('right'); const r=$('pqPic').querySelector('.reveal'); if(r) r.classList.add('on'); say(q.say,'zh');
       $('pqMsg').className='msg good'; $('pqMsg').innerHTML=`Đúng rồi! ${q.ok}${q.ex||''}`;
-      if(this.i>=this.N-1){ setTimeout(()=>{ markDone('pyquiz'); $('pqBar').style.width='100%'; resultCard($('ap-pyquiz'),`${this.ok}/${this.N} câu`,this.miss,`Con chọn chưa đúng ${this.miss} lần.`,()=>this.reset()); },900); }
+      if(this.i>=this.N-1){ setTimeout(()=>{ markDone('pyquiz'); $('pqBar').style.width='100%'; resultCard($('ap-pyquiz'),`${this.ok}/${this.N} câu`,this.miss,`Chúc mừng con đã hoàn thành ${this.ok}/${this.N} câu! Con giỏi lắm!`,()=>this.reset()); },900); }
       else $('pqNext').hidden=false; }
     else { if(b.classList.contains('wrongo')) return; this.miss++; buzz(); b.classList.add('wrongo'); $('pqMsg').className='msg bad'; $('pqMsg').textContent=`“${p}” khác thanh điệu hoặc âm. Thử lại nhé!`; } }
 };
@@ -6627,7 +6627,7 @@ const CATCH={started:false,
       $('caBasket').classList.remove('bump'); void $('caBasket').offsetWidth; setTimeout(()=>{ $('caBasket').classList.add('bump'); d.style.opacity='0'; tones([660,990],.07,'triangle'); },650);
       $('caFall').querySelectorAll('.drop').forEach(x=>{ if(x!==d){ this.freeze(x); x.classList.add('away'); } });
       $('caMsg').className='msg good'; $('caMsg').innerHTML=`Hứng được rồi! ${q.after.html}`; say(...q.after.say); this.hud();
-      this.tm=setTimeout(()=>{ if(run!==this.run) return; this.r++; if(this.r>=this.N){ $('caBar').style.width='100%'; markDone('catch'); resultCard($('ap-catch'),'Giỏ đầy sao!',this.miss,`Xiaobao hứng được ${this.got} ngôi sao, con chạm nhầm ${this.miss} lần.`,()=>this.reset()); } else this.show(); },1900); }
+      this.tm=setTimeout(()=>{ if(run!==this.run) return; this.r++; if(this.r>=this.N){ $('caBar').style.width='100%'; markDone('catch'); resultCard($('ap-catch'),'Giỏ đầy sao!',this.miss,`Chúc mừng con đã hoàn thành ${this.got}/${this.N} câu! Xiaobao hứng được ${this.got} ngôi sao rồi!`,()=>this.reset()); } else this.show(); },1900); }
     else { this.miss++; buzz(); this.freeze(d); d.classList.add('bad'); $('caMsg').className='msg bad'; $('caMsg').innerHTML=`Chưa đúng: ${o.why||'thử ngôi sao khác nhé!'}`; }
   }
 };
@@ -6646,7 +6646,7 @@ const SORT={started:false,
     if(b.dataset.t===q.t){ this.lock=true; ding(); say(...q.say2); const chip=document.createElement('span'); chip.className='sochip'; chip.innerHTML=q.chip; b.querySelector('.sopile').appendChild(chip);
       b.classList.remove('yes'); void b.offsetWidth; b.classList.add('yes'); $('soCard').classList.add('gone');
       $('soMsg').className='msg good'; $('soMsg').innerHTML=`Đúng rồi! ${q.ok}`;
-      if(this.i>=this.N-1){ setTimeout(()=>{ markDone('sort'); $('soBar').style.width='100%'; resultCard($('ap-sort'),(L.sortBk?'Xếp xong các sở thích!':'Xếp xong cả ngày!'),this.miss,`Con xếp nhầm ${this.miss} lần.`,()=>this.reset()); },1000); }
+      if(this.i>=this.N-1){ setTimeout(()=>{ markDone('sort'); $('soBar').style.width='100%'; resultCard($('ap-sort'),(L.sortBk?'Xếp xong các sở thích!':'Xếp xong cả ngày!'),this.miss,`Chúc mừng con đã hoàn thành ${this.N}/${this.N} câu! Con xếp giỏi lắm!`,()=>this.reset()); },1000); }
       else { this.tm=setTimeout(()=>{ if(this.Q[this.i]===q){ this.i++; this.show(); } },1500); } }
     else { this.miss++; buzz(); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); $('soMsg').className='msg bad'; $('soMsg').innerHTML=q.why[b.dataset.t]||'Chưa đúng, thử giỏ khác nhé!'; }
   }
@@ -6997,7 +6997,7 @@ function generalColloc(w, vi, v, end, form){
   function verb(vb){ if(!sel){ shake(vb); return; }
     if(sel.dataset.a===vb.dataset.v){ const c=VERBS.find(x=>x.v===vb.dataset.v).c; sel.classList.remove('sel'); sel.classList.add('done'); sel.style.background=c; matched.push({p:sel,v:vb,c});
       ding(); say(`${vb.dataset.v} ${sel.dataset.p.replace('’',"'")}`,'en'); $('e5MMsg').className='msg good'; $('e5MMsg').textContent=`Đúng rồi: ${vb.dataset.v} ${sel.dataset.p}`; sel=null; score(); lines();
-      if(matched.length===PAIRS.length){ markDone('e5match'); setTimeout(()=>resultCard($('sec-e5match').querySelector('.panel'),'Matched them all!',mmiss,`Con nối sai ${mmiss} lần.`,build),700); } }
+      if(matched.length===PAIRS.length){ markDone('e5match'); setTimeout(()=>resultCard($('sec-e5match').querySelector('.panel'),'Matched them all!',mmiss,`Chúc mừng con đã hoàn thành ${PAIRS.length}/${PAIRS.length} câu! Con nối giỏi lắm!`,build),700); } }
     else { mmiss++; buzz(); shake(sel); shake(vb); $('e5MMsg').className='msg bad'; $('e5MMsg').textContent=`Chưa đúng: không nói “${vb.dataset.v} ${sel.dataset.p}”. Thử động từ khác nhé!`; } }
   function score(){ $('e5Score').textContent=`${matched.length} / ${PAIRS.length}`; }
   function lines(){ const br=$('e5Board').getBoundingClientRect(); if(!br.width) return;
@@ -7095,7 +7095,7 @@ const F5 = (()=>{
     $('f5MPics').querySelectorAll('button').forEach(b=>b.onclick=()=>{ if(b.classList.contains('done')) return; $('f5MPics').querySelectorAll('button').forEach(x=>x.classList.remove('sel')); msel=b; b.classList.add('sel'); $('f5MMsg').className='msg'; $('f5MMsg').textContent='Giờ chạm sở thích đi cùng tranh này.'; });
     $('f5MWords').querySelectorAll('button').forEach(b=>b.onclick=()=>{ if(b.classList.contains('done')) return; if(!msel){ shake(b); return; }
       if(msel.dataset.w===b.dataset.w){ const c=MC[mdone%4]; mdone++; [msel,b].forEach(x=>{ x.classList.remove('sel'); x.classList.add('done'); x.style.background=c; x.style.borderColor=c; }); ding(); say(b.dataset.w,'en'); $('f5MMsg').className='msg good'; $('f5MMsg').textContent='Đúng rồi: '+b.dataset.w; msel=null; $('f5MScore').textContent=mdone+' / 4';
-        if(mdone===4){ markDone('f5match'); setTimeout(()=>resultCard($('sec-f5match').querySelector('.panel'),'Matched them all!',mmiss,`Con nối sai ${mmiss} lần.`,mbuild),700); } }
+        if(mdone===4){ markDone('f5match'); setTimeout(()=>resultCard($('sec-f5match').querySelector('.panel'),'Matched them all!',mmiss,`Chúc mừng con đã hoàn thành 4/4 câu! Con nối giỏi lắm!`,mbuild),700); } }
       else { mmiss++; buzz(); shake(msel); shake(b); $('f5MMsg').className='msg bad'; $('f5MMsg').textContent='Chưa đúng, thử lại nhé!'; } });
     $('f5MScore').textContent='0 / 4'; $('f5MMsg').className='msg'; $('f5MMsg').textContent='Chạm một bức tranh trước nhé.'; }
   $('f5MReset').onclick=mbuild;
@@ -7111,7 +7111,7 @@ const F5 = (()=>{
   $('f5Cloze').querySelectorAll('.f5blank').forEach(bl=>bl.onclick=()=>{ if(bl.classList.contains('ok')) return;
     if(!rw){ shake(bl); $('f5RMsg').className='msg bad'; $('f5RMsg').textContent='Chọn một từ trong khung trước nhé.'; return; }
     if(rw.dataset.w===bl.dataset.a){ bl.classList.add('ok'); bl.innerHTML=`<i>${bl.dataset.n}</i>${esc(bl.dataset.a)}`; rw.classList.remove('sel'); rw.classList.add('used'); rw=null; rdone++; ding(); $('f5RMsg').className='msg good'; $('f5RMsg').textContent='Đúng rồi!'; $('f5RScore').textContent=rdone+' / 5';
-      if(rdone===5){ markDone('f5read'); setTimeout(()=>resultCard($('sec-f5read').querySelector('.panel'),'Well done!',rmiss,`Con chọn sai ${rmiss} lần.`,rbuild),700); } }
+      if(rdone===5){ markDone('f5read'); setTimeout(()=>resultCard($('sec-f5read').querySelector('.panel'),'Well done!',rmiss,`Chúc mừng con đã hoàn thành 5/5 câu! Con đọc giỏi lắm!`,rbuild),700); } }
     else { rmiss++; buzz(); shake(bl); $('f5RMsg').className='msg bad'; $('f5RMsg').textContent=`Chưa đúng: “${rw.dataset.w}” không hợp ở ô ${bl.dataset.n}. Đọc lại câu nhé!`; } });
   $('f5RReset').onclick=rbuild;
   /* talk */
@@ -7315,7 +7315,7 @@ const CLAW={started:false, X0:14, X1:88, TOP:14, FLOOR:76, hh:8,
       setTimeout(()=>t.remove(),900); setTimeout(()=>say(...q.after.say),500); }
     await wait(700); if(run!==this.run) return;
     this.place(this.x,this.TOP,true); this.r++; this.cur=null; this.busy=false; this.hud(); this.fill(false);
-    if(this.r>=this.N){ $('clOpts').hidden=true; markDone('claw'); resultCard($('clStage'),'Hộp quà đầy thú bông!',this.miss,`Con mang về được ${this.won} bạn thú, đánh rơi ${this.miss} bạn.`,()=>this.reset()); return; }
+    if(this.r>=this.N){ $('clOpts').hidden=true; markDone('claw'); resultCard($('clStage'),'Hộp quà đầy thú bông!',this.miss,`Chúc mừng con đã hoàn thành ${this.won}/${this.N} câu! Con mang về được ${this.won} bạn thú bông.`,()=>this.reset()); return; }
     $('clNext').hidden=false; },
   next(){ this.ready(); },
   wire(){ if(this.wired) return; this.wired=true;
@@ -8053,7 +8053,7 @@ const GS={started:false, T:40,
   finish(){ this.stopAll(); $('gsPick').hidden=true; const prev=store.get(this.key(),0), best=Math.max(prev,this.score), rec=this.score>prev; store.set(this.key(),best);
     const full=this.lives>0; if(full){ markDone('gs'); GSND.play('applause',.8); }
     this.sb(full?(rec?'<b>KỶ LỤC MỚI!</b> Con giỏi quá! Cảm ơn con đã tham gia MC Leo Gameshow!':'Hết chương trình rồi! Cảm ơn con đã tham gia MC Leo Gameshow!'):'Hết mạng rồi! Chơi lại để về đích nhé.');
-    resultCard($('gsStudio'), full?(rec?'Kỷ lục mới!':'Hoàn thành gameshow!'):'Hết mạng rồi!', full?this.miss:3, `Điểm: <b>${this.score}</b> · Kỷ lục: <b>${best}</b>. Con trả lời sai ${this.miss} câu.`, ()=>{ this.reset(); this.intro(true); }); }
+    resultCard($('gsStudio'), full?(rec?'Kỷ lục mới!':'Hoàn thành gameshow!'):'Cố lên nhé!', full?this.miss:3, full?`Chúc mừng con đã hoàn thành ${this.N}/${this.N} câu! Điểm: <b>${this.score}</b> · Kỷ lục: <b>${best}</b>.`:`Con đã cố gắng lắm! Điểm: <b>${this.score}</b>. Chơi lại để về đích nhé!`, ()=>{ this.reset(); this.intro(true); }); }
 };
 { const _wa=wireActs; wireActs=function(groupId){ _wa(groupId); $(groupId).querySelectorAll('.act').forEach(b=>{ const o=b.onclick; b.onclick=()=>{ o(); if(b.dataset.act==='gs'){ if(!GS.started) GS.reset(); else GS.resume(); } else GS.pause(); }; }); }; }
 { const _pl=paintLesson; paintLesson=function(){ GS.started=false; GS.stopAll(); return _pl.apply(this,arguments); }; }
@@ -8440,8 +8440,8 @@ const DUCK8 = (() => {
   function finish(won){ state='over'; cancelAnimationFrame(raf); raf=0; $('dkSwim').hidden=true; draw(performance.now());
     const place=order().indexOf(P())+1, miss=NQ-right;
     if(won){ markDone('duck'); if(place===1) setTimeout(()=>FX.whistle&&FX.whistle(),200); }
-    resultCard($('dkWrap'), won ? (place===1?'Về nhất! 第一名！':place===2?'Về nhì! 第二名！':'Về ba! 第三名！') : 'Ôi, vịt bị choáng 3 lần rồi!', won?miss:3,
-      won ? `Con trả lời đúng ${right}/${NQ} câu.` : 'Thử lại nhé! 再来一次！', ()=>{ $('dkPlay').hidden=true; $('dkPick').hidden=false; state='pick'; }); }
+    resultCard($('dkWrap'), won ? (place===1?'Về nhất! 第一名！':place===2?'Về nhì! 第二名！':'Về ba! 第三名！') : 'Vịt cần nghỉ một chút!', won?miss:3,
+      won ? `Chúc mừng con đã hoàn thành ${right}/${NQ} câu!` : 'Con chơi lại để vịt về đích nhé! 再来一次！', ()=>{ $('dkPlay').hidden=true; $('dkPick').hidden=false; state='pick'; }); }
   function update(dt){ const p=P(), t=performance.now()/1000;
     for(const r of racers){ if(r.fin) continue;
       if(r.me){
@@ -8544,8 +8544,8 @@ const DASH8 = (() => {
       if(lives<=0){ state='over'; setTimeout(()=>finish(false),1200); return; }
       setTimeout(()=>{ if(state==='stuck') sayQ(); },700); } }
   function finish(done){ state='over'; cancelAnimationFrame(raf); raf=0; if(done) markDone('dash');
-    resultCard($('rnWrap'), done?(score>=7?'Excellent! 太棒了！':score>=5?'Good job! 很好！':'Keep going! 加油！'):'Hết trái tim rồi!', done?QN-score:3,
-      done?`Con chạy đúng ngay lần đầu ${score}/${QN} câu.`:'Thử lại nhé! 再来一次！', startGame); }
+    resultCard($('rnWrap'), done?(score>=7?'Excellent! 太棒了！':score>=5?'Good job! 很好！':'Keep going! 加油！'):'Cố lên! 加油！', done?QN-score:3,
+      done?`Chúc mừng con đã hoàn thành ${QN}/${QN} câu!`:'Con làm tốt lắm, chơi lại để về đích nhé! 再来一次！', startGame); }
   function setLane(l){ if(state==='over'||state==='idle') return; lane=Math.max(0,Math.min(2,l)); if(state==='stuck') check(); }
   const move = d => setLane(lane+d);
   function loop(){ if(!raf&&vis()){ last=performance.now(); raf=requestAnimationFrame(tick); } }
@@ -8622,7 +8622,7 @@ const TUG8 = (() => {
   function finish(win){ $('tgQ').hidden=true;
     if(win){ mon.classList.add('ko','fall'); kid.classList.add('jump'); markDone('tug'); setTimeout(()=>FX.dizzy(),200); setTimeout(()=>FX.whistle&&FX.whistle(),900); }
     else { kid.classList.add('fall'); mon.classList.add('jump'); }
-    setTimeout(()=>resultCard(scene, win?'You win! 你赢了！':'Try again! 再来一次！', LIVES-lives, win?`Con kéo ngã quái vật, còn ${lives}/${LIVES} trái tim.`:'Quái vật thắng lần này. Thử lại nhé!',
+    setTimeout(()=>resultCard(scene, win?'You win! 你赢了！':'Try again! 再来一次！', LIVES-lives, win?`Con kéo ngã quái vật, còn ${lives}/${LIVES} trái tim.`:'Suýt nữa là thắng rồi! Con chơi lại để kéo ngã quái vật nhé!',
       ()=>{ reset(); next(false); $('tgQ').hidden=false; locked=false; wqSay8(q); }),700); }
   return {
     enter(){ wire(); if(pos===undefined){ reset(); next(false); } if(introDone&&!locked&&!$('tgQ').hidden) wqSay8(q); },
@@ -9122,7 +9122,7 @@ const KIT = (() => {
   function finish(){ $('ktBar').style.width='100%'; markDone('kit11'); confetti(30);
     $('ktImg').src='kt11/s6.jpg'; $('ktSpots').innerHTML=''; $('ktOpts').innerHTML=''; $('ktQi').textContent='Kitty ở đâu thế?'; $('ktQm').innerHTML=`${zhL('小猫在树下。','xiǎo māo zài shù xià.')} Kitty is under the tree!`;
     say('小猫在树下。','zh').then(()=>say('Kitty is under the tree!','en'));
-    resultCard($('ktStage'),'Tìm thấy Kitty rồi!',miss,`Con tìm đúng ${score}/${N} lần. Kitty ở dưới gốc cây!`,()=>reset()); }
+    resultCard($('ktStage'),'Tìm thấy Kitty rồi!',miss,`Chúc mừng con đã hoàn thành ${N}/${N} câu! Kitty ở dưới gốc cây!`,()=>reset()); }
   function reset(){ wire(); rs=build(); i=0; miss=0; score=0; $('ktOpts').classList.remove('locked'); $('ktStage').querySelectorAll('.result').forEach(r=>r.remove()); show(); }
   return { started:false, enter(){ wire(); if(!this.started){ this.started=true; reset(); } }, stop(){ this.started=false; } };
 })();
@@ -9165,7 +9165,7 @@ const DOL = (() => {
       setTimeout(()=>{ $('dlStage').querySelectorAll('.dl-stamp.no').forEach(x=>x.remove()); },1200); }
     $('dlStreak').textContent=`COMBO ×${streak}`; $('dlStreak').classList.toggle('hot',streak>=3); }
   function next(){ stage='done'; $('dlTF').hidden=!cur.q.ok; $('dlNext').hidden=false; $('dlBar').style.width=((i+1)/rs.length*100)+'%'; $('dlScore').textContent=`${score} ★`; }
-  function finish(){ markDone('dol11'); confetti(30); resultCard($('dlStage'),'Thám tử giỏi!',miss,`Con trả lời đúng ${score} lần. Con đã tìm thấy búp bê cùng các bạn!`,()=>reset()); }
+  function finish(){ markDone('dol11'); confetti(30); resultCard($('dlStage'),'Thám tử giỏi!',miss,`Chúc mừng con đã hoàn thành ${rs.length}/${rs.length} câu! Con đã tìm thấy búp bê cùng các bạn!`,()=>reset()); }
   function reset(){ wire(); rs=DQ11.map((q,k)=>({q,lang:k%2?'en':'zh'})); i=0; miss=0; score=0; streak=0; $('dlStage').querySelectorAll('.result').forEach(r=>r.remove()); show(); }
   return { started:false, enter(){ wire(); if(!this.started){ this.started=true; reset(); } }, stop(){ this.started=false; } };
 })();

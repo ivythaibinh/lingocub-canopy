@@ -78,7 +78,7 @@
     {n:'Gấu nâu', r:[['#fde3c0','0 0 10 10'],['#7a4a2a','1 1 2 2 7 1 2 2'],['#8a5a34','1 2 8 6 2 8 6 2'],['#c99566','2 2 1 1 7 2 1 1'],['#e0b77a','3 5 4 3'],['#2a1a12','3 4 1 1 6 4 1 1 4 5 2 1 4 7 2 1']]}
   ];
   window.CANOPY = {
-    demoOpenAll:false, /* true = every station open (demo); false = stations unlock in order */
+    demoOpenAll:true, /* true = every station open (demo); false = stations unlock in order */
     site:!!window.CANOPY_SITE, /* one website (GitHub Pages): map and stations share progress */
     U:U, lessons:lessons, art:art, partial:partial, band:band, rects:rects, PLOT:PLOT, SIGN:SIGN, SCAF:SCAF,
     /* compact hash formats shared by the map and the station pages */

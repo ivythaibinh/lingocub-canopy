@@ -26,7 +26,7 @@
     C.writeCity(o); }
   function openSet(){ try{ return JSON.parse(ls('lc_open')||'[]'); }catch(e){ return []; } }
   function unitOpen(u){ if(C.demoOpenAll||teacher()||u===1||cityDone(u-1)) return true; if(openSet().indexOf(u)>=0) return true; var UNITS=g('UNITS'); return !!(UNITS&&UNITS[u-1]&&unitDone(u-1)); }
-  function lessonOpen(u,n){ if(!unitOpen(u)) return false; if(teacher()) return true; var ns=lessonNums(u), i=ns.indexOf(n); return i===0 || (i>0 && lessonDone(u,ns[i-1])); }
+  function lessonOpen(u,n){ if(!unitOpen(u)) return false; if(teacher()||C.demoOpenAll) return true; var ns=lessonNums(u), i=ns.indexOf(n); return i===0 || (i>0 && lessonDone(u,ns[i-1])); }
   function bits(u){ return lessonNums(u).map(function(n){ return lessonDone(u,n)?'1':'0'; }).join(''); }
   function hubHref(){ if(!CFG.hub) return ''; var m={}; unitsHere().forEach(function(u){ m[u]=bits(u); }); return CFG.hub+'#'+C.reportStr(m); }
   function info(u){ return C.U[u] || {en:'Unit '+u,zh:'',py:'',b:'',q:'',n:lessonNums(u).length}; }
@@ -87,7 +87,7 @@
         '<b class="lc-card-t">'+esc(m.vi)+'</b>'+
         '<span class="lc-card-s">'+esc(topic(UN,n))+'</span>'+
         '<div class="lc-meter" role="img" aria-label="'+k+' trên '+a+' hoạt động"><span style="width:'+(a?Math.round(k/a*100):0)+'%"></span></div>'+
-        '<span class="lc-card-c">★ '+k+'/'+a+' hoạt động</span>'+btn+'</li>';
+        '<span class="lc-card-c">★ '+k+'/'+a+' hoạt động</span>'+(k&&!done?'<span class="lc-card-miss">Còn thiếu: '+esc(missTextFor(UN,n))+'</span>':'')+btn+'</li>';
     }).join('');
     var left=ns.length-dn;
     el('lcStation').innerHTML=
@@ -109,6 +109,7 @@
     var UN=g('UN'), LN=g('LN'), m=lmeta(UN,LN), I=info(UN), ns=lessonNums(UN), dn=ns.filter(function(n){return lessonDone(UN,n);}).length;
     el('lcBarB').innerHTML='<figure class="lc-bar-fig">'+figure(UN,ns.length?dn/ns.length:0)+'</figure>'+
       '<div class="lc-bar-tem"><span class="lc-bar-cap"><b>'+(dn===ns.length?'Đã xây xong ':'Đang xây ')+esc(I.b)+'</b> · '+dn+'/'+ns.length+' tem</span><div class="lc-tems">'+temHTML(UN)+'</div></div>';
+    setTimeout(paintMiss,0);
     el('lcBarL').innerHTML=chIcon(m)+'<div class="lc-bt"><span class="pxl">TRẠM '+UN+' · BÀI '+LN+'</span><b>'+esc(m.vi)+'</b><span class="lc-bs">'+esc(topic(UN,LN))+(m.zh?' · <span class="zh">'+esc(m.zh)+'</span>':'')+'</span></div>';
   }
   function paintLock(){
@@ -305,6 +306,154 @@
     document.title='Canopy · Trạm '+UN+' · '+info(UN).en;
   }
 
+  /* ===================== 17/11: game music, fireworks, dub tabs, recorder, "còn thiếu" ===================== */
+  var FLAG={
+    en:'<svg class="lc-flag" viewBox="0 0 60 30" aria-hidden="true"><clipPath id="lcUk"><path d="M0 0v30h60V0z"/></clipPath><g clip-path="url(#lcUk)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2.4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg>',
+    zh:'<svg class="lc-flag" viewBox="0 0 30 20" aria-hidden="true"><path fill="#EE1C25" d="M0 0h30v20H0z"/><g fill="#FFFF00"><path d="M5 2l1.18 3.62H10L6.9 7.86 8.09 11.5 5 9.26 1.91 11.5 3.1 7.86 0 5.62h3.82z"/><circle cx="10" cy="2" r=".9"/><circle cx="12" cy="4" r=".9"/><circle cx="12" cy="7" r=".9"/><circle cx="10" cy="9" r=".9"/></g></svg>'
+  };
+  function curL(){ return g('L')||{}; }
+  function stripTags(s){ return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); }
+  function dubWord(L){ L=L||curL(); return L.dub&&L.dub.kara ? 'Hát karaoke' : 'Lồng tiếng'; }
+  function lessonObj(u,n){ var U=g('UNITS'); return (U&&U[u]&&U[u].lessons[n])||curL(); }
+  function actLabel(a,L){
+    L=L||curL();
+    if(a==='dub_en') return dubWord(L)+' - tiếng Anh';
+    if(a==='dub_zh') return dubWord(L)+' - tiếng Trung';
+    var v=(L.vocab||[]).concat(L.hanzi||[]).filter(function(x){ return x.act===a; })[0]; if(v) return stripTags(v.nm||v.h||a);
+    var s=(L.sections||[]).filter(function(x){ return x.sec===a; })[0]; if(s) return stripTags(s.nm);
+    return a;
+  }
+  function missingActs(u,n){ var P=g('PROG')||{}; return acts(u,n).filter(function(a){ return !P[pkey(u,n,a)]; }); }
+  function goAct(a){
+    var L=curL(), tiles=el('secTiles');
+    function sec(s){ var b=tiles&&tiles.querySelector('button[data-sec="'+s+'"]'); if(b) b.click(); else { var f=g('openSec'); if(typeof f==='function') f(s); } }
+    if(a==='dub_en'||a==='dub_zh'){ sec('dub'); var sb=document.querySelector('#sec-dub .seg button[data-v="'+a.slice(4)+'"]'); if(sb) sb.click(); var p=el('sec-dub'); if(p) p.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+    var inV=(L.vocab||[]).some(function(x){return x.act===a;}), inH=(L.hanzi||[]).some(function(x){return x.act===a;});
+    if(inV||inH){ sec(inV?'vocab':'hanzi'); var t=document.querySelector('.act[data-act="'+a+'"]'); if(t){ t.click(); t.scrollIntoView({behavior:'smooth',block:'center'}); } return; }
+    sec(a); var sp=el('sec-'+a); if(sp) sp.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  /* reminder of the parts still missing in this lesson */
+  function paintMiss(){
+    var bar=el('lcBar'); if(!bar) return;
+    var box=el('lcMiss'); if(!box){ box=document.createElement('div'); box.id='lcMiss'; box.className='lc-miss'; var b=el('lcBarB'); if(b) bar.insertBefore(box,b); else bar.appendChild(box); }
+    var UN=g('UN'), LN=g('LN'), miss=missingActs(UN,LN), done=nDone(UN,LN);
+    if(!miss.length){ box.hidden=false; box.className='lc-miss ok'; box.innerHTML='<b>✓ Con đã làm đủ mọi phần của bài này. Công trình đã có thêm 1 bộ phận!</b>'; return; }
+    if(!done){ box.hidden=true; return; }
+    box.hidden=false; box.className='lc-miss';
+    box.innerHTML='<span class="lc-miss-t"><b>Con còn thiếu '+miss.length+' phần</b> để hoàn thiện công trình:</span>'+
+      miss.map(function(a){ var f=a==='dub_en'?FLAG.en:a==='dub_zh'?FLAG.zh:''; return '<button type="button" class="lc-mchip" data-a="'+esc(a)+'">'+f+esc(actLabel(a))+' ▶</button>'; }).join('');
+    box.querySelectorAll('[data-a]').forEach(function(b){ b.onclick=function(){ goAct(b.dataset.a); }; });
+  }
+  function missTextFor(u,n){ return missText(u,n,3); }
+  function missText(u,n,max){ var m=missingActs(u,n), Lo=lessonObj(u,n); var s=m.slice(0,max).map(function(a){ return actLabel(a,Lo); }).join(', '); return m.length>max ? s+'… (còn '+(m.length-max)+' phần nữa)' : s; }
+  var toastT=0;
+  function toast(html){ var t=el('lcToast'); if(!t){ t=document.createElement('div'); t.id='lcToast'; t.className='lc-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+    t.innerHTML=html; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove('on'); },6500);
+    var b=t.querySelector('[data-a]'); if(b) b.onclick=function(){ t.classList.remove('on'); goAct(b.dataset.a); }; }
+  function remindAfter(id){
+    var UN=g('UN'), LN=g('LN'), m=missingActs(UN,LN); if(!m.length || m.length===acts(UN,LN).length) return;
+    var first=m[0];
+    if(id==='dub_en' && m.indexOf('dub_zh')>=0) first='dub_zh'; else if(id==='dub_zh' && m.indexOf('dub_en')>=0) first='dub_en';
+    toast('<b>Giỏi lắm! Con đã xong “'+esc(actLabel(id))+'”.</b><span>Con còn thiếu: '+esc(missText(UN,LN,3))+' để hoàn thiện công trình nhé!</span><button type="button" class="btn go" data-a="'+esc(first)+'">Làm “'+esc(actLabel(first))+'” ▶</button>');
+  }
+
+  /* ---------- fireworks: sound + sparks when a game is finished ---------- */
+  function fwSound(){
+    try{ var acf=g('ac'); var c=typeof acf==='function'?acf():null; if(!c) return; var t0=c.currentTime;
+      function noise(d){ var b=c.createBuffer(1,Math.max(1,c.sampleRate*d|0),c.sampleRate), x=b.getChannelData(0); for(var i=0;i<x.length;i++) x[i]=Math.random()*2-1; var s=c.createBufferSource(); s.buffer=b; return s; }
+      function env(gn,t,a,p,d){ gn.gain.setValueAtTime(.0001,t); gn.gain.exponentialRampToValueAtTime(p,t+a); gn.gain.exponentialRampToValueAtTime(.0001,t+a+d); }
+      [0,.42,.8].forEach(function(dt,k){ var t=t0+dt;
+        var o=c.createOscillator(), og=c.createGain(); o.type='sine'; o.frequency.setValueAtTime(500+k*120,t); o.frequency.exponentialRampToValueAtTime(1700+k*200,t+.42); env(og,t,.03,.05,.4); o.connect(og).connect(c.destination); o.start(t); o.stop(t+.46);
+        var tb=t+.44, n=noise(.9), f=c.createBiquadFilter(), ng=c.createGain(); f.type='lowpass'; f.frequency.setValueAtTime(5200,tb); f.frequency.exponentialRampToValueAtTime(500,tb+.8); env(ng,tb,.006,.55,.8); n.connect(f).connect(ng).connect(c.destination); n.start(tb); n.stop(tb+.9);
+        var bo=c.createOscillator(), bg=c.createGain(); bo.type='sine'; bo.frequency.setValueAtTime(140,tb); bo.frequency.exponentialRampToValueAtTime(45,tb+.3); env(bg,tb,.004,.45,.32); bo.connect(bg).connect(c.destination); bo.start(tb); bo.stop(tb+.36);
+        for(var i=0;i<9;i++){ var tc=tb+.18+Math.random()*.75, cn=noise(.03), hf=c.createBiquadFilter(), cg=c.createGain(); hf.type='highpass'; hf.frequency.value=3000; env(cg,tc,.002,.22,.03); cn.connect(hf).connect(cg).connect(c.destination); cn.start(tc); cn.stop(tc+.04); }
+      });
+    }catch(e){}
+  }
+  function fwSparks(host){
+    try{ var box=(host&&host.querySelector(':scope > .result'))||host||document.body; var cols=['#ffdf01','#ff6b6b','#6cc04a','#8fd3ff','#ffffff','#ffa53b'];
+      [[22,30,0],[78,26,420],[50,14,800]].forEach(function(p){ setTimeout(function(){ for(var i=0;i<18;i++){ var s=document.createElement('i'); s.className='lc-spark';
+        var a=i/18*Math.PI*2, r=60+Math.random()*50; s.style.left=p[0]+'%'; s.style.top=p[1]+'%'; s.style.background=cols[i%cols.length];
+        s.style.setProperty('--dx',Math.round(Math.cos(a)*r)+'px'); s.style.setProperty('--dy',Math.round(Math.sin(a)*r)+'px'); box.appendChild(s); setTimeout(function(x){ return function(){ x.remove(); }; }(s),1300); } },p[2]+440); });
+    }catch(e){}
+  }
+
+  /* ---------- background music: only while a game is being played ---------- */
+  var LIVE={};
+  function gamePanels(){ var GA=g('GAMEACTS')||[]; return GA.map(function(a){ return el('ap-'+a); }).filter(Boolean); }
+  function panelOn(p){ var sp=p.closest('.secpanel'); return !p.hidden && sp && !sp.hidden; }
+  function musicNow(){ return !!g('musicOn'); }
+  function setMusic(on){ window.__lcv=!!on; gset('musicOn'); try{ var st=g('store'); if(st) st.set('canopy_music',!!on); }catch(e){} try{ var pm=g('paintMusic'); if(typeof pm==='function') pm(); }catch(e){} paintGMus(); sync(); }
+  function sync(){ try{ var s=g('syncMusic'); if(typeof s==='function') s(); }catch(e){} }
+  function paintGMus(){ var on=musicNow(); document.querySelectorAll('.lc-gmus').forEach(function(b){ b.setAttribute('aria-pressed',String(on)); b.innerHTML='<span aria-hidden="true">'+(on?'♪':'✕')+'</span><span>'+(on?'Nhạc: bật':'Nhạc: tắt')+'</span>'; b.title=on?'Tắt nhạc nền':'Bật nhạc nền'; }); }
+  function addGMus(){
+    gamePanels().forEach(function(p){ if(p.querySelector(':scope > .lc-gmus')) return; p.classList.add('lc-gp');
+      var b=document.createElement('button'); b.type='button'; b.className='lc-gmus'; b.onclick=function(e){ e.stopPropagation(); setMusic(!musicNow()); }; p.appendChild(b); });
+    paintGMus();
+  }
+  function setupMusic(){
+    window.__lcv=function(){ if(!musicNow()) return false; return gamePanels().some(function(p){ return panelOn(p) && LIVE[p.id] && !p.querySelector('.result'); }); };
+    gset('wantMusic');
+    document.addEventListener('pointerdown',function(e){
+      var p=e.target.closest&&e.target.closest('.panel'); if(!p || !/^ap-/.test(p.id)) return;
+      if(gamePanels().indexOf(p)<0 || e.target.closest('.lc-gmus,.panel-h')) return;
+      LIVE[p.id]=true; sync(); setTimeout(sync,350);
+    },true);
+    var pm=g('paintMusic'); if(typeof pm==='function' && !pm.__lc){ var w=function(){ var r=pm.apply(this,arguments); paintGMus(); return r; }; w.__lc=true; window.__lcv=w; gset('paintMusic'); }
+    addGMus();
+  }
+  function onResult(host){
+    var p=host&&host.closest&&host.closest('.panel'); if(p&&p.id) LIVE[p.id]=false;
+    sync(); fwSound(); fwSparks(host);
+  }
+
+  /* ---------- dubbing / karaoke: EN | ZH tabs with flags, recorder for every unit ---------- */
+  function setupDubTabs(){
+    var sp=el('sec-dub'); if(!sp) return; var panel=sp.querySelector('.panel'), seg=sp.querySelector('.seg'), dub=sp.querySelector('.dub'); if(!panel||!seg||!dub) return;
+    var tabs=el('lcLang');
+    if(!tabs){ tabs=document.createElement('div'); tabs.id='lcLang'; tabs.className='lc-lang'; tabs.setAttribute('role','tablist'); tabs.setAttribute('aria-label','Chọn ngôn ngữ');
+      dub.parentNode.insertBefore(tabs,dub); seg.classList.add('lc-hide');
+      new MutationObserver(paintDubTabs).observe(seg,{attributes:true,subtree:true,attributeFilter:['aria-pressed']}); }
+    paintDubTabs();
+  }
+  function paintDubTabs(){
+    var tabs=el('lcLang'), seg=document.querySelector('#sec-dub .seg'); if(!tabs||!seg) return;
+    var P=g('PROG')||{}, UN=g('UN'), LN=g('LN');
+    tabs.innerHTML=['en','zh'].map(function(v){ var b=seg.querySelector('button[data-v="'+v+'"]'), on=b&&b.getAttribute('aria-pressed')==='true', done=!!P[pkey(UN,LN,'dub_'+v)];
+      return '<button type="button" role="tab" data-v="'+v+'" aria-selected="'+on+'" class="lc-ltab '+v+(done?' done':'')+'">'+FLAG[v]+'<span class="t"><b>'+dubWord()+' - '+(v==='en'?'tiếng Anh':'tiếng Trung')+'</b><small>'+(v==='en'?'English':'中文')+' · '+(done?'✓ Đã xong':'Chưa xong')+'</small></span></button>'; }).join('');
+    tabs.querySelectorAll('button').forEach(function(t){ t.onclick=function(){ var b=seg.querySelector('button[data-v="'+t.dataset.v+'"]'); if(b) b.click(); paintDubTabs(); }; });
+    var tile=document.querySelector('#secTiles button[data-sec="dub"] .ds'); if(tile && !tile.querySelector('.lc-flag')) tile.insertAdjacentHTML('afterbegin',FLAG.en+FLAG.zh+' ');
+  }
+  function setupRec(){
+    var REC=g('REC'); if(!REC || REC.__lc) return; REC.__lc=true;
+    var setup=REC.setup;
+    REC.setup=function(){ var r=setup.apply(this,arguments); var L=curL(), rec=el('rec');
+      if(rec && L.dub && rec.hidden){ rec.hidden=false; if(!this.wired) this.wire(); this.stop(); this.clear();
+        var m=el('recMsg'); if(m){ m.className='msg'; m.textContent=L.dub.kara?'Quay video con hát: bấm “Bật camera và quay”, bài hát chạy lại từ đầu, con nhìn chữ karaoke và hát theo.':'Quay video con lồng tiếng: bấm “Con tự lồng tiếng” để tắt tiếng video, rồi bấm “Bật camera và quay”.'; } }
+      return r; };
+    REC.saveFile=async function(){ if(!this.blob) return; var m=el('recMsg'), name='canopy-u'+g('UN')+'-bai'+g('LN')+'-'+new Date().toISOString().slice(0,10)+'.'+(this.ext||(this.blob.type&&this.blob.type.indexOf('mp4')>=0?'mp4':'webm'));
+      var d=null; try{ d=window.claude&&window.claude.use?await window.claude.use('downloads'):null; }catch(e){}
+      if(d){ try{ await d.save({filename:name,data:this.blob}); m.className='msg good'; m.textContent='Đã lưu video. Gửi cho cô qua nhóm lớp nhé!'; return; }catch(e){ if(e&&e.code==='declined'){ m.className='msg'; m.textContent='Con chưa lưu video. Muốn lưu thì bấm lại “Lưu video”.'; return; } } }
+      try{ var a=document.createElement('a'); a.href=URL.createObjectURL(this.blob); a.download=name; document.body.appendChild(a); a.click(); a.remove(); m.className='msg good'; m.textContent='Đang lưu video về máy. Gửi cho cô qua nhóm lớp nhé!'; }
+      catch(e){ m.className='msg'; m.textContent='Con bấm dấu ⋮ ở góc video để tải xuống nhé.'; } };
+    var bar=el('recBar'), out=el('recOut'), view=el('recView'), live=el('recLive');
+    if(bar && out && !el('recReplay')){ var rp=document.createElement('button'); rp.type='button'; rp.id='recReplay'; rp.className='btn blue'; rp.textContent='▶ Xem lại video';
+      rp.onclick=function(){ try{ out.currentTime=0; var p=out.play(); if(p&&p.catch) p.catch(function(){}); out.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){} }; bar.insertBefore(rp,bar.firstChild);
+      var ag=el('recAgain'); if(ag) ag.textContent='↺ Thử lại'; }
+    if(view && live && !el('lcPipLine')){
+      var line=document.createElement('div'); line.id='lcPipLine'; line.className='lc-pipline'; view.appendChild(line);
+      var tick=0;
+      var upd=function(){ var k=el('kara'), txt='';
+        if(k && !k.hidden){ var cur=k.querySelector('.kl'); txt=cur?cur.innerText:''; }
+        if(!txt){ var tr=document.querySelector('#script tr.now'); if(tr) txt=tr.innerText; }
+        line.textContent=(txt||'').replace(/\s+/g,' ').trim(); };
+      new MutationObserver(function(){ var on=!live.hidden; view.classList.toggle('lc-pip',on); clearInterval(tick); if(on){ upd(); tick=setInterval(upd,250); } else line.textContent=''; }).observe(live,{attributes:true,attributeFilter:['hidden']});
+    }
+  }
+
+  /* ---------- football: "Sút tiếp" right behind Buffy ---------- */
+  function setupKick(){ var nx=el('g2Next'), st=el('g2Stage'); if(nx && st && nx.parentNode!==st){ st.appendChild(nx); nx.classList.add('lc-kicknext'); } }
+
   /* ---------- hooks on the app's global functions ---------- */
   function wrap(name,before,after){
     var f=g(name); if(typeof f!=='function' || f.__lc) return;
@@ -316,10 +465,12 @@
     buildShell(); if(!el('lcTop')) return; syncCity();
     var go=C.parseGo(location.hash);
     if(go && !C.site){ ls('lc_teacher',go.t?'1':'0'); var o=openSet(); if(o.indexOf(go.u)<0){ o.push(go.u); ls('lc_open',JSON.stringify(o)); } }
-    wrap('paintLesson',null,function(){ decorateLesson(); wizardize(); if(VIEW==='lesson'){ paintBar(); paintTop(); } });
+    wrap('paintLesson',function(){ LIVE={}; },function(){ decorateLesson(); wizardize(); addGMus(); setupDubTabs(); if(VIEW==='lesson'){ paintBar(); paintTop(); } });
     wrap('openSec',null,function(){ wizardize(); });
-    wrap('markDone',function(){ var u=g('UN'), n=g('LN'); return {u:u,n:n,was:lessonDone(u,n)}; },
-      function(ctx){ if(!ctx) return; refresh(); if(!ctx.was && lessonDone(ctx.u,ctx.n)) setTimeout(function(){ celebrate(ctx.u,ctx.n); },700); });
+    wrap('markDone',function(id){ var u=g('UN'), n=g('LN'), P=g('PROG')||{}; return {u:u,n:n,was:lessonDone(u,n),had:!!P[pkey(u,n,id)]}; },
+      function(ctx,args){ if(!ctx) return; refresh(); paintDubTabs(); if(!ctx.was && lessonDone(ctx.u,ctx.n)) setTimeout(function(){ celebrate(ctx.u,ctx.n); },700); else if(!ctx.was && !ctx.had) remindAfter(args&&args[0]); });
+    wrap('resultCard',null,function(ctx,args){ onResult(args&&args[0]); });
+    setupMusic(); setupRec(); setupKick(); setupDubTabs();
     var here=unitsHere();
     if(go && here.indexOf(go.u)>=0) switchUnit(go.u);
     var UN=g('UN');
