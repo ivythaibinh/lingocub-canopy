@@ -3290,7 +3290,7 @@ function songKara6(){
 const U6L2 = {
   n:2, title:'Driver, employee, student', Q:{zh:'他做什么工作？他是司机。',py:'tā zuò shénme gōngzuò? tā shì sījī.'}, items:L2W6, pool:ALLW6,
   sections:[{sec:'dub',ic:'film',nm:'Bài hát karaoke',ds:'What does he do?'},{sec:'vocab',ic:'card',nm:'Từ vựng',ds:'Thẻ từ + ghép thẻ + 3 trò'},{sec:'hanzi',ic:'brush',nm:'Luyện chữ Hán',ds:'司机 · 员工 · 学生'}],
-  acts:['dub_en','dub_zh','flash','mt','catch','wm','bal','write','pyquiz'],
+  acts:['dub_en','dub_zh','flash','mt','catch','wm','bal','write','grp'],
   vocab:[
     {act:'flash',code:'TV',nm:'Thẻ từ: tài xế, nhân viên, học sinh',lv:'3 từ + mẫu câu',h:'Thẻ từ: tài xế, nhân viên, học sinh',how:'Chạm thẻ để lật. Mặt trước đọc tiếng Trung, mặt sau đọc tiếng Anh. Thẻ cuối là mẫu câu mới “What does he do? He is a driver.” Xem hết 4 thẻ để được 1 sao.'},
     {act:'mt',code:'G1',nm:'Ghép thẻ',lv:'BRIDGE 1 · Nhận diện từ',h:'Ghép thẻ: nghề mới, nghề cũ và câu hỏi',tag:'BRIDGE 1',how:'Lật 1 thẻ tiếng Anh và 1 thẻ tiếng Trung (chạm để nghe). Cùng nghĩa thì chọn V, khác nghĩa chọn X. Có cả câu “What does he/she do?” và một nghề bài 1 để ôn lại.'},
@@ -3299,7 +3299,7 @@ const U6L2 = {
     {act:'bal',code:'G2',nm:'Bóng bay ghép câu',lv:'BRIDGE 2 · Câu hỏi và câu trả lời',h:'Bóng bay: 他做什么工作？他是司机。',tag:'BRIDGE 2',how:'Đọc câu tiếng Anh. Chạm bóng bay theo đúng thứ tự để ghép câu tiếng Trung, ví dụ 他 + 是 + 司机. Có bóng bẫy: 他 hay 她, 谁 hay 什么工作. Chạm nhầm thì bóng rung lắc, con thử bóng khác nhé!'}],
   hanzi:[
     {act:'write',code:'VC',nm:'Viết chữ Hán',lv:'司机 · 员工 · 学生',h:'Viết chữ Hán',how:'Chọn từ rồi chọn cách luyện: Xem mẫu, Tô nét, Tự viết. Hình lót quá đậm hay quá mờ thì kéo thanh “làm mờ – làm rõ”; hình lệch thì bấm “Kéo hình”. Tô xong cả 6 chữ để được 1 sao.'},
-    {act:'pyquiz',code:'PY',nm:'Nhìn hình chọn pinyin',lv:'Chữ đỏ ghép thành từ · ôn bài 1',h:'Nhìn chữ đỏ, chọn pinyin của cả từ',how:'Các chữ màu đỏ lấy từ thẻ chữ tượng hình, ghép lại thành một từ. Chọn pinyin đúng của cả từ. Bấm loa để nghe từng đáp án.'}],
+    {act:'grp',code:'XN',nm:'Xếp nhóm: 师 · 医',lv:'Chữ giống nhau · 7 cuốn sách',h:'Xếp sách lên ngăn có chữ giống nhau',how:'Mỗi ngăn giá sách có một chữ: 师 hoặc 医. Chạm một cuốn sách rồi chạm ngăn có chữ đó. Sách không có 师, 医 thì xếp vào ngăn Khác. Bấm loa để nghe.'}],
   dub:{aspect:'16/9', en:'media/u6l2_en.mp4', zh:'media/u6l2_zh.mp4', pen:'media/poster_u6l2_en.jpg', pzh:'media/poster_u6l2_zh.jpg', kara:true, karaData:songKara6,
     msg:'Bài hát “What does he do? – 他做什么工作？”. Bước 1: xem và hát theo dòng chữ karaoke (chữ sáng lên đến đâu, hát đến đó). Bước 2: bấm micro để tắt tiếng và tự hát. Các từ 客车 (xe khách), 警察 (cảnh sát), shopkeeper (người bán hàng) chỉ có trong bài hát. Xem hết video để được 1 sao.',
     rows:(()=>{ const K=songKara6(); return K.en.map((e,i)=>({lab:i%4===0?(i<4?'Đoạn 1':'Đoạn 2'):'', en:[`<b>${e.words.map(w=>w.w).join(' ')}</b>`], zh:[['',K.zh[i].chars.map(c=>c.c).join(''),K.zh[i].chars.filter(c=>!c.p).map(c=>c.py).join(' ')]], ten:[e.t0,e.t1], tzh:[K.zh[i].t0,K.zh[i].t1]})); })()},
@@ -5622,5 +5622,5 @@ paintLesson();
 </script>
 
 
-<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../cdata.js"></script><script src="../lc.js"></script>
+<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../grp.js"></script><script src="../cdata.js"></script><script src="../lc.js"></script>
 </body></html>

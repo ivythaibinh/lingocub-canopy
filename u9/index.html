@@ -4768,7 +4768,7 @@ const ADJS9 = (subj,spy,sen,adj,neg) => ({zh:`${subj}${neg?'不':'很'}${adj.zh}
 const U9L2 = {
   n:2, title:'Cute, fat, thin, young, old…', Q:{zh:'小猪很胖。我不老！',py:'xiǎo zhū hěn pàng. wǒ bù lǎo!'}, items:L2W9, pool:ALLW9,
   sections:[{sec:'dub',ic:'film',nm:'Bài hát karaoke',ds:'I’m Short · 我很矮'},{sec:'vocab',ic:'card',nm:'Từ vựng',ds:'Thẻ từ + ghép thẻ + 4 trò'},{sec:'hanzi',ic:'brush',nm:'Luyện chữ Hán',ds:'可爱 · 胖 · 瘦 · 年轻 · 老 · 丑 · 漂亮'}],
-  acts:['dub_en','dub_zh','flash','mt','tug','catch','wm','bal','write','pyquiz'],
+  acts:['dub_en','dub_zh','flash','mt','tug','catch','wm','bal','write','grp'],
   vocab:[
     {act:'flash',code:'TV',nm:'Thẻ từ: trông như thế nào?',lv:'7 từ',h:'Thẻ từ: dễ thương, gầy – béo, trẻ – già, xấu – xinh đẹp',how:'Chạm thẻ để lật. Mặt trước đọc tiếng Trung, mặt sau đọc tiếng Anh. Các từ đi theo cặp trái nghĩa: 瘦 – 胖, 年轻 – 老, 丑 – 漂亮. Xem hết 7 thẻ để được 1 sao.'},
     {act:'mt',code:'G1',nm:'Ghép thẻ',lv:'BRIDGE 1 · Nhận diện từ',h:'Ghép thẻ: từ chỉ hình dáng',tag:'BRIDGE 1',how:'Lật 1 thẻ tiếng Anh và 1 thẻ tiếng Trung (chạm để nghe). Cùng nghĩa thì chọn V, khác nghĩa chọn X. Coi chừng cặp trái nghĩa: 瘦 (gầy) – 胖 (béo)!'},
@@ -4778,7 +4778,7 @@ const U9L2 = {
     {act:'bal',code:'G2',nm:'Bóng bay: ghép cụm từ',lv:'BRIDGE 2 · Ai + 很 + trông thế nào',h:'Bóng bay: ghép cụm từ và câu ngắn',tag:'BRIDGE 2',how:'Đọc tiếng Anh. Chạm bóng bay theo đúng thứ tự để ghép câu tiếng Trung: con vật / người + 很 + từ chỉ hình dáng, ví dụ 小猪 + 很 + 胖. Muốn nói “không” thì thay 很 bằng 不: 我不老 (giống bài hát). Coi chừng bóng bẫy mang từ trái nghĩa!'}],
   hanzi:[
     {act:'write',code:'VC',nm:'Viết chữ Hán',lv:'可爱 · 瘦 · 胖 · 年轻 · 老 · 丑 · 漂亮',h:'Viết chữ Hán',how:'Chọn từ rồi chọn cách luyện: Xem mẫu, Tô nét, Tự viết. Mỗi chữ có tranh minh họa mờ phía sau ô viết; chỉnh độ mờ hoặc bấm “Kéo hình” nếu cần. Tô xong tất cả các chữ để được 1 sao.'},
-    {act:'pyquiz',code:'PY',nm:'Nhìn chữ chọn pinyin',lv:'Chữ đỏ ghép thành từ · ôn bài 1',h:'Nhìn chữ đỏ, chọn pinyin đúng',how:'Chọn pinyin đúng của chữ hoặc của cả từ. Các đáp án còn lại là pinyin của những từ khác trong bài. Bấm loa để nghe từng đáp án.'}],
+    {act:'grp',code:'XN',nm:'Xếp nhóm: 犭 · 鸟',lv:'Phần chữ giống nhau · 9 bạn thú',h:'Lùa thú vào chuồng có phần chữ giống nhau',how:'Chuồng 犭: chữ có 犭 bên trái. Chuồng 鸟: chữ có 鸟 bên phải. Chạm một bạn thú rồi chạm chuồng đúng. Không có 犭, 鸟 thì vào chuồng Khác. Bấm loa để nghe.'}],
   dub:{aspect:'16/9', en:'media/u9_short_en.mp4', zh:'media/u9_short_zh.mp4', pen:'media/poster_u9_short_en.jpg', pzh:'media/poster_u9_short_zh.jpg', kara:true, karaData:()=>K9B,
     msg:'Bài hát “I’m Short – 我很矮”. Bước 1: xem và hát theo dòng chữ karaoke. Bước 2: bấm micro để tắt tiếng và tự hát. Trong bài có các cặp trái nghĩa: young – old (年轻 – 老), pretty – ugly (漂亮 – 丑). short – tall (矮 – 高) con sẽ gặp lại trong truyện bài 4. Xem hết video để được 1 sao.',
     get rows(){ return R9B[VLANG]||R9B.en; }},
@@ -8344,5 +8344,5 @@ paintLesson();
 
 
 
-<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../cdata.js"></script><script src="../lc.js"></script>
+<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../grp.js"></script><script src="../cdata.js"></script><script src="../lc.js"></script>
 </body></html>

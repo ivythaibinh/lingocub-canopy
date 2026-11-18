@@ -4871,7 +4871,7 @@ const U10L1 = {
 const U10L2 = {
   n:2, title:'Sun, moon, stars, sky', Q:{zh:'太阳很大。我看到了月亮。',py:'tàiyáng hěn dà. wǒ kàndào le yuèliang.'}, items:L2W10, pool:ALLW10,
   sections:[{sec:'dub',ic:'film',nm:'Lồng tiếng video',ds:'Painting · 画画'},{sec:'vocab',ic:'card',nm:'Từ vựng',ds:'Thẻ từ + ghép thẻ + 3 trò'},{sec:'hanzi',ic:'brush',nm:'Luyện chữ Hán',ds:'太阳 · 月亮 · 星星 · 天空'}],
-  acts:['dub_en','dub_zh','flash','mt','catch','wm','bal','write','pyquiz'],
+  acts:['dub_en','dub_zh','flash','mt','catch','wm','bal','write','grp'],
   vocab:[
     {act:'flash',code:'TV',nm:'Thẻ từ: trên bầu trời',lv:'4 từ',h:'Thẻ từ: mặt trời, mặt trăng, ngôi sao, bầu trời',how:'Chạm thẻ để lật. Mặt trước đọc tiếng Trung, mặt sau đọc tiếng Anh. Mẹo: 星星 là hai chữ 星 giống nhau, chữ sau đọc nhẹ. Xem hết 4 thẻ để được 1 sao.'},
     {act:'mt',code:'G1',nm:'Ghép thẻ',lv:'BRIDGE 1 · Nhận diện từ · ôn bài 1',h:'Ghép thẻ: bầu trời và mặt đất',tag:'BRIDGE 1',how:'Lật 1 thẻ tiếng Anh và 1 thẻ tiếng Trung (chạm để nghe). Cùng nghĩa thì chọn V, khác nghĩa chọn X. Có cả từ bài 1 để ôn: 山, 河…'},
@@ -4880,7 +4880,7 @@ const U10L2 = {
     {act:'bal',code:'G2',nm:'Bóng bay: ghép cụm từ',lv:'BRIDGE 2 · 我看到 · 我画 · …很大',h:'Bóng bay: ghép cụm từ và câu ngắn',tag:'BRIDGE 2',how:'Đọc tiếng Anh. Chạm bóng bay theo đúng thứ tự để ghép câu tiếng Trung: 我 + 看到 + 太阳 (giống video bài 1), 我 + 画 + 山 (giống video 画画), 太阳 + 很 + 大. Coi chừng bóng bẫy mang từ gần nghĩa!'}],
   hanzi:[
     {act:'write',code:'VC',nm:'Viết chữ Hán',lv:'太阳 · 月亮 · 星星 · 天空',h:'Viết chữ Hán',how:'Chọn từ rồi chọn cách luyện: Xem mẫu, Tô nét, Tự viết. Mỗi chữ có tranh chữ tượng hình mờ phía sau ô viết; chỉnh độ mờ hoặc bấm “Kéo hình” nếu cần. Tô xong tất cả các chữ để được 1 sao.'},
-    {act:'pyquiz',code:'PY',nm:'Nhìn chữ chọn pinyin',lv:'Chữ đỏ ghép thành từ · ôn bài 1',h:'Nhìn chữ đỏ, chọn pinyin đúng',how:'Chọn pinyin đúng của chữ hoặc của cả từ. Các đáp án còn lại là pinyin của những từ khác trong bài. Bấm loa để nghe từng đáp án.'}],
+    {act:'grp',code:'XN',nm:'Xếp nhóm: 艹 · 氵',lv:'Phần chữ giống nhau · 10 quả bóng',h:'Ném bóng vào rổ có phần chữ giống nhau',how:'Rổ 艹: chữ có 艹 trên đầu (cây cỏ). Rổ 氵: chữ có 氵 bên trái (nước). Chạm một quả bóng rồi chạm rổ đúng. Không có 艹, 氵 thì ném vào rổ Khác. Bấm loa để nghe.'}],
   dub:{aspect:'16/9', en:'media/u10_paint_en.mp4', zh:'media/u10_paint_zh.mp4', pen:'media/poster_u10_paint_en.jpg', pzh:'media/poster_u10_paint_zh.jpg',
     msg:'Video “Painting – 画画”: bạn rồng Tianlong (天龙) ra công viên vẽ tranh. Bản 中文 là video gốc; bản English đổi chữ trên tranh sang tiếng Anh và đọc bằng giọng máy. Bước 1: xem và nghe. Bước 2: bấm “Con tự lồng tiếng” để tắt tiếng rồi tự đọc theo kịch bản. Nghe kỹ: 他画山，画水，画花… = He paints mountains, water, flowers… Xem hết cả 2 video để được 2 sao.',
     get rows(){ return PROWS10[VLANG]||PROWS10.en; }},
@@ -8619,5 +8619,5 @@ paintLesson();
 
 
 
-<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../cdata.js"></script><script src="../lc.js"></script>
+<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../grp.js"></script><script src="../cdata.js"></script><script src="../lc.js"></script>
 </body></html>

@@ -2244,7 +2244,7 @@ const MEALT={breakfast:'morning',lunch:'noon',dinner:'evening'};
 const U3L2 = {
   n:2, title:'Breakfast, lunch, dinner', Q:{zh:'我早上七点起床。',py:'wǒ zǎoshang qī diǎn qǐchuáng.'}, items:L2W, pool:L1W.concat(L2W),
   sections:[{sec:'dub',ic:'film',nm:'Lồng tiếng',ds:'My Day · 我的一天'},{sec:'vocab',ic:'card',nm:'Từ vựng',ds:'Thẻ từ + 4 trò BRIDGE 1–3'},{sec:'hanzi',ic:'brush',nm:'Luyện chữ Hán',ds:'吃 · 早饭 · 中午 · 晚上'}],
-  acts:['dub_en','dub_zh','flash','wm','catch','sort','bal','write','pyquiz'],
+  acts:['dub_en','dub_zh','flash','wm','catch','sort','bal','write','grp'],
   vocab:[
     {act:'flash',code:'TV',nm:'Thẻ từ: bữa ăn và buổi',lv:'6 từ + mẫu câu',h:'Thẻ từ: sáng, trưa, tối và ba bữa ăn',how:'Chạm thẻ để lật. Mặt trước đọc tiếng Trung, mặt sau đọc tiếng Anh. Trong video con sẽ nghe 早餐, 午餐, 晚餐: đó là cách nói khác của 早饭, 午饭, 晚饭. Xem hết 7 thẻ để được 1 sao.'},
     {act:'wm',code:'G1',nm:'Đập chuột: bữa nào, buổi nào?',lv:'BRIDGE 1 · Nhìn tranh, nghe, đọc từ',h:'Đập chuột chũi: bữa nào, buổi nào?',tag:'BRIDGE 1',how:'Nhìn tranh hoặc nghe đề, rồi đập bạn chuột chũi cầm đáp án đúng trước khi bạn ấy trốn. Coi chừng 早饭 – 晚饭, 早上 – 晚上!'},
@@ -2253,7 +2253,7 @@ const U3L2 = {
     {act:'bal',code:'G3',nm:'Bóng bay ghép câu',lv:'BRIDGE 3 · Câu đầy đủ Anh → Trung',h:'Bóng bay: 我早上七点吃早饭',tag:'BRIDGE 3',how:'Đọc câu tiếng Anh. Chạm bóng bay theo đúng thứ tự để ghép câu tiếng Trung: 我 + buổi + giờ + việc làm. Chạm nhầm thì bóng rung lắc, con thử bóng khác nhé!'}],
   hanzi:[
     {act:'write',code:'VC',nm:'Viết chữ Hán',lv:'吃 · 早饭 · 午饭 · 中午 · 晚上',h:'Viết chữ Hán',how:'Chọn từ rồi chọn cách luyện: Xem mẫu, Tô nét, Tự viết. Hình lót quá đậm hay quá mờ thì kéo thanh “làm mờ – làm rõ”. Tô xong cả 7 chữ để được 1 sao.'},
-    {act:'pyquiz',code:'PY',nm:'Nhìn hình chọn pinyin',lv:'Chữ đỏ ghép thành từ · ôn bài 1',h:'Nhìn chữ đỏ, chọn pinyin của cả từ',how:'Các chữ màu đỏ lấy từ thẻ chữ tượng hình. Chọn pinyin đúng của cả từ. Nhìn kỹ: wǔfàn – wǎnfàn, zǎoshang – wǎnshang. Bấm loa để nghe từng đáp án.'}],
+    {act:'grp',code:'XN',nm:'Xếp nhóm: 早 · 午 · 晚',lv:'Chữ giống nhau · 10 thẻ',h:'Xếp thẻ vào ô cửa sổ có chữ giống nhau',how:'Mỗi ô cửa sổ có một chữ: 早, 午, 晚. Chạm một thẻ rồi chạm ô cửa sổ có chữ đó. Thẻ không có chữ nào giống thì vào “Cửa bí ẩn”. Bấm loa để nghe.'}],
   dub:{aspect:'16/9', en:'media/u3l2_en.mp4', zh:'media/u3l2_zh.mp4', pen:'media/poster_u3l2_en.jpg', pzh:'media/poster_u3l2_zh.jpg',
     msg:'Truyện “My Day – 我的一天”. Bước 1: xem video có tiếng. Bước 2: bấm micro để tắt tiếng và tự lồng tiếng. Video tiếng Trung nói 早餐, 午餐, 晚餐 – nghĩa giống 早饭, 午饭, 晚饭. Xem hết video để được 1 sao.',
     rows:[['Buổi sáng','It is morning.','现在是早上。','xiànzài shì zǎoshang.',[5.7,25.4],[8.3,28.8]],['Chào nhau','—','“你好”。','“nǐ hǎo”.',[25.4,25.4],[28.8,32.4]],['Ăn sáng','We eat breakfast.','我们吃早餐。','wǒmen chī zǎocān.',[25.4,41.1],[32.4,49.1]],
@@ -4540,5 +4540,5 @@ paintLesson();
 
 </script>
 
-<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../cdata.js"></script><script src="../lc.js"></script>
+<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../grp.js"></script><script src="../cdata.js"></script><script src="../lc.js"></script>
 </body></html>

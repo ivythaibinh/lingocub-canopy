@@ -3347,7 +3347,7 @@ const U5L1 = {
 const U5L2 = {
   n:2, title:'Restaurant, zoo, go to school, go home', Q:{zh:'你去哪儿？我去动物园。',py:'nǐ qù nǎr? wǒ qù dòngwùyuán.'}, items:L2W5, pool:ALLW5,
   sections:[{sec:'vocab',ic:'card',nm:'Từ vựng',ds:'Thẻ từ + ghép thẻ + 3 trò'},{sec:'hanzi',ic:'brush',nm:'Luyện chữ Hán',ds:'饭店 · 动物园 · 去上学 · 回家'}],
-  acts:['flash','mt','catch','wm','bal','write','pyquiz'],
+  acts:['flash','mt','catch','wm','bal','write','grp'],
   vocab:[
     {act:'flash',code:'TV',nm:'Thẻ từ: nhà hàng, sở thú, đi học, về nhà',lv:'4 từ + mẫu câu',h:'Thẻ từ: nhà hàng, sở thú, đi học, về nhà',how:'Chạm thẻ để lật. Mặt trước đọc tiếng Trung, mặt sau đọc tiếng Anh. Thẻ cuối là mẫu câu mới “Where are you going? I’m going to the zoo.” Xem hết 5 thẻ để được 1 sao.'},
     {act:'mt',code:'G1',nm:'Ghép thẻ',lv:'BRIDGE 1 · Nhận diện từ',h:'Ghép thẻ: từ mới, từ bài 1 và câu hỏi',tag:'BRIDGE 1',how:'Lật 1 thẻ tiếng Anh và 1 thẻ tiếng Trung (chạm để nghe). Cùng nghĩa thì chọn V, khác nghĩa chọn X. Coi chừng 你去哪儿？ (đi đâu) và 你在哪儿？ (đang ở đâu) chỉ khác một chữ!'},
@@ -3356,7 +3356,7 @@ const U5L2 = {
     {act:'bal',code:'G2',nm:'Bóng bay ghép câu',lv:'BRIDGE 2 · Câu hỏi và câu trả lời',h:'Bóng bay: 你去哪儿？我去动物园。',tag:'BRIDGE 2',how:'Đọc câu tiếng Anh. Chạm bóng bay theo đúng thứ tự để ghép câu tiếng Trung, ví dụ 我 + 去 + 动物园. Có bóng bẫy: 去 hay 在, 去 hay 回. Nhớ nhé: về nhà là 回家, không nói 去家!'}],
   hanzi:[
     {act:'write',code:'VC',nm:'Viết chữ Hán',lv:'饭店 · 动物园 · 去上学 · 回家',h:'Viết chữ Hán',how:'Chọn từ rồi chọn cách luyện: Xem mẫu, Tô nét, Tự viết. Tô xong tất cả các chữ để được 1 sao.'},
-    {act:'pyquiz',code:'PY',nm:'Nhìn hình chọn pinyin',lv:'Chữ đỏ ghép thành từ · ôn bài 1',h:'Nhìn chữ đỏ, chọn pinyin của cả từ',how:'Các chữ màu đỏ ghép lại thành một từ. Chọn pinyin đúng của cả từ. Bấm loa để nghe từng đáp án.'}],
+    {act:'grp',code:'XN',nm:'Xếp nhóm: 园 · 店',lv:'Chữ giống nhau · 8 thẻ',h:'Bỏ thẻ vào xe đẩy có chữ giống nhau',how:'Mỗi xe đẩy có một chữ: 园 hoặc 店. Chạm một thẻ rồi chạm xe đẩy có chữ đó. Thẻ không có 园, 店 thì bỏ vào xe Khác. Bấm loa để nghe.'}],
   fc:{aspect:'5/6', cards: L2W5.map(w=>({fimg:w.img, bimg:w.img, zh:w.zh, py:w.py, en:`${w.en} · ${w.vi}`, sayZh:w.zh, sayEn:w.en}))
     .concat([{fimg:'fc5/zoo.webp',bimg:'fc5/zoo.webp',over:true, overZh:zhL('你去哪儿？','nǐ qù nǎr?')+'<br>'+zhL('我去动物园。','wǒ qù dòngwùyuán.'), overEn:"<b>Where are you going? I’m going to the zoo.</b><br><span style=\"font-size:.8rem;color:var(--mute)\">Bạn đi đâu đấy? Tớ đi sở thú. Về nhà thì nói: I’m going home. 我回家。</span>", sayZh:'你去哪儿？我去动物园。', sayEn:'Where are you going? I’m going to the zoo.'}])},
   mtSet:()=>shuffle(L2W5).concat(pick(L1W5,1)).concat([QGO5]),
@@ -5688,5 +5688,5 @@ paintLesson();
 
 
 
-<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../cdata.js"></script><script src="../lc.js"></script>
+<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../grp.js"></script><script src="../cdata.js"></script><script src="../lc.js"></script>
 </body></html>
