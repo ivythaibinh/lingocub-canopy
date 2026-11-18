@@ -94,12 +94,12 @@
       '<section class="box lc-hero" aria-labelledby="lcHeroT"><div class="lc-hero-t"><span class="pxl lc-tram">TRẠM '+UN+'</span><h1 id="lcHeroT">'+esc(I.en)+'</h1>'+
         '<div class="lc-uzh"><span class="zh">'+esc(I.zh)+'</span><span class="py">'+esc(I.py)+'</span></div>'+
         '<span class="lc-q">'+esc(I.q)+'</span>'+
-        '<span class="lc-d">'+(dn===ns.length?'Con đã xong cả trạm! '+esc(I.b)+' đã mọc lên trên bản đồ của con.':'Xong '+ns.length+' bài là '+esc(I.b)+' mọc lên trên bản đồ của con.')+'</span></div>'+
+        '<span class="lc-d">'+(dn===ns.length?'Con đã xong cả trạm! Công trình “'+esc(I.en)+'” đã mọc lên trên bản đồ của con.':'Xong '+ns.length+' bài là công trình “'+esc(I.en)+'” mọc lên trên bản đồ của con.')+'</span></div>'+
         '<figure class="lc-fig">'+figure(UN,frac)+'<figcaption>Bản vẽ công trình của trạm '+UN+'</figcaption></figure></section>'+
       '<section class="lc-ls" aria-labelledby="lcLsT"><h2 id="lcLsT">Các bài của trạm</h2><ol class="lc-cards">'+cards+'</ol></section>'+
       '<div class="lc-row">'+
-        '<section class="box lc-pass" aria-labelledby="lcPassT"><h2 id="lcPassT">Tem của trạm '+UN+'</h2><div class="lc-tems">'+temHTML(UN)+'</div><span class="lc-cap">Mỗi bài học xong được 1 tem, là 1 bộ phận của '+esc(I.b)+' · '+dn+'/'+ns.length+' tem</span></section>'+
-        '<section class="box lc-build" aria-labelledby="lcBuildT"><h2 id="lcBuildT">'+(left?'Đang xây ':'Đã xây xong ')+esc(I.b)+'</h2><div class="lc-segs" style="grid-template-columns:repeat('+ns.length+',minmax(0,1fr))">'+ns.map(function(n){return '<span class="'+(lessonDone(UN,n)?'on':'')+'"></span>';}).join('')+'</div>'+
+        '<section class="box lc-pass" aria-labelledby="lcPassT"><h2 id="lcPassT">Tem của trạm '+UN+'</h2><div class="lc-tems">'+temHTML(UN)+'</div><span class="lc-cap">Mỗi bài học xong được 1 tem, là 1 bộ phận của công trình “'+esc(I.en)+'” · '+dn+'/'+ns.length+' tem</span></section>'+
+        '<section class="box lc-build" aria-labelledby="lcBuildT"><h2 id="lcBuildT">'+(left?'Đang xây công trình “':'Đã xây xong công trình “')+esc(I.en)+'”</h2><div class="lc-segs" style="grid-template-columns:repeat('+ns.length+',minmax(0,1fr))">'+ns.map(function(n){return '<span class="'+(lessonDone(UN,n)?'on':'')+'"></span>';}).join('')+'</div>'+
           '<p>'+(left?'Còn '+left+' bài nữa là công trình mọc lên trên bản đồ.':'Bấm “Bản đồ” để xem công trình mới trong thành phố của con!')+'</p></section>'+
       '</div>';
     el('lcStation').querySelectorAll('[data-go]').forEach(function(b){ b.onclick=function(){ openLesson(+b.dataset.go); }; });
@@ -108,7 +108,7 @@
   function paintBar(){
     var UN=g('UN'), LN=g('LN'), m=lmeta(UN,LN), I=info(UN), ns=lessonNums(UN), dn=ns.filter(function(n){return lessonDone(UN,n);}).length;
     el('lcBarB').innerHTML='<figure class="lc-bar-fig">'+figure(UN,ns.length?dn/ns.length:0)+'</figure>'+
-      '<div class="lc-bar-tem"><span class="lc-bar-cap"><b>'+(dn===ns.length?'Đã xây xong ':'Đang xây ')+esc(I.b)+'</b> · '+dn+'/'+ns.length+' tem</span><div class="lc-tems">'+temHTML(UN)+'</div></div>';
+      '<div class="lc-bar-tem"><span class="lc-bar-cap"><b>'+(dn===ns.length?'Đã xây xong công trình “':'Đang xây công trình “')+esc(I.en)+'”</b> · '+dn+'/'+ns.length+' tem</span><div class="lc-tems">'+temHTML(UN)+'</div></div>';
     setTimeout(paintMiss,0);
     el('lcBarL').innerHTML=chIcon(m)+'<div class="lc-bt"><span class="pxl">TRẠM '+UN+' · BÀI '+LN+'</span><b>'+esc(m.vi)+'</b><span class="lc-bs">'+esc(topic(UN,LN))+(m.zh?' · <span class="zh">'+esc(m.zh)+'</span>':'')+'</span></div>';
   }
@@ -152,7 +152,7 @@
     if(unitDone(u)){
       var nextHere=unitsHere().indexOf(u+1)>=0;
       var md=modal('<span class="pxl lc-tram">TRẠM '+u+' · HOÀN THÀNH</span><div class="lc-modal-fig">'+figure(u,1)+'</div>'+
-        '<h2>'+esc(I.b)+' đã xây xong!</h2><p>Con đã học hết '+ns.length+' bài của trạm '+u+'. Bấm <b>Về bản đồ</b> để xem công trình mọc lên và mở trạm '+(u<12?u+1:'')+(u<12?'':'… mà con đã đi hết thành phố rồi!')+'.</p>'+
+        '<h2>Công trình “'+esc(I.en)+'” đã xây xong!</h2><p>Con đã học hết '+ns.length+' bài của trạm '+u+'. Bấm <b>Về bản đồ</b> để xem công trình mọc lên và mở trạm '+(u<12?u+1:'')+(u<12?'':'… mà con đã đi hết thành phố rồi!')+'.</p>'+
         '<div class="lc-row-b">'+(CFG.hub?'<a class="btn go" href="'+esc(hubHref())+'"'+TGT+'>Về bản đồ ▶</a>':'')+
         (nextHere?'<button type="button" class="btn sun" data-next="1">Sang Trạm '+(u+1)+' ▶</button>':'')+
         '<button type="button" class="btn" data-x="1">Ở lại trạm</button></div>');
@@ -164,7 +164,7 @@
     var nm=nx?lmeta(u,nx):null;
     var md2=modal('<div class="lc-modal-stamp">'+(m.abc?'<span class="lc-abc" aria-hidden="true"><i>A</i><i>B</i><i>C</i></span>':'<img src="'+C.whoImg[m.who]+'" alt="">')+'<span class="pxl">BÀI '+n+'</span></div>'+
       '<h2>Con đã xong Bài '+n+' · '+esc(m.vi)+'!</h2><p>Con được thêm 1 tem vào hộ chiếu trạm '+u+'.'+(nm?' <b>Bài '+nx+' · '+esc(nm.vi)+'</b> đã mở khoá.':'')+'</p>'+
-      '<p class="lc-modal-note">Một phần '+esc(I.b)+' vừa được xây thêm. Bấm <b>Xem trên bản đồ</b> để thấy nhé!</p>'+
+      '<p class="lc-modal-note">Một phần công trình “'+esc(I.en)+'” vừa được xây thêm. Bấm <b>Xem trên bản đồ</b> để thấy nhé!</p>'+
       '<div class="lc-row-b">'+(nm?'<button type="button" class="btn go" data-l="'+nx+'">Học Bài '+nx+' ▶</button>':'')+(CFG.hub?'<a class="btn sun" href="'+esc(hubHref())+'"'+TGT+'>Xem trên bản đồ</a>':'')+'<button type="button" class="btn" data-x="1">Về trạm '+u+'</button></div>');
     md2.querySelector('[data-x]').onclick=function(){ md2.remove(); showStation(); };
     var lb=md2.querySelector('[data-l]'); if(lb) lb.onclick=function(){ md2.remove(); openLesson(+lb.dataset.l); };

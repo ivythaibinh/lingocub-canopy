@@ -156,6 +156,7 @@ footer .btn{min-height:40px;font-size:13px}
 .bob{animation:bob 1s steps(2) infinite}
 #station{scroll-margin-top:12px}.panel.flash{animation:stFlash 1.4s steps(7)}@keyframes stFlash{0%,40%,80%{box-shadow:0 0 0 6px var(--lemon,var(--yel,#ffd400)),0 0 0 9px var(--ink,#0e1526)}20%,60%,100%{box-shadow:none}}
 .bwrap{display:flex;gap:14px;align-items:center}.bfig{flex:none;width:128px;border:3px solid var(--ink);background:#fff;box-shadow:4px 4px 0 var(--ink)}.bfig svg{display:block;width:100%;height:auto}.btxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}@media (max-width:420px){.bwrap{flex-direction:column;align-items:stretch}.bfig{width:150px;align-self:center}}
+.pf-av .pt{display:block;margin-top:3px;font-size:10px;font-weight:600;opacity:.7}.pf-char{display:block;font-size:13px}.pf-char b{font-weight:800}
 @media (prefers-reduced-motion:reduce){.panel.flash{animation:none}.blink,.bob{animation:none}}
 @media (max-width:640px){ .logo img{height:44px} .sign .px{font-size:14px} .city{padding:14px} .panel{padding:16px} }
 </style>
@@ -179,7 +180,7 @@ footer .btn{min-height:40px;font-size:13px}
     <div class="box pf">
       <div class="pf-h"><h2 id="pfT">Hồ sơ nhà thám hiểm</h2><button type="button" class="btn" id="pfX">Đóng ✕</button></div>
       <div class="pf-me"><span class="pf-big" id="pfAv"></span>
-        <div class="pf-name"><label for="pfName">Tên của con</label><div class="pf-row"><input id="pfName" maxlength="20" autocomplete="off" placeholder="Nhập tên"><button type="button" class="btn go" id="pfSave">Lưu tên</button></div><span id="pfMsg" role="status"></span></div></div>
+        <div class="pf-name"><span class="pf-char" id="pfChar"></span><label for="pfName">Tên của con</label><div class="pf-row"><input id="pfName" maxlength="20" autocomplete="off" placeholder="Nhập tên"><button type="button" class="btn go" id="pfSave">Lưu tên</button></div><span id="pfMsg" role="status"></span></div></div>
       <h3>Chọn avatar</h3><div class="pf-avs" id="pfAvs" role="radiogroup" aria-label="Chọn avatar"></div>
       <h3>Thống kê</h3><div class="pf-stats" id="pfStats"></div>
       <h3>Tiến độ 12 trạm</h3><ol class="pf-units" id="pfUnits"></ol>
@@ -309,16 +310,16 @@ function drawMap(){
     s+=g+'</g>';
   }
   var K=LOT[cur];
-  s+='<g transform="translate('+K.kx+' '+K.ky+')"><path fill="#2a1a12" d="M1 0h4v1h-4z M0 1h6v3h-6z M0 4h1v3h-1z M5 4h1v3h-1z"/><path fill="#f2c29b" d="M1 2h4v3h-4z M0 7h1v1h-1z M5 7h1v1h-1z"/><path fill="#0b1f45" d="M2 3h1v1h-1z M4 3h1v1h-1z M1 8h1v2h-1z M4 8h1v2h-1z"/><path fill="#f1a300" d="M5 0h1v1h-1z M1 5h4v3h-4z"/><path fill="#fcc100" d="M2 6h2v1h-2z"/><path fill="#174793" d="M1 10h1v1h-1z M4 10h1v1h-1z"/></g>';
+  s+='<g transform="translate('+(K.kx-2)+' '+(K.ky-1)+')">'+C.mapMe(S.av||0)+'</g>';
   s+='</svg>';
   var btns='';
   for(var v=1;v<=12;v++){ var Q=LOT[v], dv=doneCount(v), st=built(v)?'đã xây xong':(dv?'đang xây, xong '+dv+'/'+U[v].n+' bài':'chưa xây');
     btns+='<button type="button" class="lot'+(built(v)?' is-built':'')+(v===cur&&!built(v)?' is-cur':'')+'" data-u="'+v+'" aria-pressed="'+(v===sel)+'" aria-label="Trạm '+v+' · '+esc(U[v].en)+' · '+st+'" style="left:'+((Q.x-1)/200*100)+'%;top:'+((Q.y+7)/154*100)+'%;width:'+(22/200*100)+'%;height:'+(34/154*100)+'%">'+(built(v)||dv>0||v===cur?'<span class="lot-n">'+v+'</span>':'')+'</button>'; }
   var b='';
   if(bubbleFor && doneCount(bubbleFor)>0){ var Z=LOT[bubbleFor], left=Math.min(Math.max((Z.x-4)/200*100,1),52), top=Z.y<60?((Z.y+40)/154*100):((Z.y-22)/154*100);
-    b='<div class="bubble" style="left:'+left+'%;top:'+top+'%"><button type="button" class="say" id="sayBtn" aria-label="Nghe lại câu của '+esc(U[bubbleFor].b)+'"><svg viewBox="0 0 9 9" width="22" height="22" shape-rendering="crispEdges" aria-hidden="true"><path fill="#0b1f45" d="M0 3h2v3h-2z M2 2h1v5h-1z M3 1h1v7h-1z M4 0h1v9h-1z M6 3h1v3h-1z M7 1h1v1h-1z M8 2h1v5h-1z M7 7h1v1h-1z"/></svg></button><div class="t"><small>'+esc(U[bubbleFor].b)+' · Trạm '+bubbleFor+'</small><b>'+esc(U[bubbleFor].sEn)+'</b><span class="zh">'+esc(U[bubbleFor].sZh)+'</span></div></div>'; }
+    b='<div class="bubble" style="left:'+left+'%;top:'+top+'%"><button type="button" class="say" id="sayBtn" aria-label="Nghe lại câu của '+esc(U[bubbleFor].en)+'"><svg viewBox="0 0 9 9" width="22" height="22" shape-rendering="crispEdges" aria-hidden="true"><path fill="#0b1f45" d="M0 3h2v3h-2z M2 2h1v5h-1z M3 1h1v7h-1z M4 0h1v9h-1z M6 3h1v3h-1z M7 1h1v1h-1z M8 2h1v5h-1z M7 7h1v1h-1z"/></svg></button><div class="t"><small>'+esc(U[bubbleFor].en)+' · Trạm '+bubbleFor+'</small><b>'+esc(U[bubbleFor].sEn)+'</b><span class="zh">'+esc(U[bubbleFor].sZh)+'</span></div></div>'; }
   $('map').innerHTML=s+btns+b;
-  $('map').querySelectorAll('.lot').forEach(function(x){ x.onclick=function(){ var u=+x.dataset.u; sel=u; bubbleFor=doneCount(u)>0?(bubbleFor===u?0:u):0; render(); if(bubbleFor) speak(u); showStation(); }; });
+  $('map').querySelectorAll('.lot').forEach(function(x){ x.onclick=function(){ var u=+x.dataset.u; sel=u; bubbleFor=0; render(); showStation(); }; });
   var sb=$('sayBtn'); if(sb) sb.onclick=function(e){ e.stopPropagation(); speak(bubbleFor); };
   var nb=0, nl=0, nw=0; for(var w=1;w<=12;w++){ if(built(w)) nb++; else if(doneCount(w)>0||w===cur) nw++; nl+=doneCount(w); }
   $('legend').innerHTML='<div><i style="background:#c8643c"></i>Đã xây · '+nb+' công trình</div>'+
@@ -337,7 +338,7 @@ function speak(u){
 function icon(l){ return l.abc ? '<span class="abc" aria-hidden="true"><i>A</i><i>B</i><i>C</i></span>' : '<span class="ch" aria-hidden="true"><img src="'+C.whoImg[l.who]+'" alt=""></span>'; }
 function drawStation(){
   var u=sel||current(), info=U[u], ls=C.lessons(u), b=bits(u), op=open(u), firstTodo=b.indexOf('0');
-  var h='<div class="st-h"><span class="px">TRẠM '+u+'</span><h2>'+esc(info.en)+'</h2><div class="sub"><span class="zh">'+esc(info.zh)+'</span><span class="py">'+esc(info.py)+'</span></div><span class="bd">Công trình: '+esc(info.b)+'</span></div>';
+  var h='<div class="st-h"><span class="px">TRẠM '+u+'</span><h2>'+esc(info.en)+'</h2><div class="sub"><span class="zh">'+esc(info.zh)+'</span><span class="py">'+esc(info.py)+'</span></div></div>';
   if(!op) h+='<div class="lockbox"><svg viewBox="0 0 7 8" width="21" height="24" shape-rendering="crispEdges" aria-hidden="true"><path fill="#0b1f45" d="M2 0h3v1h-3z M1 1h1v3h-1z M5 1h1v3h-1z M0 4h7v4h-7z"/><path fill="#fcc100" d="M3 5h1v2h-1z"/></svg>Học xong Trạm '+(u-1)+' để mở trạm này nhé.</div>';
   h+='<ol class="ls">';
   ls.forEach(function(l,i){
@@ -354,9 +355,9 @@ function drawStation(){
   $('station').innerHTML=h;
   var n=info.n, d=doneCount(u), left=n-d;
   var bt = built(u) ?
-    '<h2>Đã xây xong '+esc(info.b)+'</h2><div class="bar" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(n+1).join('<span class="on"></span>')+'</div><p>Công trình đã mọc lên trên bản đồ của con. Chạm vào nó để nghe lại câu của trạm nhé!</p>' :
-    !op ? '<h2>'+esc(info.b)+'</h2><p>Trạm này chưa mở. Con xây xong công trình của trạm '+(u-1)+' trước nhé.</p>' :
-    '<h2>Đang xây '+esc(info.b)+'</h2><div class="bar" role="img" aria-label="Đã xong '+d+' trên '+n+' bài" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(d+1).join('<span class="on"></span>')+Array(left+1).join('<span></span>')+'</div><p>Còn '+left+' bài nữa là công trình mọc lên trên bản đồ.</p>';
+    '<h2>Đã xây xong công trình “'+esc(info.en)+'”</h2><div class="bar" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(n+1).join('<span class="on"></span>')+'</div><p>Công trình đã mọc lên trên bản đồ của con. Chạm vào nó để nghe lại câu của trạm nhé!</p>' :
+    !op ? '<h2>'+esc(info.en)+'</h2><p>Trạm này chưa mở. Con xây xong công trình của trạm '+(u-1)+' trước nhé.</p>' :
+    '<h2>Đang xây công trình “'+esc(info.en)+'”</h2><div class="bar" role="img" aria-label="Đã xong '+d+' trên '+n+' bài" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(d+1).join('<span class="on"></span>')+Array(left+1).join('<span></span>')+'</div><p>Còn '+left+' bài nữa là công trình mọc lên trên bản đồ.</p>';
   $('build').innerHTML = op ? '<div class="bwrap"><div class="bfig">'+bfig(u)+'</div><div class="btxt">'+bt+'</div></div>' : bt;
 }
 /* tap a building: flash the station's lesson column; on a phone (column is below the map) scroll down to it */
@@ -367,7 +368,7 @@ function showStation(){ var st=$('station'); if(!st) return;
     try{ st.scrollIntoView({behavior:calm?'auto':'smooth',block:'start'}); }catch(e){ st.scrollIntoView(true); } } }
 /* model of the building: scaffold + the finished parts so far (full colour once built) */
 function bfig(u){ var n=U[u].n, d=doneCount(u), body=d>=n?C.art(u):C.partial(u,d/n)+C.rects(C.SCAF);
-  return '<svg viewBox="-8 -3 36 38" shape-rendering="crispEdges" role="img" aria-label="Công trình '+esc(U[u].b)+': xong '+d+' trên '+n+' phần"><rect x="-8" y="-3" width="36" height="38" fill="#dff1ff"/><rect x="-8" y="32" width="36" height="3" fill="#6cc04a"/><path fill="#5aa83c" d="M-6 33h1v1h-1z M24 33h1v1h-1z M3 34h1v1h-1z"/>'+body+'</svg>'; }
+  return '<svg viewBox="-8 -3 36 38" shape-rendering="crispEdges" role="img" aria-label="Công trình '+esc(U[u].en)+': xong '+d+' trên '+n+' phần"><rect x="-8" y="-3" width="36" height="38" fill="#dff1ff"/><rect x="-8" y="32" width="36" height="3" fill="#6cc04a"/><path fill="#5aa83c" d="M-6 33h1v1h-1z M24 33h1v1h-1z M3 34h1v1h-1z"/>'+body+'</svg>'; }
 function render(){
   $('cityTitle').textContent='Thành phố của '+(S.name||'con');
   $('meName').textContent=S.name||'Nhà thám hiểm'; $('meAv').innerHTML=C.avatar(S.av||0);
@@ -378,8 +379,8 @@ function render(){
 /* explorer profile: avatar, name, stats, progress */
 var TOTAL_L=0; for(var t=1;t<=12;t++) TOTAL_L+=U[t].n;
 function paintProfile(){
-  $('pfAv').innerHTML=C.avatar(S.av||0);
-  $('pfAvs').innerHTML=C.AV.map(function(a,i){ return '<button type="button" class="pf-av" role="radio" aria-checked="'+((S.av||0)===i)+'" data-av="'+i+'"><span class="pic">'+C.avatar(i)+'</span>'+esc(a.n)+'</button>'; }).join('');
+  $('pfAv').innerHTML=C.avatar(S.av||0); var ca=C.AV[S.av||0]||C.AV[0]; $('pfChar').innerHTML='Nhân vật của con: <b>'+esc(ca.n)+'</b> · '+esc(ca.t||'');
+  $('pfAvs').innerHTML=C.AV.map(function(a,i){ return '<button type="button" class="pf-av" role="radio" aria-checked="'+((S.av||0)===i)+'" data-av="'+i+'"><span class="pic">'+C.avatar(i)+'</span>'+esc(a.n)+'<small class="pt">'+esc(a.t||'')+'</small></button>'; }).join('');
   $('pfAvs').querySelectorAll('[data-av]').forEach(function(b){ b.onclick=function(){ S.av=+b.dataset.av; save(); paintProfile(); render(); }; });
   var nb=0, nl=0, ad=0, at=0, has=false; for(var u=1;u<=12;u++){ if(built(u)) nb++; nl+=doneCount(u); var a=(S.a||{})[u]; if(a){ has=true; ad+=a[0]; at+=a[1]; } }
   var cur=current();
