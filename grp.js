@@ -305,7 +305,7 @@ function mount(host,cfg,ad){
       var chip=document.createElement('span'); chip.className='grp-chip land-'+th.land; chip.title=w.zh+' · '+w.py; chip.setAttribute('aria-label',w.zh); chip.innerHTML=tiles(w);
       bin.querySelector('.grp-pile').appendChild(chip); card.remove(); w.done=true; clearSel(); placed++;
       count.textContent=placed+'/'+N; bin.classList.remove('hit'); void bin.offsetWidth; bin.classList.add('hit');
-      say('Đúng rồi! '+why(w),'good'); explain(w); refill(); busy=false;
+      try{ say('Đúng rồi! '+why(w),'good'); explain(w); }catch(err){ try{console.error(err);}catch(e2){} } try{ refill(); }catch(err){} busy=false;
       if(placed>=N) setTimeout(function(){ ad.done(N); },2600);
       return true;
     }
@@ -314,7 +314,7 @@ function mount(host,cfg,ad){
     var b=binOf(w.bin);
     if(isMean(b)){ say('Gợi ý: <b class="zh">'+esc(w.zh)+'</b> nghĩa là <b>'+esc(w.extra)+'</b>. Nhóm nào hợp nhất nhỉ?','bad'); return false; }
     var hl=(isPart(b)&&w.ch)?w.ch:w.bin;
-    card.querySelector('.grp-tiles').outerHTML=tiles(w,hl);
+    var gt=card.querySelector('.grp-tiles'); if(gt) gt.outerHTML=tiles(w,hl);
     say((isPart(b)&&w.ch)?'Gợi ý: nhìn '+b.where+' của chữ đang nhảy nhé!':'Gợi ý: nhìn chữ đang nhảy nhé!','bad');
     return false;
   }
@@ -324,20 +324,26 @@ function mount(host,cfg,ad){
     if(busy||(e.button!=null&&e.button>0)||e.target.closest('.grp-say')) return;
     var sx=e.clientX, sy=e.clientY, r=card.getBoundingClientRect(), ghost=null, over=null, id=e.pointerId;
     try{ card.setPointerCapture(id); }catch(err){}
-    function move(ev){ if(ev.pointerId!==id) return; var dx=ev.clientX-sx, dy=ev.clientY-sy;
+    var px=sx, py=sy, raf=0;
+    function hover(){ var b=binAt(px,py); if(b!==over){ if(over) over.classList.remove('over'); over=b; if(over) over.classList.add('over'); } }
+    /* near the top/bottom edge the page scrolls by itself, so a far-away group can still be reached on a phone */
+    function auto(){ raf=0; if(!ghost) return; var h=window.innerHeight, z=Math.min(110,h*.22), v=0;
+      if(py>h-z) v=Math.ceil((py-(h-z))/z*16); else if(py<z) v=-Math.ceil((z-py)/z*16);
+      if(v){ window.scrollBy(0,v); hover(); raf=requestAnimationFrame(auto); } }
+    function move(ev){ if(ev.pointerId!==id) return; var dx=ev.clientX-sx, dy=ev.clientY-sy; px=ev.clientX; py=ev.clientY;
       if(!ghost){ if(Math.abs(dx)+Math.abs(dy)<8) return;
         clearSel(); ghost=card.cloneNode(true); ghost.classList.add('grp-ghost'); ghost.removeAttribute('tabindex');
         ghost.style.left=r.left+'px'; ghost.style.top=r.top+'px'; ghost.style.width=r.width+'px'; ghost.style.height=r.height+'px';
         root.appendChild(ghost); card.classList.add('lifted'); ad.say(words[+card.dataset.k].zh); }
       ghost.style.transform='translate('+dx+'px,'+dy+'px) rotate(-3deg)';
-      var b=binAt(ev.clientX,ev.clientY); if(b!==over){ if(over) over.classList.remove('over'); over=b; if(over) over.classList.add('over'); }
+      hover(); if(!raf) raf=requestAnimationFrame(auto);
       ev.preventDefault(); }
-    function end(ev){ if(ev.pointerId!==id) return;
+    function end(ev){ if(ev.pointerId!==id) return; if(raf){ cancelAnimationFrame(raf); raf=0; } if(ghost&&ev.type==='pointerup'){ px=ev.clientX; py=ev.clientY; hover(); }
       card.removeEventListener('pointermove',move); card.removeEventListener('pointerup',end); card.removeEventListener('pointercancel',end);
       if(!ghost) return;
       eatClick=true; setTimeout(function(){ eatClick=false; },0);
       if(over) over.classList.remove('over');
-      var ok=ev.type==='pointerup'&&over?judge(card,over):false;
+      var ok=false; try{ ok=ev.type==='pointerup'&&over?judge(card,over):false; }catch(err){ busy=false; try{console.error(err);}catch(e2){} }
       if(ok){ ghost.remove(); return; }
       var t=ghost.style.transform;
       if(reduce()||!ghost.animate){ ghost.remove(); card.classList.remove('lifted'); return; }
