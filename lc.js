@@ -358,23 +358,17 @@
   }
 
   /* ---------- fireworks: sound + sparks when a game is finished ---------- */
+  var BASE=(document.currentScript&&document.currentScript.src||'').replace(/[^\/]*$/,'');
   function fwSound(){
-    try{ var acf=g('ac'); var c=typeof acf==='function'?acf():null; if(!c) return; var t0=c.currentTime;
-      function noise(d){ var b=c.createBuffer(1,Math.max(1,c.sampleRate*d|0),c.sampleRate), x=b.getChannelData(0); for(var i=0;i<x.length;i++) x[i]=Math.random()*2-1; var s=c.createBufferSource(); s.buffer=b; return s; }
-      function env(gn,t,a,p,d){ gn.gain.setValueAtTime(.0001,t); gn.gain.exponentialRampToValueAtTime(p,t+a); gn.gain.exponentialRampToValueAtTime(.0001,t+a+d); }
-      [0,.42,.8].forEach(function(dt,k){ var t=t0+dt;
-        var o=c.createOscillator(), og=c.createGain(); o.type='sine'; o.frequency.setValueAtTime(500+k*120,t); o.frequency.exponentialRampToValueAtTime(1700+k*200,t+.42); env(og,t,.03,.05,.4); o.connect(og).connect(c.destination); o.start(t); o.stop(t+.46);
-        var tb=t+.44, n=noise(.9), f=c.createBiquadFilter(), ng=c.createGain(); f.type='lowpass'; f.frequency.setValueAtTime(5200,tb); f.frequency.exponentialRampToValueAtTime(500,tb+.8); env(ng,tb,.006,.55,.8); n.connect(f).connect(ng).connect(c.destination); n.start(tb); n.stop(tb+.9);
-        var bo=c.createOscillator(), bg=c.createGain(); bo.type='sine'; bo.frequency.setValueAtTime(140,tb); bo.frequency.exponentialRampToValueAtTime(45,tb+.3); env(bg,tb,.004,.45,.32); bo.connect(bg).connect(c.destination); bo.start(tb); bo.stop(tb+.36);
-        for(var i=0;i<9;i++){ var tc=tb+.18+Math.random()*.75, cn=noise(.03), hf=c.createBiquadFilter(), cg=c.createGain(); hf.type='highpass'; hf.frequency.value=3000; env(cg,tc,.002,.22,.03); cn.connect(hf).connect(cg).connect(c.destination); cn.start(tc); cn.stop(tc+.04); }
-      });
-    }catch(e){}
+    try{ var a=new Audio(BASE+'sfx/confetti.mp3'); a.volume=.85; var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
   }
+  /* 8-bit paper confetti: square pixels that fall in steps */
   function fwSparks(host){
-    try{ var box=(host&&host.querySelector(':scope > .result'))||host||document.body; var cols=['#ffdf01','#ff6b6b','#6cc04a','#8fd3ff','#ffffff','#ffa53b'];
-      [[22,30,0],[78,26,420],[50,14,800]].forEach(function(p){ setTimeout(function(){ for(var i=0;i<18;i++){ var s=document.createElement('i'); s.className='lc-spark';
-        var a=i/18*Math.PI*2, r=60+Math.random()*50; s.style.left=p[0]+'%'; s.style.top=p[1]+'%'; s.style.background=cols[i%cols.length];
-        s.style.setProperty('--dx',Math.round(Math.cos(a)*r)+'px'); s.style.setProperty('--dy',Math.round(Math.sin(a)*r)+'px'); box.appendChild(s); setTimeout(function(x){ return function(){ x.remove(); }; }(s),1300); } },p[2]+440); });
+    try{ var box=(host&&host.querySelector(':scope > .result'))||host||document.body; var cols=['#ffdf01','#ff6b6b','#6cc04a','#8fd3ff','#ffffff','#ffa53b','#c77dff'];
+      for(var i=0;i<46;i++){ (function(i){ setTimeout(function(){ var s=document.createElement('i'); s.className='lc-conf'; var sz=i%3===0?12:8;
+        s.style.left=Math.round(Math.random()*96)+'%'; s.style.width=s.style.height=sz+'px'; s.style.background=cols[i%cols.length];
+        s.style.setProperty('--fall',(220+Math.random()*160|0)+'px'); s.style.setProperty('--sway',((Math.random()*60|0)-30)+'px'); s.style.animationDuration=(1.4+Math.random()*1)+'s';
+        box.appendChild(s); setTimeout(function(){ s.remove(); },2600); },Math.random()*900); })(i); }
     }catch(e){}
   }
 

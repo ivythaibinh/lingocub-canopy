@@ -210,7 +210,9 @@ main.wrap{padding-block:20px 40px}
 .lc-gmus s{text-decoration:line-through;text-decoration-thickness:3px}
 .lc-spark{position:absolute;width:8px;height:8px;z-index:40;pointer-events:none;animation:lcSpark 1.15s ease-out forwards}
 @keyframes lcSpark{0%{transform:translate(0,0) scale(1);opacity:1}80%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.4);opacity:0}}
-@media (prefers-reduced-motion:reduce){ .lc-spark{display:none} }
+.lc-conf{position:absolute;top:-14px;z-index:40;pointer-events:none;image-rendering:pixelated;animation:lcConf 2s steps(12) forwards}
+@keyframes lcConf{0%{transform:translate(0,0)}100%{transform:translate(var(--sway),var(--fall));opacity:.0}}
+@media (prefers-reduced-motion:reduce){ .lc-spark,.lc-conf{display:none} }
 .lc-miss{flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;background:#fff4d6;border:3px dashed var(--lc-orange);font-size:14px}
 .lc-miss.ok{background:var(--ok);border-color:var(--ok-d);color:var(--ok-d)}
 .lc-miss-t{flex:1 1 100%}
@@ -221,3 +223,4 @@ main.wrap{padding-block:20px 40px}
 .lc-toast.on{transform:translate(-50%,0)}
 .lc-toast .btn{align-self:flex-start}
 .lc-kicknext{position:absolute!important;left:calc(50% + 7%);bottom:3%;z-index:12;font-size:clamp(14px,2.4vw,18px)}
+.result{overflow:hidden}
