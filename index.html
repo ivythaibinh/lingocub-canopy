@@ -154,7 +154,8 @@ footer .btn{min-height:40px;font-size:13px}
 .blink{animation:blink 1s steps(2,start) infinite}
 @keyframes bob{50%{transform:translateY(-1px)}}
 .bob{animation:bob 1s steps(2) infinite}
-@media (prefers-reduced-motion:reduce){.blink,.bob{animation:none}}
+#station{scroll-margin-top:12px}.panel.flash{animation:stFlash 1.4s steps(7)}@keyframes stFlash{0%,40%,80%{box-shadow:0 0 0 6px var(--lemon,var(--yel,#ffd400)),0 0 0 9px var(--ink,#0e1526)}20%,60%,100%{box-shadow:none}}
+@media (prefers-reduced-motion:reduce){.panel.flash{animation:none}.blink,.bob{animation:none}}
 @media (max-width:640px){ .logo img{height:44px} .sign .px{font-size:14px} .city{padding:14px} .panel{padding:16px} }
 </style>
 
@@ -316,7 +317,7 @@ function drawMap(){
   if(bubbleFor && doneCount(bubbleFor)>0){ var Z=LOT[bubbleFor], left=Math.min(Math.max((Z.x-4)/200*100,1),52), top=Z.y<60?((Z.y+40)/154*100):((Z.y-22)/154*100);
     b='<div class="bubble" style="left:'+left+'%;top:'+top+'%"><button type="button" class="say" id="sayBtn" aria-label="Nghe lại câu của '+esc(U[bubbleFor].b)+'"><svg viewBox="0 0 9 9" width="22" height="22" shape-rendering="crispEdges" aria-hidden="true"><path fill="#0b1f45" d="M0 3h2v3h-2z M2 2h1v5h-1z M3 1h1v7h-1z M4 0h1v9h-1z M6 3h1v3h-1z M7 1h1v1h-1z M8 2h1v5h-1z M7 7h1v1h-1z"/></svg></button><div class="t"><small>'+esc(U[bubbleFor].b)+' · Trạm '+bubbleFor+'</small><b>'+esc(U[bubbleFor].sEn)+'</b><span class="zh">'+esc(U[bubbleFor].sZh)+'</span></div></div>'; }
   $('map').innerHTML=s+btns+b;
-  $('map').querySelectorAll('.lot').forEach(function(x){ x.onclick=function(){ var u=+x.dataset.u; sel=u; bubbleFor=doneCount(u)>0?(bubbleFor===u?0:u):0; render(); if(bubbleFor) speak(u); }; });
+  $('map').querySelectorAll('.lot').forEach(function(x){ x.onclick=function(){ var u=+x.dataset.u; sel=u; bubbleFor=doneCount(u)>0?(bubbleFor===u?0:u):0; render(); if(bubbleFor) speak(u); showStation(); }; });
   var sb=$('sayBtn'); if(sb) sb.onclick=function(e){ e.stopPropagation(); speak(bubbleFor); };
   var nb=0, nl=0, nw=0; for(var w=1;w<=12;w++){ if(built(w)) nb++; else if(doneCount(w)>0||w===cur) nw++; nl+=doneCount(w); }
   $('legend').innerHTML='<div><i style="background:#c8643c"></i>Đã xây · '+nb+' công trình</div>'+
@@ -356,6 +357,12 @@ function drawStation(){
     !op ? '<h2>'+esc(info.b)+'</h2><p>Trạm này chưa mở. Con xây xong công trình của trạm '+(u-1)+' trước nhé.</p>' :
     '<h2>Đang xây '+esc(info.b)+'</h2><div class="bar" role="img" aria-label="Đã xong '+d+' trên '+n+' bài" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(d+1).join('<span class="on"></span>')+Array(left+1).join('<span></span>')+'</div><p>Còn '+left+' bài nữa là công trình mọc lên trên bản đồ.</p>';
 }
+/* tap a building: flash the station's lesson column; on a phone (column is below the map) scroll down to it */
+function showStation(){ var st=$('station'); if(!st) return;
+  st.classList.remove('flash'); void st.offsetWidth; st.classList.add('flash');
+  var r=st.getBoundingClientRect(), vh=window.innerHeight||document.documentElement.clientHeight;
+  if(r.top<0||r.top>vh*.55){ var calm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+    try{ st.scrollIntoView({behavior:calm?'auto':'smooth',block:'start'}); }catch(e){ st.scrollIntoView(true); } } }
 function render(){
   $('cityTitle').textContent='Thành phố của '+(S.name||'con');
   $('meName').textContent=S.name||'Nhà thám hiểm'; $('meAv').innerHTML=C.avatar(S.av||0);
