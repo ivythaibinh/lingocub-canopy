@@ -4063,7 +4063,7 @@ const BROWS8 = (()=>{ const zh=[], en=[];
 const U8L1 = {
   n:1, title:'Zoo animals · What animal is this?', Q:{zh:'这是什么动物？这是大象。',py:'zhè shì shénme dòngwù? zhè shì dàxiàng.'}, items:L1W8, pool:L1W8,
   sections:[{sec:'dub',ic:'film',nm:'Lồng tiếng + camera',ds:'This is a bird · 这是鸟'},{sec:'vocab',ic:'card',nm:'Từ vựng',ds:'Thẻ từ + ghép thẻ + 5 trò'},{sec:'hanzi',ic:'brush',nm:'Luyện chữ Hán',ds:'大象 · 老虎 · 长颈鹿 · 猴子'}],
-  acts:['dub_en','dub_zh','flash','mt','duck','dash','g1','g2','claw','write','pyquiz'],
+  acts:['dub_en','dub_zh','flash','mt','duck','dash','g1','g2','claw','write','pyquiz','grp'],
   vocab:[
     {act:'flash',code:'TV',nm:'Thẻ từ: con vật ở sở thú',lv:'4 từ',h:'Thẻ từ: voi, hổ, hươu cao cổ, khỉ',how:'Chạm thẻ để lật. Mặt trước đọc tiếng Trung, mặt sau đọc tiếng Anh. Mẹo: 长颈鹿 có chữ 长 (dài) và 颈 (cổ): hươu cổ dài! Xem hết 4 thẻ để được 1 sao.'},
     {act:'mt',code:'G1',nm:'Ghép thẻ',lv:'BRIDGE 1 · Nhận diện từ',h:'Ghép thẻ: con vật ở sở thú',tag:'BRIDGE 1',how:'Lật 1 thẻ tiếng Anh và 1 thẻ tiếng Trung (chạm để nghe). Cùng nghĩa thì chọn V, khác nghĩa chọn X. Ghép hết 4 cặp con vật để được 1 sao.'},
@@ -4074,7 +4074,8 @@ const U8L1 = {
     {act:'claw',code:'G1',nm:'Máy gắp thú',lv:'BRIDGE 1–2 · Từ và câu',h:'Máy gắp thú: gắp được thú, trả lời đúng mới mang về!',tag:'BRIDGE 1–2',how:'Bấm ◀ ▶ (hoặc chạm vào tủ kính) để đưa cần gắp tới bạn thú con thích, rồi bấm “Gắp”. Gắp được rồi, câu hỏi hiện ra: trả lời đúng thì thú rơi vào hộp quà, trả lời sai thì thú tuột tay rơi mất!'}],
   hanzi:[
     {act:'write',code:'VC',nm:'Viết chữ Hán',lv:'大象 · 老虎 · 长颈鹿 · 猴子',h:'Viết chữ Hán',how:'Chọn từ rồi chọn cách luyện: Xem mẫu, Tô nét, Tự viết. Chữ có tranh minh họa thì bấm “Hiện hình minh họa” để thấy chữ được vẽ từ hình gì. Tô xong tất cả các chữ để được 1 sao.'},
-    {act:'pyquiz',code:'PY',nm:'Nhìn hình chọn pinyin',lv:'Chữ đỏ ghép thành từ',h:'Nhìn chữ đỏ, chọn pinyin của cả từ',how:'Các chữ màu đỏ ghép lại thành một từ. Chọn pinyin đúng của cả từ. Bấm loa để nghe từng đáp án.'}],
+    {act:'pyquiz',code:'PY',nm:'Nhìn hình chọn pinyin',lv:'Chữ đỏ ghép thành từ',h:'Nhìn chữ đỏ, chọn pinyin của cả từ',how:'Các chữ màu đỏ ghép lại thành một từ. Chọn pinyin đúng của cả từ. Bấm loa để nghe từng đáp án.'},
+    {act:'grp',code:'XN',nm:'Xếp nhóm: 犭 · 老',lv:'Phần chữ giống nhau · 5 từ',h:'Kéo thẻ vào chuồng có chữ giống nhau',how:'Chuồng 犭: chữ có 犭 bên trái (thú có lông). Chuồng 老: từ có chữ 老. Kéo thẻ thả vào chuồng đúng. Có cả 狗, 猫, 老鼠 từ Little Seed để ôn lại. Trả lời đúng sẽ hiện phần giải thích chữ.'}],
   dub:{aspect:'720/910', en:'media/u8l1_en.mp4', zh:'media/u8l1_zh.mp4', pen:'media/poster_u8l1_en.jpg', pzh:'media/poster_u8l1_zh.jpg',
     cam:{mode:'pip', masks:{zh:BZT8.map((t,i)=>[t[0],t[1],BMASK8[i]]), en:BET8.map((t,i)=>[t[0],t[1],BMASK8[i]])}},
     msg:'Truyện “This is a bird – 这是鸟”. Bước 1: xem video, nghe các bạn giới thiệu từng con vật. Bước 2: bấm “Bật camera”: mặt con sẽ hiện trong truyện với mặt nạ con vật, mặt nạ tự đổi theo con vật ở mỗi trang (kéo vòng camera đi chỗ khác nếu che chữ). Bước 3: bấm “Con tự lồng tiếng” để tắt tiếng video rồi quay video con nói 这是… / This is…. Xem hết video để được 1 sao.',
@@ -7591,5 +7592,5 @@ paintLesson();
 </script>
 
 
-<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../cdata.js"></script><script src="../lc.js"></script>
+<link rel="stylesheet" href="../lc.css"><script>window.CANOPY_SITE=true;window.LC_CFG={"hub":"../index.html"};</script><script src="../grp.js"></script><script src="../cdata.js"></script><script src="../lc.js"></script>
 </body></html>
