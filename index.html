@@ -155,6 +155,7 @@ footer .btn{min-height:40px;font-size:13px}
 @keyframes bob{50%{transform:translateY(-1px)}}
 .bob{animation:bob 1s steps(2) infinite}
 #station{scroll-margin-top:12px}.panel.flash{animation:stFlash 1.4s steps(7)}@keyframes stFlash{0%,40%,80%{box-shadow:0 0 0 6px var(--lemon,var(--yel,#ffd400)),0 0 0 9px var(--ink,#0e1526)}20%,60%,100%{box-shadow:none}}
+.bwrap{display:flex;gap:14px;align-items:center}.bfig{flex:none;width:128px;border:3px solid var(--ink);background:#fff;box-shadow:4px 4px 0 var(--ink)}.bfig svg{display:block;width:100%;height:auto}.btxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}@media (max-width:420px){.bwrap{flex-direction:column;align-items:stretch}.bfig{width:150px;align-self:center}}
 @media (prefers-reduced-motion:reduce){.panel.flash{animation:none}.blink,.bob{animation:none}}
 @media (max-width:640px){ .logo img{height:44px} .sign .px{font-size:14px} .city{padding:14px} .panel{padding:16px} }
 </style>
@@ -352,10 +353,11 @@ function drawStation(){
   if(op) h+='<a class="more" href="'+link(u,0)+'"'+TGT+'>Xem cả trạm '+u+' ▶</a>';
   $('station').innerHTML=h;
   var n=info.n, d=doneCount(u), left=n-d;
-  $('build').innerHTML = built(u) ?
+  var bt = built(u) ?
     '<h2>Đã xây xong '+esc(info.b)+'</h2><div class="bar" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(n+1).join('<span class="on"></span>')+'</div><p>Công trình đã mọc lên trên bản đồ của con. Chạm vào nó để nghe lại câu của trạm nhé!</p>' :
     !op ? '<h2>'+esc(info.b)+'</h2><p>Trạm này chưa mở. Con xây xong công trình của trạm '+(u-1)+' trước nhé.</p>' :
     '<h2>Đang xây '+esc(info.b)+'</h2><div class="bar" role="img" aria-label="Đã xong '+d+' trên '+n+' bài" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+Array(d+1).join('<span class="on"></span>')+Array(left+1).join('<span></span>')+'</div><p>Còn '+left+' bài nữa là công trình mọc lên trên bản đồ.</p>';
+  $('build').innerHTML = op ? '<div class="bwrap"><div class="bfig">'+bfig(u)+'</div><div class="btxt">'+bt+'</div></div>' : bt;
 }
 /* tap a building: flash the station's lesson column; on a phone (column is below the map) scroll down to it */
 function showStation(){ var st=$('station'); if(!st) return;
@@ -363,6 +365,9 @@ function showStation(){ var st=$('station'); if(!st) return;
   var r=st.getBoundingClientRect(), vh=window.innerHeight||document.documentElement.clientHeight;
   if(r.top<0||r.top>vh*.55){ var calm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
     try{ st.scrollIntoView({behavior:calm?'auto':'smooth',block:'start'}); }catch(e){ st.scrollIntoView(true); } } }
+/* model of the building: scaffold + the finished parts so far (full colour once built) */
+function bfig(u){ var n=U[u].n, d=doneCount(u), body=d>=n?C.art(u):C.partial(u,d/n)+C.rects(C.SCAF);
+  return '<svg viewBox="-8 -3 36 38" shape-rendering="crispEdges" role="img" aria-label="Công trình '+esc(U[u].b)+': xong '+d+' trên '+n+' phần"><rect x="-8" y="-3" width="36" height="38" fill="#dff1ff"/><rect x="-8" y="32" width="36" height="3" fill="#6cc04a"/><path fill="#5aa83c" d="M-6 33h1v1h-1z M24 33h1v1h-1z M3 34h1v1h-1z"/>'+body+'</svg>'; }
 function render(){
   $('cityTitle').textContent='Thành phố của '+(S.name||'con');
   $('meName').textContent=S.name||'Nhà thám hiểm'; $('meAv').innerHTML=C.avatar(S.av||0);
