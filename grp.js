@@ -20,10 +20,12 @@ var CFG = {
     intro:'Mỗi tủ sách có một chữ. Kéo cuốn sách thả vào tủ có chữ giống nhau nhé!',
     bins:[ {k:'师',sub:'người làm nghề giỏi',ic:'board'}, {k:'医',sub:'chữa bệnh',ic:'cross'}, {k:'学',sub:'học',ic:'book'} ],
     words:[ ['老师','lǎoshī','师'],['厨师','chúshī','师'],['医生','yīshēng','医'],['牙医','yáyī','医'],['学生','xuésheng','学'],['学校','xuéxiào','学'],['去上学','qù shàngxué','学'] ] },
-  '9-2': { theme:'pens', name:'Xếp nhóm: 犭 · 鸟 · 老', win:'Các bạn đã về đúng chuồng!', cheer:'Con nhìn ra 犭, 鸟 và 老 rất giỏi!',
-    intro:'Mỗi chuồng có một chữ hoặc một phần chữ. Kéo bạn thú thả vào chuồng đúng nhé!',
-    bins:[ {k:'犭',sub:'thú có lông',where:'bên trái',ic:'paw'}, {k:'鸟',sub:'loài có cánh',where:'bên phải',ic:'bird'}, {k:'老',sub:'đọc là lǎo',ic:'old'} ],
-    words:[ ['猪','zhū','犭','猪'],['猴子','hóuzi','犭','猴'],['鸡','jī','鸟','鸡'],['鸭子','yāzi','鸟','鸭'],['老虎','lǎohǔ','老'],['老','lǎo','老'],['老师','lǎoshī','老'] ] },
+  '9-2': { theme:'pens', name:'Xếp nhóm: 胖 · 瘦 · 老', win:'Các bạn đã về đúng chuồng!', cheer:'Con nhận ra 胖, 瘦 và 老 rất giỏi!',
+    intro:'Mỗi chuồng có một chữ. Kéo thẻ thả vào chuồng có chữ giống nhau nhé!',
+    bins:[ {k:'胖',sub:'béo',ic:'fat'}, {k:'瘦',sub:'gầy',ic:'thin'}, {k:'老',sub:'già',ic:'old'} ],
+    words:[ ['胖','pàng','胖'],['很胖','hěn pàng','胖'],['不胖','bú pàng','胖'],
+            ['瘦','shòu','瘦'],['很瘦','hěn shòu','瘦'],['不瘦','bú shòu','瘦'],
+            ['老','lǎo','老'],['很老','hěn lǎo','老'],['不老','bù lǎo','老'] ] },
   '10-2': { theme:'hoops', name:'Xếp nhóm: 艹 · 氵 · 天', win:'Bóng nào cũng vào rổ!', cheer:'Con nhìn ra 艹, 氵 và 天 rất giỏi!',
     intro:'Mỗi rổ có một chữ hoặc một phần chữ. Kéo quả bóng thả vào rổ đúng nhé!',
     bins:[ {k:'艹',sub:'cây cỏ',where:'trên đầu',ic:'grass'}, {k:'氵',sub:'có nước',where:'bên trái',ic:'drop'}, {k:'天',sub:'trời, ngày',ic:'sky'} ],
@@ -31,8 +33,9 @@ var CFG = {
             ['天空','tiānkōng','天'],['今天','jīntiān','天'],['明天','míngtiān','天'] ] }
 };
 /* folder that holds each character's red flashcard (img/<code>_red.webp); 园 has no flashcard and is drawn as a red character */
-var CARDDIR={"早":"u1to4","上":"u1to4","吃":"u1to4","饭":"u1to4","中":"u1to4","午":"u1to4","晚":"u1to4","公":"u5","动":"u5","物":"u5","商":"u5","店":"u5","家":"u5","回":"u5","学":"u5","校":"u5","去":"u5","老":"u6","师":"u6","厨":"u6","医":"u6","生":"u6","牙":"u6","猪":"u9","猴":"u8","子":"u9","鸡":"u9","鸭":"u9","虎":"u8","花":"u10","草":"u10","河":"u10","洗":"u1to4","脸":"u1to4","漂":"u9","亮":"u10","天":"u10","空":"u10","今":"u1to4","明":"u1to4"};
-var NOCARD=['园'];
+var CARDDIR={"早":"u1to4","上":"u1to4","吃":"u1to4","饭":"u1to4","中":"u1to4","午":"u1to4","晚":"u1to4","公":"u5","动":"u5","物":"u5","商":"u5","店":"u5","家":"u5","回":"u5","学":"u5","校":"u5","去":"u5","老":"u6","师":"u6","厨":"u6","医":"u6","生":"u6","牙":"u6","猪":"u9","猴":"u8","子":"u9","鸡":"u9","鸭":"u9","虎":"u8","花":"u10","草":"u10","河":"u10","洗":"u1to4","脸":"u1to4","漂":"u9","胖":"u9","瘦":"u9","亮":"u10","天":"u10","空":"u10","今":"u1to4","明":"u1to4"};
+var EXP={"早": ["zǎo", "sáng sớm", "日 (mặt trời) mọc trên đường chân trời."], "上": ["shàng", "trên; lên", "Nét ngắn nằm trên nét ngang: ở phía trên."], "吃": ["chī", "ăn", "Có 口 (miệng) bên trái: ăn bằng miệng."], "饭": ["fàn", "cơm, bữa ăn", "Có 饣 (bộ đồ ăn) bên trái."], "中": ["zhōng", "giữa", "Nét dọc xuyên giữa ô 口: ở chính giữa."], "午": ["wǔ", "buổi trưa", "Giữa ngày, mặt trời lên cao nhất."], "晚": ["wǎn", "buổi tối", "Có 日 (mặt trời) bên trái: nói về thời gian trong ngày."], "公": ["gōng", "chung, công cộng", "公园 là khu vườn chung cho mọi người."], "园": ["yuán", "vườn", "Hàng rào 囗 bao quanh: một khu vườn."], "动": ["dòng", "động, cử động", "Có 力 (sức lực): có sức thì cử động."], "物": ["wù", "vật, con vật", "Có 牜 (bộ bò) bên trái: con vật."], "商": ["shāng", "buôn bán", "商店 là nơi buôn bán hàng hóa."], "店": ["diàn", "cửa hàng", "Có 广 (mái che) bên ngoài: một cửa hàng có mái."], "家": ["jiā", "nhà, gia đình", "宀 (mái nhà) che 豕 (con lợn): ngày xưa nhà nào cũng nuôi lợn."], "回": ["huí", "trở về", "Hình vòng xoáy quay vào trong, rồi quay về."], "学": ["xué", "học", "Có 子 (đứa trẻ) ở dưới: trẻ em đi học."], "校": ["xiào", "trường", "Có 木 (cây) bên trái."], "去": ["qù", "đi", "去 là đi tới một nơi nào đó."], "老": ["lǎo", "già", "Hình ông cụ lưng còng chống gậy."], "师": ["shī", "thầy, người giỏi nghề", "老师 là thầy cô; 厨师 là đầu bếp."], "厨": ["chú", "nhà bếp", "厨师 là người nấu ăn trong bếp."], "医": ["yī", "chữa bệnh", "医生 và 牙医 đều là người chữa bệnh."], "生": ["shēng", "sinh ra; sống", "Hình mầm cây nhú lên khỏi mặt đất."], "牙": ["yá", "răng", "Hình hai chiếc răng cắn vào nhau."], "猪": ["zhū", "con lợn", "Có 犭 (bộ thú) bên trái."], "猴": ["hóu", "con khỉ", "Có 犭 (bộ thú) bên trái."], "子": ["zi", "con; hậu tố", "Hình em bé dang tay; hay đứng cuối từ như 猴子, 鸭子."], "鸡": ["jī", "con gà", "Có 鸟 (chim) bên phải."], "鸭": ["yā", "con vịt", "Có 鸟 (chim) bên phải."], "花": ["huā", "hoa", "Có 艹 (cây cỏ) trên đầu."], "草": ["cǎo", "cỏ", "Có 艹 (cây cỏ) trên đầu."], "河": ["hé", "sông", "Có 氵 (nước) bên trái."], "洗": ["xǐ", "rửa", "Có 氵 (nước) bên trái: rửa cần nước."], "脸": ["liǎn", "khuôn mặt", "Có 月 (bộ phận cơ thể) bên trái."], "漂": ["piào", "đẹp (漂亮)", "Có 氵 (nước) bên trái."], "亮": ["liàng", "sáng; đẹp", "漂亮 là xinh đẹp, sáng sủa."], "天": ["tiān", "trời; ngày", "大 (người dang tay) có nét ngang trên đầu: bầu trời trên đầu người."], "空": ["kōng", "trống; bầu trời", "Có 穴 (cái hang) ở trên: trống rỗng."], "今": ["jīn", "nay, hôm nay", "今天 là hôm nay."], "明": ["míng", "sáng; ngày mai", "日 (mặt trời) và 月 (mặt trăng) cùng chiếu: sáng."], "胖": ["pàng", "béo", "Có 月 (cơ thể, thịt) bên trái: người đầy đặn."], "瘦": ["shòu", "gầy", "Có 疒 (bộ bệnh) bên ngoài: người gầy yếu."], "很": ["hěn", "rất", "Đứng trước từ chỉ tính chất: 很胖 = rất béo."], "不": ["bù", "không", "Đứng trước từ để nói “không”: 不胖 = không béo."]};
+var NOCARD=['园','很','不'];
 
 var THEME = {
   windows:{ verb:'ô cửa sổ', thing:'thẻ',       W:48, H:34, land:'pop' },
@@ -56,6 +59,8 @@ var ICON={
   cross:['kkkkkkkkkkkk','kwwwwwwwwwwk','kwwwwrrwwwwk','kwwwwrrwwwwk','kwwwwrrwwwwk','kwrrrrrrrrwk','kwrrrrrrrrwk','kwwwwrrwwwwk','kwwwwrrwwwwk','kwwwwrrwwwwk','kwwwwwwwwwwk','kkkkkkkkkkkk'],
   paw:['............','.nn......nn.','.nn......nn.','............','nn..nnnn..nn','nn.nnnnnn.nn','...nnnnnn...','..nnnnnnnn..','..nnnnnnnn..','..nnnnnnnn..','...nnnnnn...','............'],
   bird:['............','....bbbb....','...bbbbbb...','...bwkbbbo..','..bbbbbbboo.','bbbbbbbbb...','.bbblbbbb...','..bblllbb...','...bbbbb....','....bbb.....','....o..o....','...oo..oo...'],
+  fat:['............','...nnnnnn...','..nnnnnnnn..','..nkpppknn..','..npppppnn..','.nnppnnppnn.','nnnnnnnnnnnn','nnnnnnnnnnnn','nnnnnnnnnnnn','.nnnnnnnnnn.','..nn....nn..','..kk....kk..'],
+  thin:['....nnnn....','...nnnnnn...','...nkppkn...','...npppn....','....pppp....','....nnnn....','....nnnn....','....nnnn....','....nnnn....','....n..n....','....n..n....','...kk..kk...'],
   old:['...xxxxxx...','..xxxxxxxx..','.xxppppppxx.','.xppppppppx.','.pkkppppkkp.','.pppppppppp.','.ppppnnpppp.','.pwwwwwwwwp.','..wwwwwwww..','...wwwwww...','....wwww....','............'],
   grass:['............','.G....G...G.','.G...GG..GG.','.GG..G...G..','..GG.G.G.G..','G..GGG.GGG.G','GG.GGGGGGGGG','.GGGGGGGGGG.','gggggggggggg','gggggggggggg','nnnnnnnnnnnn','nnnnnnnnnnnn'],
   drop:['.....b......','.....b......','....bbb.....','....bbb.....','...bbbbb....','...blbbb....','..bblbbbb...','..bblbbbbb..','..bbbbbbbb..','...bbbbbb...','....bbbb....','............'],
@@ -148,6 +153,10 @@ var CSS = [
 '.grp-chip.land-drop{animation:grpDrop .35s steps(4)}@keyframes grpDrop{from{transform:translateY(-60px)}}',
 '.grp-chip.land-slide{animation:grpSlide .3s steps(4)}@keyframes grpSlide{from{transform:translateX(-30px)}}',
 '.grp-chip.land-hop{animation:grpHop .5s steps(5)}@keyframes grpHop{0%{transform:translateY(-30px)}40%{transform:translateY(0)}70%{transform:translateY(-10px)}}',
+'.grp-exp{margin:10px 0;padding:10px 12px;background:#fff8d6;border:4px solid var(--g-ink);box-shadow:5px 5px 0 var(--g-ink);animation:grpIn .25s steps(3)}',
+'.grp-exh{font-weight:800;font-size:14px;margin-bottom:6px}.grp-exh i{font-style:normal;color:var(--g-mute);font-weight:600}',
+'.grp-exr{display:flex;align-items:center;gap:12px;width:100%;margin:4px 0;padding:6px 8px;border:3px solid var(--g-ink);background:#fff;color:var(--g-ink);font:inherit;font-size:14px;line-height:1.4;text-align:left;cursor:pointer}',
+'.grp-exr>b{font-size:34px;line-height:1;min-width:1.2em;text-align:center;color:var(--g-red)}.grp-exr i{font-style:normal;font-weight:800}',
 /* tray */
 '.grp-trayh{margin:0;font-weight:800;font-size:15px}',
 '.grp-tray{display:flex;flex-wrap:wrap;gap:14px;min-height:96px}',
@@ -198,9 +207,9 @@ function mount(host,cfg,ad){
   var N=words.length, placed=0, sel=null, busy=false, SHOW=4, hint=cfg.intro, eatClick=false;
   host.innerHTML='<div class="grp t-'+cfg.theme+'"><div class="grp-top">'+(ad.avatar?'<img class="grp-ava" src="'+esc(ad.avatar)+'" alt="">':'')+
     '<div class="grp-box"><button type="button" class="grp-spk" aria-label="Nghe hướng dẫn">'+pix('spk',26)+'</button><p class="grp-msg" role="status" aria-live="polite"></p><span class="grp-count">0/'+N+'</span></div></div>'+
-    '<div class="grp-bins n'+cfg.bins.length+'">'+cfg.bins.map(function(b){ return binHTML(b,cfg.theme); }).join('')+'</div>'+
+    '<div class="grp-exp" hidden></div><div class="grp-bins n'+cfg.bins.length+'">'+cfg.bins.map(function(b){ return binHTML(b,cfg.theme); }).join('')+'</div>'+
     '<p class="grp-trayh">Kéo '+esc(th.thing)+' thả vào '+esc(th.verb)+' đúng</p><div class="grp-tray"></div></div>';
-  var root=host.firstChild, msg=root.querySelector('.grp-msg'), tray=root.querySelector('.grp-tray'), count=root.querySelector('.grp-count');
+  var root=host.firstChild, msg=root.querySelector('.grp-msg'), tray=root.querySelector('.grp-tray'), count=root.querySelector('.grp-count'), exp=root.querySelector('.grp-exp');
   function say(t,cls,plain){ msg.className='grp-msg'+(cls?' '+cls:''); msg.innerHTML=t; hint=plain||msg.textContent; }
   say(esc(cfg.intro),'',cfg.intro);
   root.querySelector('.grp-spk').onclick=function(){ if(ad.sayVi) ad.sayVi(hint); };
@@ -215,6 +224,11 @@ function mount(host,cfg,ad){
   function why(w){ var b=binOf(w.bin), word='<b class="zh">'+esc(w.zh)+'</b> <i>'+esc(w.py)+'</i>';
     if(isPart(b)) return word+': chữ <b class="zh">'+esc(w.ch)+'</b> có '+cj(b.k)+' '+b.where+'.'+esc(w.extra);
     return word+' có chữ '+cj(b.k)+'.'; }
+  function explain(w){ var h='<div class="grp-exh"><b class="zh">'+esc(w.zh)+'</b> <i>'+esc(w.py)+'</i> · Giải thích chữ</div>';
+    w.zh.split('').forEach(function(c){ var e=EXP[c]; if(!e) return;
+      h+='<button type="button" class="grp-exr" data-c="'+esc(c)+'" aria-label="Nghe '+esc(c)+'"><b class="zh">'+esc(c)+'</b><span><i>'+esc(e[0])+'</i> · '+esc(e[1])+'<br>'+cj(e[2])+'</span></button>'; });
+    exp.innerHTML=h; exp.hidden=false;
+    exp.querySelectorAll('.grp-exr').forEach(function(r){ r.onclick=function(){ ad.say(r.dataset.c); }; }); }
   /* returns true when the word belongs to this group */
   function judge(card,bin){
     var w=words[+card.dataset.k];
@@ -223,8 +237,8 @@ function mount(host,cfg,ad){
       var chip=document.createElement('span'); chip.className='grp-chip land-'+th.land; chip.title=w.zh+' · '+w.py; chip.setAttribute('aria-label',w.zh); chip.innerHTML=tiles(w);
       bin.querySelector('.grp-pile').appendChild(chip); card.remove(); w.done=true; clearSel(); placed++;
       count.textContent=placed+'/'+N; bin.classList.remove('hit'); void bin.offsetWidth; bin.classList.add('hit');
-      say('Đúng rồi! '+why(w),'good'); refill(); busy=false;
-      if(placed>=N) setTimeout(function(){ ad.done(N); },700);
+      say('Đúng rồi! '+why(w),'good'); explain(w); refill(); busy=false;
+      if(placed>=N) setTimeout(function(){ ad.done(N); },2600);
       return true;
     }
     w.tries++; ad.buzz(); bin.classList.remove('shake'); void bin.offsetWidth; bin.classList.add('shake');
