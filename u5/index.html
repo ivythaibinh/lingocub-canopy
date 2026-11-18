@@ -3356,7 +3356,7 @@ const U5L2 = {
     {act:'bal',code:'G2',nm:'Bóng bay ghép câu',lv:'BRIDGE 2 · Câu hỏi và câu trả lời',h:'Bóng bay: 你去哪儿？我去动物园。',tag:'BRIDGE 2',how:'Đọc câu tiếng Anh. Chạm bóng bay theo đúng thứ tự để ghép câu tiếng Trung, ví dụ 我 + 去 + 动物园. Có bóng bẫy: 去 hay 在, 去 hay 回. Nhớ nhé: về nhà là 回家, không nói 去家!'}],
   hanzi:[
     {act:'write',code:'VC',nm:'Viết chữ Hán',lv:'饭店 · 动物园 · 去上学 · 回家',h:'Viết chữ Hán',how:'Chọn từ rồi chọn cách luyện: Xem mẫu, Tô nét, Tự viết. Tô xong tất cả các chữ để được 1 sao.'},
-    {act:'grp',code:'XN',nm:'Xếp nhóm: 园 · 店',lv:'Chữ giống nhau · 8 thẻ',h:'Bỏ thẻ vào xe đẩy có chữ giống nhau',how:'Mỗi xe đẩy có một chữ: 园 hoặc 店. Chạm một thẻ rồi chạm xe đẩy có chữ đó. Thẻ không có 园, 店 thì bỏ vào xe Khác. Bấm loa để nghe.'}],
+    {act:'grp',code:'XN',nm:'Xếp nhóm: 园 · 店 · 家 · 学',lv:'Chữ giống nhau · 8 thẻ',h:'Kéo thẻ vào xe đẩy có chữ giống nhau',how:'Mỗi xe đẩy có một chữ: 园, 店, 家, 学. Kéo thẻ thả vào xe đẩy có chữ đó. Bấm loa để nghe.'}],
   fc:{aspect:'5/6', cards: L2W5.map(w=>({fimg:w.img, bimg:w.img, zh:w.zh, py:w.py, en:`${w.en} · ${w.vi}`, sayZh:w.zh, sayEn:w.en}))
     .concat([{fimg:'fc5/zoo.webp',bimg:'fc5/zoo.webp',over:true, overZh:zhL('你去哪儿？','nǐ qù nǎr?')+'<br>'+zhL('我去动物园。','wǒ qù dòngwùyuán.'), overEn:"<b>Where are you going? I’m going to the zoo.</b><br><span style=\"font-size:.8rem;color:var(--mute)\">Bạn đi đâu đấy? Tớ đi sở thú. Về nhà thì nói: I’m going home. 我回家。</span>", sayZh:'你去哪儿？我去动物园。', sayEn:'Where are you going? I’m going to the zoo.'}])},
   mtSet:()=>shuffle(L2W5).concat(pick(L1W5,1)).concat([QGO5]),
